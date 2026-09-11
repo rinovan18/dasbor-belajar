@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contoh: kirim-tugas — Pengumpulan Tugas Mandiri</title>
+  <script type="module" src="../lib/quiz-user-auth.js"></script>
+  <script type="module" src="../lib/kirim-tugas.js"></script>
+  <style>
+    body { padding: 24px; max-width: 860px; margin: 0 auto; font-family: system-ui; }
+    h1 { color: #1e3a5f; }
+    .info { background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 8px; padding: 12px; margin-bottom: 16px; font-size: 13px; line-height: 1.6; }
+    .info code { background: #e0e7ff; color: #3730a3; border-radius: 4px; padding: 1px 6px; font-size: 12px; }
+    .section-title { color: #334155; margin: 28px 0 10px; }
+  </style>
+</head>
+<body>
+  <h1>🧑‍🎓 Contoh: &lt;kirim-tugas&gt;</h1>
+  <div class="info">
+    Halaman pengumpulan tugas mandiri (adaptasi <code>assignment-component</code>).
+    Siswa login lewat <code>&lt;quiz-user-auth&gt;</code>, lalu mengisi jawaban dan/atau link
+    Google Drive, kemudian <strong>Kirim & Kunci</strong>.
+    <ul>
+      <li><code>forum-api-url</code> — <strong>opsional</strong>; bila dikosongkan memakai <code>apps-script-url</code> (codev5.gs kini menangani aksi tugas juga, sheet <code>Tugas Log</code>).</li>
+      <li><code>apps-script-url</code> — URL /exec utama (action=logActivity, saveAssignment, deployment lib/codev5.gs) untuk rekap <code>assignment</code> + data tugas.</li>
+      <li><code>assignment-title</code>, <code>assignment-instruction</code>, <code>sheet-name</code> (kd-materi).</li>
+      <li>Status tersimpan per kd-materi di <code>localStorage</code> (<code>hax_assignment_{kdMateri}</code>).</li>
+    </ul>
+  </div>
+
+  <quiz-user-auth
+    apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec"
+    auto-login="true"></quiz-user-auth>
+
+  <h2 class="section-title">📤 Panel Pengumpulan</h2>
+  <kirim-tugas
+    forum-api-url="https://script.google.com/macros/s/AKfycbzwvWA-4FgTkyCV_FDt5McjnkkeUwNZIZb0dt3ZU-ABsSbZkUnBq9qSoUfJscItXb1dtg/exec"
+    apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec"
+    assignment-title="Tugas 1: Ringkasan Materi Pertemuan 1"
+    assignment-instruction="Tulis ringkasan materi pertemuan 1 dengan bahasamu sendiri, lalu kirim melalui form di bawah."
+    sheet-name="Pertemuan 1"></kirim-tugas>
+</body>
+</html>

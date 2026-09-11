@@ -1,0 +1,12 @@
+C:\Users\Dragon\Documents\github\andyid23\haxtheweb-kuis\elements\dasbor-kuis\.github\workflows\main.yml
+C:\Users\Dragon\Documents\github\andyid23\haxtheweb-kuis\elements\dasbor-kuis\.travis.yml
+C:\Users\Dragon\Documents\github\andyid23\haxtheweb-kuis\elements\dasbor-kuis\DATA-CONTOH.md
+C:\Users\Dragon\Documents\github\andyid23\haxtheweb-kuis\elements\dasbor-kuis\README.md
+C:\Users\Dragon\Documents\github\andyid23\haxtheweb-kuis\elements\dasbor-kuis\demo\index.html
+C:\Users\Dragon\Documents\github\andyid23\haxtheweb-kuis\elements\dasbor-kuis\demo\kirim-tugas.html
+C:\Users\Dragon\Documents\github\andyid23\haxtheweb-kuis\elements\dasbor-kuis\demo\quiz-user-auth.html
+C:\Users\Dragon\Documents\github\andyid23\haxtheweb-kuis\elements\dasbor-kuis\demo\ruang-diskusi.html
+C:\Users\Dragon\Documents\github\andyid23\haxtheweb-kuis\elements\dasbor-kuis\demo\soal-akm-lengkap.html
+C:\Users\Dragon\Documents\github\andyid23\haxtheweb-kuis\elements\dasbor-kuis\demo\tutorial-hax.html
+C:\Users\Dragon\Documents\github\andyid23\haxtheweb-kuis\elements\dasbor-kuis\index.html
+C:\Users\Dragon\Documents\github\andyid23\haxtheweb-kuis\elements\dasbor-kuis\promptlengkap-dasbor-kuis.txt

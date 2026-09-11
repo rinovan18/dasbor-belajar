@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <base href="/">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="Description" content="Contoh halaman HTML perubahan dasbor-kuis: URL backend v5.1, sebelum/sesudah, dan demo langsung" />
+  <title>dasbor-kuis — Contoh HTML Perubahan</title>
+  <style>
+    :root, html, body { margin: 0; padding: 0; font-family: system-ui, sans-serif; background: #f1f5f9; color: #0f172a; }
+    .halaman { max-width: 1100px; margin: 0 auto; padding: 24px 20px 60px; }
+    header.hero {
+      background: linear-gradient(120deg, #7c2d12, #ea580c 55%, #f59e0b);
+      color: #fff; border-radius: 20px; padding: 26px 32px; margin-bottom: 22px;
+      box-shadow: 0 12px 28px -12px rgb(234 88 12 / 0.55);
+    }
+    header.hero h1 { margin: 0; font-size: 25px; }
+    header.hero p { margin: 8px 0 0; opacity: 0.85; font-size: 14px; }
+    .nav-links { margin: 12px 0 24px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .nav-links a, .nav-links button {
+      padding: 8px 14px; border-radius: 10px; border: 1px solid #fed7aa; background: #fff;
+      color: #9a3412; font-weight: 600; font-size: 13px; text-decoration: none; cursor: pointer;
+    }
+    .nav-links a:hover, .nav-links button:hover { background: #fff7ed; }
+    .kartu { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 22px; margin-bottom: 20px; }
+    .kartu h2 { margin: 0 0 10px; font-size: 19px; color: #1e293b; }
+    .kartu h3 { margin: 20px 0 8px; font-size: 15px; color: #7c2d12; }
+    .kartu p { font-size: 14px; color: #475569; line-height: 1.65; margin: 6px 0; }
+    code { background: #fff7ed; color: #9a3412; border-radius: 6px; padding: 2px 7px; font-size: 12.5px; word-break: break-all; }
+    pre { background: #0f172a; color: #e2e8f0; border-radius: 12px; padding: 16px; overflow-x: auto; font-size: 12.5px; line-height: 1.6; }
+    pre code { background: none; color: inherit; padding: 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+    th { background: #f8fafc; text-align: left; padding: 10px 12px; border-bottom: 2px solid #e2e8f0; font-size: 12px; }
+    td { padding: 9px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+    tr:hover td { background: #f8fafc; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 9999px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+    .badge-lama { background: #fee2e2; color: #991b1b; }
+    .badge-baru { background: #dcfce7; color: #166534; }
+    .catatan { background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 0 10px 10px 0; padding: 12px 16px; font-size: 13px; margin: 14px 0; }
+    .catatan.ok { background: #f0fdf4; border-left-color: #22c55e; }
+    .catatan.info { background: #eff6ff; border-left-color: #3b82f6; }
+    .banding { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 760px) { .banding { grid-template-columns: 1fr; } }
+    .banding .kolom { border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; }
+    .banding .kolom .judul { padding: 8px 12px; font-weight: 800; font-size: 12px; letter-spacing: .3px; }
+    .banding .kolom.lama .judul { background: #fee2e2; color: #991b1b; }
+    .banding .kolom.baru .judul { background: #dcfce7; color: #166534; }
+    .banding .kolom pre { border-radius: 0; margin: 0; }
+  </style>
+</head>
+
+<body>
+  <div class="halaman">
+    <header class="hero">
+      <h1>🧪 Contoh HTML Perubahan</h1>
+      <p>Perbandingan sebelum/sesudah pemasangan URL backend v5.1 + demo langsung, lengkap dengan cuplikan kode yang bisa disalin.</p>
+    </header>
+
+    <div class="nav-links">
+      <a href="/">← Demo utama (index.html)</a>
+      <a href="index.html">🗂 Hubungan Sheet</a>
+      <a href="tutor-rangkuman.html">📚 Tutor Rangkuman</a>
+      <a href="tutor-akumulasi-nilai-rapor.html">📊 Tutor Akumulasi Nilai Rapor</a>
+      <a href="hasil-cek-perubahan.html">🔎 Hasil Cek Perubahan</a>
+    </div>
+
+    <div class="kartu">
+      <h2>🔄 Sebelum vs Sesudah</h2>
+      <div class="banding">
+        <div class="kolom lama">
+          <div class="judul">❌ SEBELUM — URL v5 (idempoten)</div>
+          <pre><code>&lt;dasbor-kuis
+  mode="guru"
+  kd-materi="Pertemuan 1"
+  apps-script-url="https://script.google.com/macros/s/
+    AKfycbzJYZTooejJ1q4hTDsPHbapS5fu_Od1jd1G-X_
+    Na3bA3UZvdYdlg2bbX4P93NEo_ywe/exec"
+&gt;&lt;/dasbor-kuis&gt;</code></pre>
+        </div>
+        <div class="kolom baru">
+          <div class="judul">✅ SESUDAH — URL v5.1 (antidobel)</div>
+          <pre><code>&lt;dasbor-kuis
+  mode="guru"
+  kd-materi="Pertemuan 1"
+  apps-script-url="https://script.google.com/macros/s/
+    AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec"
+  forum-api-url="https://script.google.com/macros/s/
+    AKfycbzwvWA-4FgTkyCV_FDt5McjnkkeUwNZIZb0dt3ZU-ABsSbZkUnBq9qSoUfJscItXb1dtg/exec"
+&gt;&lt;/dasbor-kuis&gt;</code></pre>
+        </div>
+      </div>
+      <div class="catatan ok">
+        <strong>Efek:</strong> kuis kini menulis skor ke <code>db_nilai</code> (terlihat di Rangkuman/Leaderboard),
+        forum/tugas/kehadiran berfungsi penuh, dan anti double-entry memakai <code>LockService</code> (v5.1).
+      </div>
+    </div>
+
+    <div class="kartu">
+      <h2>🗝️ Cara Cek Versi Deployment</h2>
+      <p>Buka URL <code>/exec</code> tanpa parameter di browser. Banner respons menunjukkan versi:</p>
+      <table>
+        <thead><tr><th>Respons</th><th>Kesimpulan</th></tr></thead>
+        <tbody>
+          <tr><td><code>codev5.gs aktif (idempoten v5)</code></td><td><span class="badge badge-lama">LAMA</span> — segera pindah ke URL v5.1</td></tr>
+          <tr><td><code>codev5.gs aktif (antidobel-entri v5.1)</code></td><td><span class="badge badge-baru">BARU</span> — sudah benar</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="kartu">
+      <h2>🧩 Snippet Komponen (Salin-Tempel)</h2>
+      <h3>Mode Guru — dasbor-kuis</h3>
+      <pre><code>&lt;quiz-user-auth
+  apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec"&gt;
+&lt;/quiz-user-auth&gt;
+
+&lt;dasbor-kuis mode="guru" kd-materi="Pertemuan 1"
+  apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec"
+  forum-api-url="https://script.google.com/macros/s/AKfycbzwvWA-4FgTkyCV_FDt5McjnkkeUwNZIZb0dt3ZU-ABsSbZkUnBq9qSoUfJscItXb1dtg/exec"&gt;
+&lt;/dasbor-kuis&gt;</code></pre>
+
+      <h3>Kuis Interaktif — kuis-ledakan</h3>
+      <pre><code>&lt;kuis-ledakan judul="Evaluasi Kuis Interaktif" mode="siswa" kd-materi="Pertemuan 1"
+  apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec"&gt;
+&lt;/kuis-ledakan&gt;</code></pre>
+
+      <h3>Ruang Diskusi — ruang-diskusi</h3>
+      <pre><code>&lt;ruang-diskusi
+  forum-api-url="https://script.google.com/macros/s/AKfycbzwvWA-4FgTkyCV_FDt5McjnkkeUwNZIZb0dt3ZU-ABsSbZkUnBq9qSoUfJscItXb1dtg/exec"
+  apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec"
+  forum-topic="Diskusi Materi Pertemuan 1" sheet-name="Pertemuan 1" view-mode="student"&gt;
+&lt;/ruang-diskusi&gt;</code></pre>
+
+      <h3>Pengumpulan Tugas — kirim-tugas</h3>
+      <pre><code>&lt;kirim-tugas
+  forum-api-url="https://script.google.com/macros/s/AKfycbzwvWA-4FgTkyCV_FDt5McjnkkeUwNZIZb0dt3ZU-ABsSbZkUnBq9qSoUfJscItXb1dtg/exec"
+  apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec"
+  assignment-title="Tugas 1: Ringkasan Materi" sheet-name="Pertemuan 1"&gt;
+&lt;/kirim-tugas&gt;</code></pre>
+    </div>
+
+    <div class="kartu">
+      <h2>🚀 Demo Langsung (URL baru)</h2>
+      <p>Login lalu kerjakan kuis / kirim diskusi — hasilnya ditulis ke <code>db_nilai</code> &amp; <code>db_aktivitas</code> deployment v5.1.</p>
+      <quiz-user-auth
+        apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec">
+      </quiz-user-auth>
+      <div style="margin-top:16px;">
+        <kuis-ledakan judul="Kuis Contoh Perubahan" mode="siswa" kd-materi="Pertemuan 1"
+          apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec">
+        </kuis-ledakan>
+      </div>
+      <div style="margin-top:16px;">
+        <ruang-diskusi
+          forum-api-url="https://script.google.com/macros/s/AKfycbzwvWA-4FgTkyCV_FDt5McjnkkeUwNZIZb0dt3ZU-ABsSbZkUnBq9qSoUfJscItXb1dtg/exec"
+          apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec"
+          forum-topic="Diskusi Materi Pertemuan 1" sheet-name="Pertemuan 1" view-mode="student">
+        </ruang-diskusi>
+
+        <kirim-tugas
+  forum-api-url="https://script.google.com/macros/s/AKfycbzwvWA-4FgTkyCV_FDt5McjnkkeUwNZIZb0dt3ZU-ABsSbZkUnBq9qSoUfJscItXb1dtg/exec"
+  apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec"
+  assignment-title="Tugas 1: Ringkasan Materi" sheet-name="Pertemuan 1">
+</kirim-tugas>
+
+kuis
+
+<dasbor-kuis
+  mode="guru"
+  kd-materi="Pertemuan 1"
+  apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec"
+  forum-api-url="https://script.google.com/macros/s/AKfycbzwvWA-4FgTkyCV_FDt5McjnkkeUwNZIZb0dt3ZU-ABsSbZkUnBq9qSoUfJscItXb1dtg/exec"
+></dasbor-kuis>
+
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="../dasbor-kuis.js"></script>
+  <script type="module" src="../lib/quiz-user-auth.js"></script>
+  <script type="module" src="../lib/kuis-ledakan.js"></script>
+  <script type="module" src="../lib/ruang-diskusi.js"></script>
+</body>
+
+</html>

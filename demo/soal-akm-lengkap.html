@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo: Soal AKM Lengkap (PG, PG Kompleks, Menjodohkan, Isian Singkat) — dasbor-kuis</title>
+  <script type="module" src="../lib/kuis-ledakan.js"></script>
+  <script type="module" src="../lib/quiz-user-auth.js"></script>
+  <style>
+    :root, html, body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, sans-serif;
+      background: #f1f5f9;
+      color: #0f172a;
+    }
+    .halaman { max-width: 1000px; margin: 0 auto; padding: 24px 20px 60px; }
+    header.hero {
+      background: linear-gradient(120deg, #312e81, #4f46e5 55%, #6d28d9);
+      color: #fff; border-radius: 20px; padding: 26px 30px; margin-bottom: 22px;
+      box-shadow: 0 12px 28px -12px rgb(79 70 229 / 0.55);
+    }
+    header.hero h1 { margin: 0; font-size: 23px; }
+    header.hero p { margin: 8px 0 0; opacity: 0.85; font-size: 14px; }
+    .nav-links { margin: 0 0 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .nav-links a {
+      padding: 8px 14px; border-radius: 10px; border: 1px solid #c7d2fe;
+      background: #fff; color: #4338ca; font-weight: 600; font-size: 13px; text-decoration: none;
+    }
+    .nav-links a:hover { background: #eef2ff; }
+    .info { background: #f3f0fa; border: 1px solid #c7b3fc; border-radius: 10px; padding: 14px; margin-bottom: 20px; font-size: 13px; line-height: 1.7; }
+    .info code { background: #e3d9fc; padding: 1px 6px; border-radius: 4px; font-size: 12px; }
+    .section { background: #fff; border-radius: 14px; padding: 22px; margin: 18px 0; border: 1px solid #e2e8f0; box-shadow: 0 2px 8px -2px rgb(15 23 42 / 0.08); }
+    h2 { color: #1e293b; font-size: 16px; margin: 26px 0 10px; border-left: 4px solid #4f46e5; padding-left: 10px; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; margin-right: 6px; }
+    .badge-mc { background: #dbeafe; color: #1e40af; }
+    .badge-pgk { background: #fef3c7; color: #92400e; }
+    .badge-match { background: #d1fae5; color: #065f46; }
+    .badge-fill { background: #ede9fe; color: #5b21b6; }
+    .ket { font-size: 13px; color: #555; margin-bottom: 12px; }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; }
+    th { background: #f3f0fa; padding: 10px; text-align: left; }
+    td { padding: 10px; border-bottom: 1px solid #eee; }
+    code { background: #eef2ff; color: #4338ca; border-radius: 6px; padding: 2px 7px; font-size: 12px; word-break: break-all; }
+    .demo-auth { max-width: 500px; margin: 0 auto 8px; }
+  </style>
+</head>
+<body>
+  <div class="halaman">
+    <header class="hero">
+      <h1>📝 Demo: Soal AKM Lengkap — dasbor-kuis</h1>
+      <p><code style="background:rgb(255 255 255/.15);color:#fff;">&lt;kuis-ledakan&gt;</code> + <code style="background:rgb(255 255 255/.15);color:#fff;">&lt;quiz-user-auth&gt;</code></p>
+    </header>
+
+    <div class="nav-links">
+      <a href="/">← Kembali ke demo utama (index.html)</a>
+      <a href="quiz-user-auth.html">🔐 Login / Daftar</a>
+    </div>
+
+    <div class="info">
+      <strong>4+1 Tipe Soal AKM:</strong><br>
+      <span class="badge badge-mc">PG</span> Pilihan Ganda biasa (1 jawaban benar, <code>correctIndex: 1</code>)<br>
+      <span class="badge badge-mc">PG KOMPLEKS</span> Multi-correct via <code>correctAnswers: [0, 2]</code><br>
+      <span class="badge badge-pgk">PGK</span> Pernyataan Benar/Salah per baris (<code>type: "pgk"</code>)<br>
+      <span class="badge badge-match">MENJODOHKAN</span> Pasangkan item kiri ke kanan (<code>type: "matching"</code>)<br>
+      <span class="badge badge-fill">ISIAN SINGKAT</span> Ketik jawaban teks (<code>type: "shortAnswer"</code>)<br><br>
+      <strong>Fitur baru:</strong> <code>image: "https://..."</code> untuk gambar soal &bull; <code>shuffle-choices</code> untuk acak jawaban &bull; sesi siswa diambil otomatis dari <code>&lt;quiz-user-auth&gt;</code> (event <code>quiz-user-login</code>).
+    </div>
+
+    <!-- ==================== AUTH ==================== -->
+    <div class="demo-auth">
+      <quiz-user-auth apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec"></quiz-user-auth>
+    </div>
+
+    <!-- ==================== CONTOH 1: PG Biasa ==================== -->
+    <h2><span class="badge badge-mc">PG</span> Soal 1: Pilihan Ganda Biasa</h2>
+    <div class="section">
+      <kuis-ledakan
+        judul="Soal AKM — PG Biasa"
+        apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec"
+        kd-materi="Pertemuan 1"
+        mode="siswa"
+        shuffle-choices
+        questions='[
+          {
+            "question": "Apa kepanjangan dari HAX?",
+            "choices": ["Hyper-Active X", "Hybrid Authoring eXperience", "High Accuracy XML", "Hyper Access X"],
+            "correctIndex": 1
+          },
+          {
+            "question": "Lit Element digunakan untuk?",
+            "image": "https://www.pngall.com/wp-content/uploads/13/JavaScript-PNG-Image.png",
+            "choices": ["Database", "Komponen Web Custom", "Mobile App", "Operating System"],
+            "correctIndex": 1
+          },
+          {
+            "question": "Planet terdekat dengan Matahari?",
+            "choices": ["Venus", "Bumi", "Mars", "Merkurius"],
+            "correctIndex": 3
+          }
+        ]'>
+      </kuis-ledakan>
+    </div>
+
+    <!-- ==================== CONTOH 2: PG Kompleks (Multi-Correct) ==================== -->
+    <h2><span class="badge badge-mc">PG KOMPLEKS</span> Soal 2: Pilihan Ganda Kompleks (Multi-Correct)</h2>
+    <div class="section">
+      <p class="ket">Centang <strong>lebih dari 1</strong> jawaban benar. Gunakan <code>correctAnswers: [0, 2]</code> (array, bukan <code>correctIndex</code>).</p>
+      <kuis-ledakan
+        judul="Soal AKM — PG Kompleks"
+        apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec"
+        kd-materi="Pertemuan 1"
+        mode="siswa"
+        questions='[
+          {
+            "question": "Manakah yang merupakan framework CSS?",
+            "choices": ["React", "Tailwind CSS", "Vue.js", "Bootstrap"],
+            "correctAnswers": [1, 3]
+          },
+          {
+            "question": "Bahasa pemrograman yang berjalan di browser:",
+            "choices": ["Python", "JavaScript", "Java", "PHP"],
+            "correctAnswers": [1]
+          },
+          {
+            "question": "Yang termasuk Web Component API:",
+            "choices": ["Shadow DOM", "Canvas", "Custom Elements", "WebGL"],
+            "correctAnswers": [0, 2]
+          }
+        ]'>
+      </kuis-ledakan>
+    </div>
+
+    <!-- ==================== CONTOH 3: PG Kompleks Benar/Salah ==================== -->
+    <h2><span class="badge badge-pgk">PGK</span> Soal 3: Pilihan Ganda Kompleks (Benar / Salah)</h2>
+    <div class="section">
+      <p class="ket">Setiap pernyataan dipilih <strong>Benar</strong> atau <strong>Salah</strong>. Semua harus benar untuk dapat 1 poin.</p>
+      <kuis-ledakan
+        judul="Soal AKM — PGK Benar Salah"
+        apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec"
+        kd-materi="Pertemuan 2"
+        mode="siswa"
+        questions='[
+          {
+            "question": "Tentukan apakah pernyataan berikut Benar atau Salah:",
+            "type": "pgk",
+            "statements": [
+              {"text": "Energi biomassa memanfaatkan bahan dari limbah pertanian.", "answer": true},
+              {"text": "Pengembangan biomassa meningkatkan emisi karbon global.", "answer": false},
+              {"text": "JavaScript hanya bisa berjalan di server.", "answer": false}
+            ]
+          },
+          {
+            "question": "Pernyataan tentang Web Components:",
+            "type": "pgk",
+            "statements": [
+              {"text": "Shadow DOM mengisolasi DOM komponen.", "answer": true},
+              {"text": "Custom Elements memerlukan jQuery.", "answer": false},
+              {"text": "Web Components didukung semua browser modern.", "answer": true}
+            ]
+          }
+        ]'>
+      </kuis-ledakan>
+    </div>
+
+    <!-- ==================== CONTOH 4: Menjodohkan ==================== -->
+    <h2><span class="badge badge-match">MENJODOHKAN</span> Soal 4: Menjodohkan</h2>
+    <div class="section">
+      <p class="ket">Pilih pasangan yang tepat untuk setiap item kiri. <code>correctPairs: {"0":1, "1":0}</code> artinya Item Kiri 0 → Item Kanan B.</p>
+      <kuis-ledakan
+        judul="Soal AKM — Menjodohkan"
+        apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec"
+        kd-materi="Pertemuan 3"
+        mode="siswa"
+        questions='[
+          {
+            "question": "Jodohkan istilah dengan definisinya:",
+            "type": "matching",
+            "leftItems": ["HTML", "CSS", "JavaScript"],
+            "rightItems": ["Styling & Layout", "Struktur & Markup", "Interaktivitas & Logika"],
+            "correctPairs": {"0":1, "1":0, "2":2}
+          },
+          {
+            "question": "Pasangkan framework dengan bahasanya:",
+            "type": "matching",
+            "leftItems": ["React", "Vue.js", "Angular", "Svelte"],
+            "rightItems": ["TypeScript/JavaScript", "JavaScript", "JavaScript", "JavaScript"],
+            "correctPairs": {"0":0, "1":1, "2":0, "3":2}
+          }
+        ]'>
+      </kuis-ledakan>
+    </div>
+
+    <!-- ==================== CONTOH 5: Isian Singkat ==================== -->
+    <h2><span class="badge badge-fill">ISIAN SINGKAT</span> Soal 5: Isian Singkat</h2>
+    <div class="section">
+      <p class="ket">Ketik jawaban. Cek case-insensitive, <code>includes</code> match. <code>acceptedAnswers: ["biomassa", "sekam"]</code>.</p>
+      <kuis-ledakan
+        judul="Soal AKM — Isian Singkat"
+        apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec"
+        kd-materi="Pertemuan 4"
+        mode="siswa"
+        questions='[
+          {
+            "question": "Sebutkan salah satu contoh bahan sisa limbah pertanian penunjang biomassa!",
+            "type": "shortAnswer",
+            "acceptedAnswers": ["biomassa", "sekam padi", "sekam", "limbah pertanian", "jerami"]
+          },
+          {
+            "question": "Apa kepanjangan dari HTML?",
+            "type": "shortAnswer",
+            "acceptedAnswers": ["hypertext markup language", "hyper text markup language"]
+          },
+          {
+            "question": "Bahasa pemrograman apa yang digunakan untuk styling web?",
+            "type": "shortAnswer",
+            "acceptedAnswers": ["css", "cascading style sheets"]
+          }
+        ]'>
+      </kuis-ledakan>
+    </div>
+
+    <!-- ==================== KUNCI JAWABAN ==================== -->
+    <h2>📋 Kunci Jawaban & Format Soal</h2>
+    <div class="section">
+      <table>
+        <thead>
+          <tr><th>No</th><th>Tipe</th><th>Format JSON</th><th>Scoring</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td><span class="badge badge-mc">PG</span></td>
+            <td><code>{"correctIndex": 1}</code></td>
+            <td>1 poin jika benar</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td><span class="badge badge-mc">PG KOMPLEKS</span></td>
+            <td><code>{"correctAnswers": [1, 3]}</code></td>
+            <td>1 poin jika SEMUA dipilih benar</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td><span class="badge badge-pgk">PGK</span></td>
+            <td><code>{"type":"pgk", "statements":[{"text":"...","answer":true}]}</code></td>
+            <td>1 poin jika SEMUA pernyataan benar</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td><span class="badge badge-match">MENJODOHKAN</span></td>
+            <td><code>{"type":"matching", "leftItems":[...], "rightItems":[...], "correctPairs":{"0":1}}</code></td>
+            <td>Poin proporsional per pasangan benar</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td><span class="badge badge-fill">ISIAN SINGKAT</span></td>
+            <td><code>{"type":"shortAnswer", "acceptedAnswers":["kata1","kata2"]}</code></td>
+            <td>1 poin jika teks includes salah satu jawaban</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script type="module">
+      // Sesi siswa dibawa otomatis oleh kuis-ledakan lewat event quiz-user-login.
+      document.querySelectorAll("kuis-ledakan").forEach((quiz) => {
+        window.addEventListener("quiz-user-login", (e) => {
+          const d = e.detail || {};
+          quiz.studentId = d.studentId;
+          quiz.studentName = d.nama;
+          quiz.studentNis = d.nis;
+          quiz.studentAbsen = d.absen;
+          quiz.studentKelas = d.kelas;
+        });
+      });
+    </script>
+  </div>
+</body>
+</html>

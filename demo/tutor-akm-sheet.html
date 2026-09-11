@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <base href="/">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="Description" content="Tutor dasbor-kuis: alur hasil kuis AKM dari halaman soal-akm-lengkap.html sampai masuk sheet db_nilai & db_aktivitas, plus format baris" />
+  <title>dasbor-kuis — Tutor: Hasil Kuis AKM Masuk Sheet</title>
+  <style>
+    :root, html, body { margin: 0; padding: 0; font-family: system-ui, sans-serif; background: #f1f5f9; color: #0f172a; }
+    .halaman { max-width: 1100px; margin: 0 auto; padding: 24px 20px 60px; }
+    header.hero {
+      background: linear-gradient(120deg, #831843, #be185d 55%, #db2777);
+      color: #fff; border-radius: 20px; padding: 26px 32px; margin-bottom: 22px;
+      box-shadow: 0 12px 28px -12px rgb(190 24 93 / 0.55);
+    }
+    header.hero h1 { margin: 0; font-size: 25px; }
+    header.hero p { margin: 8px 0 0; opacity: 0.85; font-size: 14px; }
+    .nav-links { margin: 12px 0 24px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .nav-links a, .nav-links button {
+      padding: 8px 14px; border-radius: 10px; border: 1px solid #fbcfe8; background: #fff;
+      color: #9d174d; font-weight: 600; font-size: 13px; text-decoration: none; cursor: pointer;
+    }
+    .nav-links a:hover, .nav-links button:hover { background: #fdf2f8; }
+    .kartu { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 22px; margin-bottom: 20px; }
+    .kartu h2 { margin: 0 0 10px; font-size: 19px; color: #1e293b; }
+    .kartu h3 { margin: 20px 0 8px; font-size: 15px; color: #831843; }
+    .kartu p { font-size: 14px; color: #475569; line-height: 1.65; margin: 6px 0; }
+    code { background: #fdf2f8; color: #9d174d; border-radius: 6px; padding: 2px 7px; font-size: 12.5px; word-break: break-all; }
+    pre { background: #0f172a; color: #e2e8f0; border-radius: 12px; padding: 16px; overflow-x: auto; font-size: 12.5px; line-height: 1.6; }
+    pre code { background: none; color: inherit; padding: 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+    th { background: #f8fafc; text-align: left; padding: 10px 12px; border-bottom: 2px solid #e2e8f0; font-size: 12px; }
+    td { padding: 9px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+    tr:hover td { background: #f8fafc; }
+    .catatan { background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 0 10px 10px 0; padding: 12px 16px; font-size: 13px; margin: 14px 0; }
+    .catatan.ok { background: #f0fdf4; border-left-color: #22c55e; }
+    .catatan.info { background: #eff6ff; border-left-color: #3b82f6; }
+    .alur { display: flex; flex-direction: column; gap: 8px; margin: 16px 0; }
+    .alur .step { display: flex; gap: 12px; align-items: flex-start; }
+    .alur .step .no { background: #be185d; color: #fff; border-radius: 9999px; min-width: 26px; height: 26px; display: grid; place-items: center; font-weight: 800; font-size: 13px; flex: 0 0 auto; }
+    .alur .step .isi { font-size: 14px; color: #334155; line-height: 1.6; }
+  </style>
+</head>
+
+<body>
+  <div class="halaman">
+    <header class="hero">
+      <h1>📝 Tutor: Hasil Kuis AKM → Sheet</h1>
+      <p>Dari halaman <code>soal-akm-lengkap.html</code> / <code>&lt;kuis-ledakan&gt;</code> sampai baris skor muncul di
+        <code>db_nilai</code> &amp; <code>db_aktivitas</code> — lengkap dengan format baris nyata.</p>
+    </header>
+
+    <div class="nav-links">
+      <a href="/">← Demo utama (index.html)</a>
+      <a href="index.html">🗂 Hubungan Sheet</a>
+      <a href="contoh-api-langsung.html">🌐 Contoh API Langsung</a>
+      <a href="tutor-rangkuman.html">📚 Tutor Rangkuman</a>
+      <button onclick="document.getElementById('alur').scrollIntoView()">Alur</button>
+      <button onclick="document.getElementById('baris').scrollIntoView()">Format Baris</button>
+      <button onclick="document.getElementById('halaman').scrollIntoView()">Halaman Terkait</button>
+      <button onclick="document.getElementById('cek').scrollIntoView()">Cara Cek</button>
+    </div>
+
+    <div class="kartu" id="alur">
+      <h2>🔄 Alur Hasil Kuis AKM</h2>
+      <div class="alur">
+        <div class="step"><div class="no">1</div><div class="isi"><strong>Buka halaman <code>demo/soal-akm-lengkap.html</code>.</strong>
+          Halaman ini memuat <code>&lt;kuis-ledakan&gt;</code> + <code>&lt;quiz-user-auth&gt;</code>. Login dulu supaya
+          <code>studentId</code> terisi (dari sesi <code>quiz_user_session</code>).</div></div>
+        <div class="step"><div class="no">2</div><div class="isi"><strong>Kerjakan kuis.</strong> Tipe soal yang didukung:
+          PG (<code>mc</code>), PG Kompleks (<code>pgk</code>), Menjodohkan (<code>matching</code>), Isian Singkat
+          (<code>shortAnswer</code>), Gambar. Nilai dihitung ke skor 0–100.</div></div>
+        <div class="step"><div class="no">3</div><div class="isi"><strong>Kuis selesai → event <code>dasbor-kuis-log</code>.</strong>
+          <code>&lt;kuis-ledakan&gt;</code> membuat <code>id_log</code> unik (<code>LOG-{timestamp}-{hex}</code>) dan memancarkan
+          event berisi <code>{tipe:"quiz", payload:{score, jenisKuis:"formatif", metadataKuis: judul, timestamp}}</code>.</div></div>
+        <div class="step"><div class="no">4</div><div class="isi"><strong>Host <code>&lt;dasbor-kuis&gt;</code> menangkap event</strong>
+          (atau bila standalone, <code>&lt;kuis-ledakan&gt;</code> mengirim langsung). Log masuk antrean lokal
+          <code>a3_v5_sync_queue</code>, lalu di-flush ke <code>action=logActivity</code>.</div></div>
+        <div class="step"><div class="no">5</div><div class="isi"><strong>Backend menulis dua sheet.</strong> Baris aktivitas
+          masuk <code>db_aktivitas</code> (tipe <code>quiz</code>), dan karena tipe kuis, <strong>skor juga ditulis ke
+          <code>db_nilai</code></strong> dengan kategori <code>formatif</code>.</div></div>
+        <div class="step"><div class="no">6</div><div class="isi"><strong>Lihat hasil.</strong> Guru memanggil
+          <code>?action=generateReport</code> → skor kuis tampil di <code>Rangkuman</code> (Total Kuis, Rata-rata,
+          Kuis Formatif) dan ikut membentuk <code>Akumulasi Nilai Rapor</code>.</div></div>
+      </div>
+      <div class="catatan ok">
+        <strong>Kenapa idempoten?</strong> Setiap kiriman membawa <code>id_log</code>. Backend v5.1
+        (<code>LockService</code> + fingerprint) menolak <code>id_log</code> yang sudah tercatat, jadi satu kuis tidak pernah
+        menghasilkan baris rangkap walau dikirim berulang.
+      </div>
+    </div>
+
+    <div class="kartu" id="baris">
+      <h2>📄 Format Baris di Sheet db_nilai (contoh nyata)</h2>
+      <p>Kolom: <code>Timestamp | Date | Kode Materi | Nama | Skor (%) | Total Soal | Status | Student ID | NIS | Absen | Kelas | Kategori Kuis | ID Log</code></p>
+      <table>
+        <thead><tr><th>Timestamp</th><th>Date</th><th>Kode Materi</th><th>Nama</th><th>Skor</th><th>Soal</th><th>Status</th><th>Student ID</th><th>Kategori</th><th>ID Log</th></tr></thead>
+        <tbody>
+          <tr><td>11/08/2026 19:48:58</td><td>2026-08-11</td><td>Pertemuan 1</td><td>Test Cek Kuis</td><td>77</td><td>10</td><td>LULUS</td><td>STD-CHECK-KUIS</td><td>formatif</td><td>LOG-CHECK-584205</td></tr>
+          <tr><td>11/08/2026 19:55:34</td><td>2026-08-11</td><td>Pertemuan 1</td><td>Test Unik</td><td>71</td><td>10</td><td>LULUS</td><td>STD-CEK-98885</td><td>formatif</td><td>LOG-609385</td></tr>
+        </tbody>
+      </table>
+      <div class="catatan info">
+        <strong>Penjelasan baris:</strong> dua baris di atas berasal dari pengujian langsung (bukan kuis AKM siswa biasa)
+        — <code>Nama</code> &amp; <code>Student ID</code> adalah nilai yang dikirim bersama <code>logActivity</code>.
+        Pada kuis AKM nyata, kolom Nama/Student ID/NIS/Absen/Kelas diisi otomatis dari sesi login
+        (<code>quiz-user-auth</code>), dan <code>Kode Materi</code> diambil dari atribut <code>kd-materi</code>.
+      </div>
+      <p>Baris di <code>db_aktivitas</code> untuk kuis yang sama tampil sebagai:</p>
+      <pre><code>Timestamp | Tanggal | Hari | Nama | Tipe Aktivitas | Deskripsi | Count | Student ID | ... | Kode Materi | ID Log
+11/08/2026 19:55:34 | 2026-08-11 | Selasa | Test Unik | quiz | {"score":71,"jenisKuis":"formatif","metadataKuis":"Cek bug db_nilai"} | 1 | STD-CEK-98885 | ... | Pertemuan 1 | LOG-609385</code></pre>
+    </div>
+
+    <div class="kartu" id="halaman">
+      <h2>📄 Halaman Terkait</h2>
+      <table>
+        <thead><tr><th>Halaman / Komponen</th><th>Peran</th></tr></thead>
+        <tbody>
+          <tr><td><code>demo/soal-akm-lengkap.html</code></td><td>Demo kuis AKM lengkap (PG, PGK, Menjodohkan, Isian, Gambar)</td></tr>
+          <tr><td><code>&lt;kuis-ledakan&gt;</code></td><td>Komponen kuis; menilai, memancarkan <code>dasbor-kuis-log</code>, kirim langsung bila standalone</td></tr>
+          <tr><td><code>&lt;quiz-user-auth&gt;</code></td><td>Login/registrasi; mengisi <code>quiz_user_session</code> (studentId, nama, NIS, absen, kelas)</td></tr>
+          <tr><td><code>&lt;dasbor-kuis&gt;</code></td><td>Host penampil; menangkap event log, antrean idempoten, tampilkan leaderboard/nilai</td></tr>
+          <tr><td><code>demo/contoh-api-langsung.html</code></td><td>Tombol demo untuk generateReport / leaderboard / roster / scores / history / login</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="kartu" id="cek">
+      <h2>🔍 Cara Memverifikasi Hasil Masuk Sheet</h2>
+      <ol style="font-size:14px;color:#475569;line-height:1.8;margin:8px 0;">
+        <li>Setelah kuis selesai, buka <code>demo/contoh-api-langsung.html</code> → tombol <strong>getActivityHistory</strong>
+          dengan <code>studentId</code>-mu → aktivitas <code>quiz</code> tampil pada tanggal hari itu.</li>
+        <li>Tekan tombol <strong>generateReport</strong>, lalu tombol <strong>getLeaderboard</strong> →
+          <code>Total Kuis</code>, <code>Rata-rata Skor</code>, <code>Kuis Formatif</code> naik sesuai skor barumu.</li>
+        <li>Buka spreadsheet → sheet <code>db_nilai</code>: baris baru dengan <code>Status</code> LULUS (skor ≥ 70)
+          atau TIDAK LULUS (skor &lt; 70).</li>
+      </ol>
+      <div class="catatan">
+        <strong>Pastikan URL benar.</strong> <code>&lt;kuis-ledakan&gt;</code> &amp; <code>&lt;quiz-user-auth&gt;</code> memakai
+        atribut <code>apps-script-url</code>. Gunakan URL v5.1
+        (<code>AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec</code>) agar
+        skor kuis benar-benar masuk <code>db_nilai</code> (deployment v5 lama tidak menulis db_nilai secara konsisten).
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

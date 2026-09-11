@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Shell(ls -la \"/Users/Dragon/Documents/github/andyid23/haxtheweb-kuis/elements/\" 2>/dev/null; echo \"---\"; ls -la \"/Users/Dragon/Documents/github/andyid23/haxtheweb-kuis/.commandcode/plans/\" 2>/dev/null || echo \"no plans\"; echo \"---\"; find \"/Users/Dragon/Documents/github/andyid23/haxtheweb-kuis\" -maxdepth 4 -iname \"*timer*\" -not -path \"*/node_modules/*\" -not -path \"*/.git/*\" 2>/dev/null)",
+      "Shell(npm:*)",
+      "Shell(node -c lib/timer-kuis.js)",
+      "Shell(node -c lib/latihan-kuis.js)",
+      "Shell(node -c lib/kuis-ledakan.js)",
+      "Shell(node -c dasbor-kuis.js)"
+    ],
+    "deny": [],
+    "defaultMode": "default"
+  }
+}

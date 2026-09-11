@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <base href="/">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="Description" content="Tutor alur data dasbor-kuis: cara kerja sheet Rangkuman — dari logActivity → db_nilai/db_aktivitas → generateReport → Rangkuman (leaderboard guru)" />
+  <title>dasbor-kuis — Tutor: Rangkuman</title>
+  <style>
+    :root, html, body { margin: 0; padding: 0; font-family: system-ui, sans-serif; background: #f1f5f9; color: #0f172a; }
+    .halaman { max-width: 1100px; margin: 0 auto; padding: 24px 20px 60px; }
+    header.hero {
+      background: linear-gradient(120deg, #312e81, #4f46e5 55%, #6d28d9);
+      color: #fff; border-radius: 20px; padding: 26px 32px; margin-bottom: 22px;
+      box-shadow: 0 12px 28px -12px rgb(79 70 229 / 0.55);
+    }
+    header.hero h1 { margin: 0; font-size: 25px; }
+    header.hero p { margin: 8px 0 0; opacity: 0.85; font-size: 14px; }
+    .nav-links { margin: 12px 0 24px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .nav-links a, .nav-links button {
+      padding: 8px 14px; border-radius: 10px; border: 1px solid #c7d2fe; background: #fff;
+      color: #4338ca; font-weight: 600; font-size: 13px; text-decoration: none; cursor: pointer;
+    }
+    .nav-links a:hover, .nav-links button:hover { background: #eef2ff; }
+    .kartu { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 22px; margin-bottom: 20px; }
+    .kartu h2 { margin: 0 0 10px; font-size: 19px; color: #1e293b; }
+    .kartu h3 { margin: 20px 0 8px; font-size: 15px; color: #312e81; }
+    .kartu p { font-size: 14px; color: #475569; line-height: 1.65; margin: 6px 0; }
+    code { background: #eef2ff; color: #4338ca; border-radius: 6px; padding: 2px 7px; font-size: 12.5px; word-break: break-all; }
+    pre { background: #0f172a; color: #e2e8f0; border-radius: 12px; padding: 16px; overflow-x: auto; font-size: 12.5px; line-height: 1.6; }
+    pre code { background: none; color: inherit; padding: 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+    th { background: #f8fafc; text-align: left; padding: 10px 12px; border-bottom: 2px solid #e2e8f0; font-size: 12px; }
+    td { padding: 9px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+    tr:hover td { background: #f8fafc; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 9999px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+    .badge-input { background: #dcfce7; color: #166534; }
+    .badge-turunan { background: #fef3c7; color: #92400e; }
+    .catatan { background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 0 10px 10px 0; padding: 12px 16px; font-size: 13px; margin: 14px 0; }
+    .catatan.ok { background: #f0fdf4; border-left-color: #22c55e; }
+    .catatan.info { background: #eff6ff; border-left-color: #3b82f6; }
+    .alur { display: flex; flex-direction: column; gap: 8px; margin: 16px 0; }
+    .alur .step { display: flex; gap: 12px; align-items: flex-start; }
+    .alur .step .no { background: #4f46e5; color: #fff; border-radius: 9999px; min-width: 26px; height: 26px; display: grid; place-items: center; font-weight: 800; font-size: 13px; flex: 0 0 auto; }
+    .alur .step .isi { font-size: 14px; color: #334155; line-height: 1.6; }
+    .rumus { background: #0f172a; color: #fbbf24; border-radius: 12px; padding: 14px 16px; font-size: 14px; font-weight: 700; text-align: center; margin: 10px 0; }
+  </style>
+</head>
+
+<body>
+  <div class="halaman">
+    <header class="hero">
+      <h1>📚 Tutor: Rangkuman</h1>
+      <p>Cara kerja sheet <code>Rangkuman</code> — satu baris per siswa untuk leaderboard guru,
+        dihasilkan <code>generateReport</code> dari <code>db_nilai</code> + <code>db_aktivitas</code> di <code>lib/codev5.gs</code>.</p>
+    </header>
+
+    <div class="nav-links">
+      <a href="/">← Demo utama (index.html)</a>
+      <a href="index.html">🗂 Hubungan Sheet</a>
+      <a href="tutor-akumulasi-nilai-rapor.html">📊 Tutor Akumulasi Nilai Rapor</a>
+      <a href="hasil-cek-perubahan.html">🔎 Hasil Cek Perubahan</a>
+      <button onclick="document.getElementById('alur').scrollIntoView()">Alur Data</button>
+      <button onclick="document.getElementById('kolom').scrollIntoView()">Kolom</button>
+      <button onclick="document.getElementById('aksi').scrollIntoView()">Aksi</button>
+      <button onclick="document.getElementById('batas').scrollIntoView()">Batas &amp; Idempotensi</button>
+    </div>
+
+    <div class="kartu" id="alur">
+      <h2>🔄 Alur Data — hingga menjadi Rangkuman</h2>
+      <div class="alur">
+        <div class="step"><div class="no">1</div><div class="isi"><strong>Siswa mengerjakan kuis / beraktivitas.</strong>
+          <code>&lt;kuis-ledakan&gt;</code>, <code>&lt;ruang-diskusi&gt;</code>, <code>&lt;kirim-tugas&gt;</code>,
+          <code>&lt;sistem-kehadiran&gt;</code>, atau <code>&lt;dasbor-kuis&gt;</code> mengirim
+          <code>action=logActivity</code> (GET, ramah CORS) lengkap dengan <code>id_log</code> unik.</div></div>
+        <div class="step"><div class="no">2</div><div class="isi"><strong>Backend menulis data mentah.</strong> Tiap aktivitas masuk
+          <code>db_aktivitas</code>; bila tipenya <code>quiz</code>, skor <strong>juga</strong> ditulis ke <code>db_nilai</code>
+          (kategori: <code>formatif</code>, <code>ulangan_harian</code>, <code>uts</code>, <code>uas</code>, <code>sumatif</code>).
+          Anti double-entry via <code>id_log</code> + fingerprint + <code>LockService</code>.</div></div>
+        <div class="step"><div class="no">3</div><div class="isi"><strong>Guru memanggil <code>action=generateReport</code>.</strong>
+          Backend membaca <code>db_nilai</code>, <code>db_aktivitas</code>, <code>Users</code>, <code>db_kehadiran</code>
+          lalu <em>menimpa</em> sheet <code>Rangkuman</code> (dan <code>Akumulasi Nilai Rapor</code>).</div></div>
+        <div class="step"><div class="no">4</div><div class="isi"><strong>Frontend memuat <code>action=getLeaderboard</code>.</strong>
+          Membaca <code>Rangkuman</code> dan mengurutkan berdasarkan <strong>Rata-rata Skor</strong> tertinggi
+          (opsional filter <code>kelas</code>).</div></div>
+      </div>
+      <div class="catatan ok">
+        <strong>Kuis tidak wajib menunggu generateReport.</strong> <code>getScores</code> dan <code>getStudentRoster</code>
+        tetap membaca <code>db_nilai</code> / sheet rapor yang sudah ada. generateReport hanya <em>memadatkan</em> ulang
+        agar <code>Rangkuman</code> &amp; Rapor selalu sinkron.
+      </div>
+    </div>
+
+    <div class="kartu" id="kolom">
+      <h2>📋 Kolom Sheet Rangkuman (satu baris per siswa)</h2>
+      <table>
+        <thead><tr><th>Kolom</th><th>Sumber</th><th>Catatan</th></tr></thead>
+        <tbody>
+          <tr><td><code>Student ID</code>, NIS, Nama, Absen, Kelas</td><td><code>db_nilai</code> / <code>Users</code></td><td>data siswa</td></tr>
+          <tr><td><code>Total Kuis</code></td><td><code>db_nilai</code></td><td>jumlah seluruh baris skor kuis siswa</td></tr>
+          <tr><td><code>Rata-rata Skor</code></td><td><code>db_nilai</code></td><td>dipakai untuk urutan leaderboard</td></tr>
+          <tr><td><code>Skor Tertinggi / Terendah</code></td><td><code>db_nilai</code></td><td>min/maks skor kuis</td></tr>
+          <tr><td><code>Total Aktivitas</code></td><td><code>db_aktivitas</code></td><td>non-kuis, maks. 50 (kuis bebas kuota)</td></tr>
+          <tr><td><code>Reading / Assignment / Discussion / Download</code></td><td><code>db_aktivitas</code></td><td>per tipe aktivitas</td></tr>
+          <tr><td><code>Quiz Activity</code></td><td><code>db_aktivitas</code> tipe quiz</td><td><strong>tidak dibatasi</strong></td></tr>
+          <tr><td><code>Kuis Formatif / Sumatif</code></td><td><code>db_nilai</code></td><td>jumlah kuis per kategori</td></tr>
+          <tr><td><code>Skor UTS / UAS</code></td><td><code>db_nilai</code></td><td>skor tertinggi per kategori</td></tr>
+          <tr><td><code>Jumlah Pertemuan</code></td><td><code>db_nilai</code></td><td>unik <code>Kode Materi</code></td></tr>
+          <tr><td><code>Status Kuis Terakhir</code></td><td><code>db_nilai</code></td><td>LULUS/TIDAK LULUS kuis terbaru</td></tr>
+        </tbody>
+      </table>
+      <div class="catatan info">
+        <strong>Contoh hasil nyata:</strong> siswa uji <code>STD-CEK-98885</code> setelah satu kuis skor 71 tampil
+        <code>Total Kuis: 1</code>, <code>Rata-rata Skor: 71</code>, <code>Quiz Activity: 1</code>, <code>Kuis Formatif: 1</code>,
+        <code>Status Kuis Terakhir: LULUS</code>.
+      </div>
+    </div>
+
+    <div class="kartu" id="rumus">
+      <h2>🧮 Aturan perhitungan di Rangkuman</h2>
+      <h3>Status kuis</h3>
+      <div class="rumus">LULUS jika skor ≥ 70 • TIDAK LULUS jika skor &lt; 70</div>
+      <h3>Batasan aktivitas</h3>
+      <table>
+        <thead><tr><th>Aturan</th><th>Nilai</th><th>Diterapkan pada</th></tr></thead>
+        <tbody>
+          <tr><td>Batas reading</td><td>15× / siswa</td><td>baris di atas batas diabaikan saat hitung</td></tr>
+          <tr><td>Batas total aktivitas</td><td>50× / siswa</td><td>non-kuis; kuis bebas kuota</td></tr>
+          <tr><td>Rata-rata UH</td><td>rata-rata kategori <code>ulangan_harian</code></td><td>hanya di Rapor (lihat tutor Rapor)</td></tr>
+        </tbody>
+      </table>
+      <p>Leaderboard <code>getLeaderboard</code> mengurutkan baris <code>Rangkuman</code> berdasarkan <strong>Rata-rata Skor</strong> tertinggi.</p>
+    </div>
+
+    <div class="kartu" id="aksi">
+      <h2>⚙️ Aksi Backend Terkait Rangkuman</h2>
+      <table>
+        <thead><tr><th>Aksi</th><th>Metode</th><th>Menulis</th><th>Membaca</th></tr></thead>
+        <tbody>
+          <tr><td><code>logActivity</code></td><td>GET / POST</td><td>db_aktivitas (+ db_nilai bila quiz)</td><td>—</td></tr>
+          <tr><td><code>generateReport</code></td><td>GET</td><td>Rangkuman, Rapor</td><td>db_nilai, db_aktivitas, Users, db_kehadiran</td></tr>
+          <tr><td><code>getLeaderboard</code></td><td>GET</td><td>—</td><td>Rangkuman</td></tr>
+          <tr><td><code>getStudentRoster</code></td><td>GET</td><td>—</td><td>Users, db_aktivitas, Rapor</td></tr>
+          <tr><td><code>dedupTransaksi</code></td><td>GET</td><td>db_aktivitas, db_nilai (hapus rangkap)</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="kartu" id="batas">
+      <h2>⛔ Batas Aktivitas &amp; Idempotensi</h2>
+      <table>
+        <thead><tr><th>Batas</th><th>Nilai</th><th>Diterapkan pada</th></tr></thead>
+        <tbody>
+          <tr><td>Reading</td><td>15× / siswa</td><td>tipe <code>reading</code> — <code>{"status":"error","message":"Batas reading 15× per siswa tercapai."}</code></td></tr>
+          <tr><td>Total Aktivitas</td><td>50× / siswa</td><td>non-kuis — <code>{"status":"error","message":"Batas total aktivitas 50× per siswa tercapai."}</code></td></tr>
+          <tr><td>Kuis</td><td>∞ (bebas)</td><td><strong>tidak dibatasi</strong> — skor kuis selalu diterima &amp; tidak memakai kuota 50×</td></tr>
+        </tbody>
+      </table>
+      <div class="catatan">
+        <strong>🛡 Anti double-entry:</strong> tiap aktivitas membawa <code>id_log</code>. Backend men-serial-kan tulis dengan
+        <code>LockService</code>, menolak <code>id_log</code> yang sudah tercatat, memangkas baris rangkap, dan menolak baris identik
+        (fingerprint <code>Tanggal+Tipe+Deskripsi+Kode Materi+Student ID</code>). <code>dedupTransaksi</code> membersihkan data lama bila perlu.
+      </div>
+    </div>
+
+    <div class="kartu">
+      <h2>🚀 Cara Menjalankan</h2>
+      <p>1. Salin seluruh isi <code>lib/codev5.gs</code> ke editor Apps Script spreadsheet kamu → Deploy → Web app (execute as Me, akses Anyone).</p>
+      <p>2. Tempel URL <code>/exec</code> ke atribut <code>apps-script-url</code> pada komponen / demo (lihat <code>DATA-CONTOH.md</code>).</p>
+      <p>3. Panggil <code>?action=generateReport</code> agar <code>Rangkuman</code> terisi, lalu lihat leaderboard di Mode Guru.</p>
+      <p>4. Bila ada baris rangkap dari versi lama: panggil <code>?action=dedupTransaksi</code>, lalu <code>generateReport</code> lagi.</p>
+    </div>
+  </div>
+</body>
+
+</html>

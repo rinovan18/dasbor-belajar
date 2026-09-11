@@ -1,0 +1,76 @@
+Act as an Expert Full-Stack Web Component Developer for HAXcms. Your core objective is to perform a total refactor of a legacy file (`dasbor-kuis.js`) into a modern, production-ready HAXcms web component named `<dasbor-kuis>`. 
+
+The new component must be modular, highly performant, written in pure Vanilla JS (using LitElement), and structured inside a dedicated folder `elements/dasbor-kuis/` with a sub-folder `./lib/`. It must strictly adhere to the HAXcms `code-standards.md` template provided and integrate a lightweight 3-Sheet Google Apps Script (GAS) backend architecture.
+
+Below is the strict Project Requirements Document (PRD) and architectural specifications you must follow to generate the complete code outputs.
+
+---
+
+## 📑 PROJECT REQUIREMENTS DOCUMENT (PRD)
+
+### 1. OVERVIEW
+The `<dasbor-kuis>` component is a high-utility, modular student learning hub integrated within HAXcms. It automates attendance tracking, serves interactive quizzes, handles assignment uploads/discussions, and ensures 100% offline-first resilience. It syncs seamlessly with a 3-Sheet Google Sheets architecture via Google Apps Script (GAS) using an unyielding, idempotent data-integrity layer.
+
+### 2. REQUIREMENTS & DATA INTEGRITY SPECIFICATIONS
+*   **Zero Framework Overhead:** Written strictly in modern Vanilla JS using LitElement.
+*   **HAXcms Compliance:** Must implement custom properties, clean styling hooks, and clean life-cycle hooks matching the standard HAX template.
+*   **No Memory Leaks:** Every single global event listener (scroll, online, offline, window clicks) must be tightly bound to class properties and completely torn down during `disconnectedCallback()`.
+*   **Idempotency (Anti Double-Entry):** The frontend must generate a mathematically solid unique ID (`id_log`) using a combination of `timestamp + cryptographically secure random string` the microsecond data enters `localStorage`. This ID is locked permanently. The GAS server must validate Column A (`id_log`) against this ID; if it already exists, the server must silently ignore the write request to prevent duplicate rows caused by flaky network retries during auto-syncing.
+*   **State-Locked Storage Synchronization:** Data must be safely insulated inside local keys: `a3_v3_student_profile`, `a3_v3_activity_logs` (for heat maps), and `a3_v3_sync_queue` (offline queue). Introduce a strict state lock `this._isFlushing = true` while processing the queue to block race conditions during rapid mutations.
+*   **No Premature 100% Progress:** Progress logic must never lock down prematurely. It must dynamically evaluate the `kriteria_wajib` array (e.g., `["reading", "quiz", "assignment"]`). If any required criteria evaluates to 0, the overall module progress must instantly drop proportionally.
+
+### 3. CORE FEATURES & MODULARITY
+The orchestrator must delegate capabilities cleanly into sub-components inside `./lib/`:
+
+*   **Fase 1 – Aktivitas Harian & Riwayat (Core Foundation & Attendance Engine):**
+    *   *Dynamic Attendance Tracking:* Driven entirely by `lib/sistem-kehadiran.js`. Attendance is never manually checked; it is computed by matching the student's activity log against the `kriteria_wajib` array pulled from `master_materi`. 
+    *   A student is only "Hadir / 100% Selesai" if every listed criterion is greater than zero (`> 0`). Partial completion must drop the progress bar linearly.
+    *   Renders a vibrant activity visualizer (Heat Map) tracking engagement streaks.
+*   **Fase 2 – Keamanan Akun & Data Resilience:**
+    *   Handles local state validation, cryptographic `id_log` locking, stateful queue flushing, and online/offline status handling.
+*   **Fase 3 – Manajemen Diri (Quiz Engine & Assignment Forum):**
+    *   *Quiz Engine (`lib/ledakan-kuis.js`):* Renders interactive assessments, updates student activity scores, and formats JSON payload strings for the transaction log.
+    *   *Assignment Forum (`lib/diskusi-tugas.js`):* Handles structured file/text submissions, rendering live classroom peer discussion feeds safely sanitized against XSS.
+
+### 4. USER FLOW
+1.  **Initialize:** Student loads the page -> `<dasbor-kuis>` reads `a3_v3_student_profile`. If empty, prompts for student context or syncs from `master_users`.
+2.  **Interact:** Student reads content or completes a task -> `lib/ledakan-kuis.js` or `lib/diskusi-tugas.js` captures completion -> `id_log` is instantly generated.
+3.  **Process:** `lib/sistem-kehadiran.js` re-evaluates `kriteria_wajib` -> progress drops or climbs instantly in real-time -> logs stored inside `a3_v3_sync_queue`.
+4.  **Sync:** Service worker/online trigger checks connection -> locks state (`_isFlushing = true`) -> pushes payload to GAS -> GAS verifies `id_log` uniqueness -> updates Sheets -> releases lock.
+
+### 5. ARCHITECTURE DIAGRAM
+Gunakan kode dengan hati-hati.[dasbor-kuis.js (Orchestrator)]│├── (Listens to network online/offline & controls state lock '_isFlushing')├──────► [lib/sistem-kehadiran.js] ──► (Computes kriteria_wajib vs local storage)├──────► [lib/ledakan-kuis.js]      ──► (Runs quiz engine & dispatches JSON payloads)└──────► [lib/diskusi-tugas.js]  ──► (Renders assignment submission & discussion boards)
+### 6. DATABASE SCHEMA (3-SHEET ARSITEKTUR RAMPING V3)
+Your code must strictly interface with, format payloads for, and expect data responses structured like this 3-Sheet pattern:
+1.  **master_materi**
+    `id_materi | nama_pelajaran | kd_materi | pertemuan | judul_topik | kriteria_wajib` *(e.g., Stringified Array: ["reading", "quiz"])*
+2.  **master_users**
+    `student_id | nis | nama_siswa | email | absen | kelas`
+3.  **db_transaksi_aktivitas**
+    `id_log | student_id | id_materi | tipe_aktivitas | payload_data | timestamp` *(Note: id_log is the Column A unique primary key for checking idempotency)*
+
+### 7. TECH STACK
+*   Frontend: LitElement (Vanilla JS), LocalStorage API, Native Fetch API.
+*   Backend: Google Apps Script (GAS) Web App Engine interfacing with Google Sheets.
+
+---
+
+## 📤 OUTPUT EXPECTATION (STRICT PRODUCTION CODE ONLY)
+
+Provide fully functional, **UNTRUNCATED, EXHAUSTIVE PRODUCTION CODE** for the following 4 files inside separate markdown code blocks. Do not use placeholders, shortcuts, or omissions. 
+
+For every legacy feature you migrate safely, insert the comment `// ADAPTASI LAMA: [Nama Fitur]` directly above the implementation inside the code blocks to verify compliance.
+
+### 1. `dasbor-kuis.js`
+The master orchestration component. Sets up properties, global event listeners (properly cleaned up), local storage handling, state lock tracking (`_isFlushing`), and layouts the UI grid utilizing the sub-components.
+
+### 2. `lib/ledakan-kuis.js`
+The isolated quiz engine component. Must parse quiz structures, score inputs, render individual multiple-choice question elements dynamically, block repetitive clicks, and throw out idempotent log structures.
+
+### 3. `lib/sistem-kehadiran.js`
+The absolute dynamic core. Implements the dynamic attendance matrix. Must load `kriteria_wajib`, evaluate it item-by-item against local transaction caches, output precise un-locked percentage drops, and render the engagement tracking grid interface.
+
+### 4. `lib/diskusi-tugas.js`
+The forum and task component. Renders text inputs, mocks file upload indicators, tracks state, and formats discussion strings into safe, stringified JSON log payloads.
+
+Begin your deep architectural refactor now. Provide the absolute full code ready f

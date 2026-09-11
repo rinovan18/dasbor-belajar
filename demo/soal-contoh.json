@@ -1,0 +1,6 @@
+[
+  {"q":"Apa ibu kota Indonesia?","a":"Bandung","b":"Jakarta","c":"Surabaya","d":"Medan","k":"b","points":10},
+  {"q":"Berapa 7 × 8?","a":"54","b":"56","c":"58","d":"60","k":"b","points":10},
+  {"q":"Planet terdekat Matahari?","a":"Venus","b":"Bumi","c":"Merkurius","d":"Mars","k":"c","points":10},
+  {"q":"Bahasa pemrograman apa yang dipakai elemen ini?","a":"Python","b":"Lit (JavaScript)","c":"PHP","d":"Ruby","k":"b","points":10}
+]

@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <base href="/">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="Description" content="Tutor dasbor-kuis: cara kerja sheet Akumulasi Nilai Rapor — nilai akhir & grade siswa dari db_nilai, db_kehadiran, Nilai Manual via generateReport" />
+  <title>dasbor-kuis — Tutor: Akumulasi Nilai Rapor</title>
+  <style>
+    :root, html, body { margin: 0; padding: 0; font-family: system-ui, sans-serif; background: #f1f5f9; color: #0f172a; }
+    .halaman { max-width: 1100px; margin: 0 auto; padding: 24px 20px 60px; }
+    header.hero {
+      background: linear-gradient(120deg, #065f46, #059669 55%, #0d9488);
+      color: #fff; border-radius: 20px; padding: 26px 32px; margin-bottom: 22px;
+      box-shadow: 0 12px 28px -12px rgb(5 150 105 / 0.55);
+    }
+    header.hero h1 { margin: 0; font-size: 25px; }
+    header.hero p { margin: 8px 0 0; opacity: 0.85; font-size: 14px; }
+    .nav-links { margin: 12px 0 24px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .nav-links a, .nav-links button {
+      padding: 8px 14px; border-radius: 10px; border: 1px solid #a7f3d0; background: #fff;
+      color: #047857; font-weight: 600; font-size: 13px; text-decoration: none; cursor: pointer;
+    }
+    .nav-links a:hover, .nav-links button:hover { background: #ecfdf5; }
+    .kartu { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 22px; margin-bottom: 20px; }
+    .kartu h2 { margin: 0 0 10px; font-size: 19px; color: #1e293b; }
+    .kartu h3 { margin: 20px 0 8px; font-size: 15px; color: #065f46; }
+    .kartu p { font-size: 14px; color: #475569; line-height: 1.65; margin: 6px 0; }
+    code { background: #ecfdf5; color: #047857; border-radius: 6px; padding: 2px 7px; font-size: 12.5px; word-break: break-all; }
+    pre { background: #0f172a; color: #e2e8f0; border-radius: 12px; padding: 16px; overflow-x: auto; font-size: 12.5px; line-height: 1.6; }
+    pre code { background: none; color: inherit; padding: 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+    th { background: #f8fafc; text-align: left; padding: 10px 12px; border-bottom: 2px solid #e2e8f0; font-size: 12px; }
+    td { padding: 9px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+    tr:hover td { background: #f8fafc; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 9999px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+    .badge-input { background: #dcfce7; color: #166534; }
+    .badge-turunan { background: #fef3c7; color: #92400e; }
+    .badge-manual { background: #dbeafe; color: #1e40af; }
+    .catatan { background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 0 10px 10px 0; padding: 12px 16px; font-size: 13px; margin: 14px 0; }
+    .catatan.ok { background: #f0fdf4; border-left-color: #22c55e; }
+    .catatan.info { background: #eff6ff; border-left-color: #3b82f6; }
+    .alur { display: flex; flex-direction: column; gap: 8px; margin: 16px 0; }
+    .alur .step { display: flex; gap: 12px; align-items: flex-start; }
+    .alur .step .no { background: #059669; color: #fff; border-radius: 9999px; min-width: 26px; height: 26px; display: grid; place-items: center; font-weight: 800; font-size: 13px; flex: 0 0 auto; }
+    .alur .step .isi { font-size: 14px; color: #334155; line-height: 1.6; }
+    .rumus { background: #0f172a; color: #fbbf24; border-radius: 12px; padding: 14px 16px; font-size: 14px; font-weight: 700; text-align: center; margin: 10px 0; }
+  </style>
+</head>
+
+<body>
+  <div class="halaman">
+    <header class="hero">
+      <h1>📊 Tutor: Akumulasi Nilai Rapor</h1>
+      <p>Cara kerja sheet <code>Akumulasi Nilai Rapor</code> — satu baris per siswa berisi kehadiran, UH, UTS, UAS,
+        Nilai Akhir &amp; Grade, dihasilkan <code>generateReport</code> dan dibaca <code>getScores</code> di Mode Siswa.</p>
+    </header>
+
+    <div class="nav-links">
+      <a href="/">← Demo utama (index.html)</a>
+      <a href="index.html">🗂 Hubungan Sheet</a>
+      <a href="tutor-rangkuman.html">📚 Tutor Rangkuman</a>
+      <a href="hasil-cek-perubahan.html">🔎 Hasil Cek Perubahan</a>
+      <button onclick="document.getElementById('alur').scrollIntoView()">Alur Data</button>
+      <button onclick="document.getElementById('kolom').scrollIntoView()">Kolom</button>
+      <button onclick="document.getElementById('rumus').scrollIntoView()">Rumus &amp; Grade</button>
+      <button onclick="document.getElementById('manual').scrollIntoView()">Nilai Manual</button>
+    </div>
+
+    <div class="kartu" id="alur">
+      <h2>🔄 Alur Data — hingga menjadi Nilai Rapor</h2>
+      <div class="alur">
+        <div class="step"><div class="no">1</div><div class="isi"><strong>Skor kuis dicatat ke <code>db_nilai</code>.</strong>
+          Kuis dikirim via <code>action=logActivity</code> dengan <code>type=quiz</code>; deskripsi JSON berisi
+          <code>{"score":…,"kategori":"ulangan_harian|uts|uas|formatif|sumatif"}</code>.</div></div>
+        <div class="step"><div class="no">2</div><div class="isi"><strong>Kehadiran dicatat ke <code>db_kehadiran</code>.</strong>
+          <code>action=saveAttendanceComplete</code> menulis/update baris per siswa per hari (UPSERT).</div></div>
+        <div class="step"><div class="no">3</div><div class="isi"><strong>Guru memanggil <code>action=generateReport</code>.</strong>
+          Backend menghitung rata-rata UH, skor tertinggi UTS/UAS, rata-rata kehadiran, lalu menulis sheet
+          <code>Akumulasi Nilai Rapor</code>.</div></div>
+        <div class="step"><div class="no">4</div><div class="isi"><strong>Siswa melihat hasilnya.</strong> Mode Siswa memanggil
+          <code>action=getScores&amp;studentId=…</code> yang membaca <code>Akumulasi Nilai Rapor</code> (+ <code>Nilai Manual</code> untuk override).</div></div>
+      </div>
+      <div class="catatan ok">
+        <strong>Boosting kehadiran:</strong> sejak pembaruan terbaru, kolom <code>Kehadiran (skala 100)</code> diisi
+        <strong>rata-rata</strong> <code>Kehadiran (%)</code> dari <code>db_kehadiran</code>, bukan angka mati 0 —
+        sehingga siswa yang rajin hadir langsung mendapat poin penuh pada komponen kehadiran Nilai Akhir.
+      </div>
+    </div>
+
+    <div class="kartu" id="kolom">
+      <h2>📋 Kolom Sheet Akumulasi Nilai Rapor</h2>
+      <table>
+        <thead><tr><th>Kolom</th><th>Sumber</th><th>Catatan</th></tr></thead>
+        <tbody>
+          <tr><td><code>Student ID</code>, NIS, Nama, Absen, Kelas</td><td><code>db_nilai</code> / <code>Users</code></td><td>data siswa</td></tr>
+          <tr><td><code>Jumlah Pertemuan</code></td><td><code>db_nilai</code></td><td>unik <code>Kode Materi</code></td></tr>
+          <tr><td><code>Rata Aktivitas/Pertemuan</code></td><td><code>db_aktivitas</code></td><td>total non-kuis ÷ jumlah pertemuan</td></tr>
+          <tr><td><code>Kehadiran (skala 100)</code></td><td><code>db_kehadiran</code></td><td>rata-rata <code>Kehadiran (%)</code></td></tr>
+          <tr><td><code>Rata-rata UH</code></td><td><code>db_nilai</code></td><td>kategori <code>ulangan_harian</code></td></tr>
+          <tr><td><code>Skor UTS / UAS</code></td><td><code>db_nilai</code></td><td>skor tertinggi per kategori (atau override manual)</td></tr>
+          <tr><td><code>Skor Sikap</code> / <code>Skor Keterampilan</code></td><td>manual / guru</td><td>diisi langsung di sheet</td></tr>
+          <tr><td><code>Nilai Akhir</code></td><td>rumus generateReport</td><td>lihat rumus di bawah</td></tr>
+          <tr><td><code>Grade</code></td><td>rumus generateReport</td><td>A / B+ / B / C+ / C / D</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="kartu" id="rumus">
+      <h2>🧮 Rumus Nilai Akhir &amp; Grade</h2>
+      <div class="rumus">Nilai Akhir = (Kehadiran×1 + Rata-rata UH×3 + UTS×2 + UAS×2) ÷ 8</div>
+      <table>
+        <thead><tr><th>Nilai Akhir</th><th>Grade</th></tr></thead>
+        <tbody>
+          <tr><td>≥ 87</td><td>A</td></tr>
+          <tr><td>80 – 86</td><td>B+</td></tr>
+          <tr><td>70 – 79</td><td>B</td></tr>
+          <tr><td>60 – 69</td><td>C+</td></tr>
+          <tr><td>50 – 59</td><td>C</td></tr>
+          <tr><td>&lt; 50</td><td>D</td></tr>
+        </tbody>
+      </table>
+      <p><code>Rata-rata UH</code> diambil dari kategori <code>ulangan_harian</code>; <code>UTS</code>/<code>UAS</code> memakai skor tertinggi
+        (atau override dari <code>Nilai Manual</code> via <code>setManualScore</code>).</p>
+    </div>
+
+    <div class="kartu" id="manual">
+      <h2>✍️ Nilai Manual (Override)</h2>
+      <p>Guru dapat mengoreksi UTS/UAS/kehadiran/UH/sikap/keterampilan/nilai akhir lewat sheet <code>Nilai Manual</code>:</p>
+      <pre><code>GET {FORM_API}?action=setManualScore&amp;studentId=STD-…&amp;kategori=uts&amp;skor=90
+GET {FORM_API}?action=setManualScore&amp;studentId=STD-…&amp;kategori=uas&amp;skor=88</code></pre>
+      <table>
+        <thead><tr><th>kategori</th><th>Kolom Rapor yang dioverride</th></tr></thead>
+        <tbody>
+          <tr><td><code>uts</code></td><td>Skor UTS</td></tr>
+          <tr><td><code>uas</code></td><td>Skor UAS</td></tr>
+          <tr><td><code>kehadiran</code></td><td>Kehadiran (skala 100)</td></tr>
+          <tr><td><code>uh</code></td><td>Rata-rata UH</td></tr>
+          <tr><td><code>sikap</code> / <code>keterampilan</code> / <code>nilaiakhir</code></td><td>kolom terkait</td></tr>
+        </tbody>
+      </table>
+      <div class="catatan info">
+        <strong>getScores</strong> membaca override UTS/UAS dari <code>Nilai Manual</code>; <code>generateReport</code>
+        juga menyertakan override saat menulis ulang sheet Rapor.
+      </div>
+    </div>
+
+    <div class="kartu">
+      <h2>🚀 Cara Menjalankan</h2>
+      <p>1. Pastikan sheet <code>Akumulasi Nilai Rapor</code>, <code>db_nilai</code>, <code>db_kehadiran</code>, <code>Users</code> ada.</p>
+      <p>2. Tempel URL <code>/exec</code> ke <code>apps-script-url</code> (lihat <code>DATA-CONTOH.md</code>).</p>
+      <p>3. Kirim kehadiran otomatis: <code>?action=saveAttendanceComplete&amp;studentId=…&amp;kehadiran=100&amp;kdMateri=…</code>.</p>
+      <p>4. Panggil <code>?action=generateReport</code>, lalu siswa melihat nilai akhir di Mode Siswa (<code>getScores</code>).</p>
+    </div>
+  </div>
+</body>
+
+</html>

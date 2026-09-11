@@ -1,0 +1,62 @@
+[
+  {
+    "question": "Apa kegunaan utama metode connectedCallback pada LitElement?",
+    "hint": "Pikirkan kapan elemen Anda benar-benar 'terhubung' ke struktur DOM halaman.",
+    "choices": [
+      "Menginisialisasi nilai variabel dasar",
+      "Mendeteksi elemen saat berhasil diinjeksikan ke struktur DOM",
+      "Menghapus event listener global",
+      "Menghentikan rendering komponen"
+    ],
+    "correctIndex": 1,
+    "points": 2
+  },
+  {
+    "question": "Bagaimana cara mencegah timeout 6 menit pada Google Apps Script?",
+    "hint": "Pertimbangkan teknik I/O yang efisien — hindari penulisan sel per sel.",
+    "choices": [
+      "Menggunakan penulisan masal berbasis batch I/O",
+      "Menulis ke banyak sheet terpisah",
+      "Memperbanyak rumus formula cell",
+      "Menggunakan synchronousLock service"
+    ],
+    "correctIndex": 0,
+    "points": 2
+  },
+  {
+    "question": "Yang mana pernyataan berikut BUKAN termasuk lifecycle callback LitElement?",
+    "hint": "LitElement extends HTMLElement — cek metode standar Web Components.",
+    "choices": [
+      "connectedCallback",
+      "disconnectedCallback",
+      "firstUpdated",
+      "renderCallback"
+    ],
+    "correctIndex": 3,
+    "points": 2
+  },
+  {
+    "question": "Pernyataan berikut tentang CSS custom properties DIKAT — pilih dua yang benar.",
+    "hint": "CSS custom properties bekerja di semua browser modern tanpa transpiler. Coba aktifkan multi-select.",
+    "choices": [
+      "Nilainya dihitung saat runtime, bukan compile time",
+      "Selalu harus dideklarasikan di :root",
+      "Bisa di-override oleh media query",
+      "Nilainya tidak bisa diubah dengan JavaScript"
+    ],
+    "correctAnswers": [0, 2],
+    "points": 3
+  },
+  {
+    "question": "Urutkan log langkah deployment HAX web component dari yang paling dulu ke akhir.",
+    "hint": "Pikirkan urutan: bangun → uji → publikasi.",
+    "choices": [
+      "npm publish",
+      "npm run build",
+      "npm test",
+      "Surge deploy"
+    ],
+    "correctIndex": 1,
+    "points": 1
+  }
+]

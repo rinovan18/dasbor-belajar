@@ -1,0 +1,396 @@
+﻿<!doctype html>
+<html lang="id">
+
+<head>
+  <base href="/">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="Description" content="Tutor upgrade v6 Kurikulum Merdeka pada dasbor-kuis: pisahkan progress formatif dari rapor sumatif, 3 sheet inti, rumus nilai rapor, interval capaian, dan catatan anekdot sikap." />
+  <title>dasbor-kuis — Tutor: Kurikulum Merdeka v6</title>
+  <style>
+    :root, html, body { margin: 0; padding: 0; font-family: system-ui, sans-serif; background: #f1f5f9; color: #0f172a; }
+    .halaman { max-width: 1100px; margin: 0 auto; padding: 24px 20px 60px; }
+    header.hero {
+      background: linear-gradient(120deg, #0f766e, #0d9488 55%, #0891b2);
+      color: #fff; border-radius: 20px; padding: 26px 32px; margin-bottom: 22px;
+      box-shadow: 0 12px 28px -12px rgb(13 148 136 / 0.55);
+    }
+    header.hero h1 { margin: 0; font-size: 25px; }
+    header.hero p { margin: 8px 0 0; opacity: 0.9; font-size: 14px; }
+    .nav-links { margin: 12px 0 24px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .nav-links a, .nav-links button {
+      padding: 8px 14px; border-radius: 10px; border: 1px solid #99f6e4; background: #fff;
+      color: #0f766e; font-weight: 600; font-size: 13px; text-decoration: none; cursor: pointer;
+    }
+    .nav-links a:hover, .nav-links button:hover { background: #ecfeff; }
+    .kartu { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 22px; margin-bottom: 20px; }
+    .kartu h2 { margin: 0 0 10px; font-size: 19px; color: #134e4a; }
+    .kartu h3 { margin: 20px 0 8px; font-size: 15px; color: #0f766e; }
+    .kartu p { font-size: 14px; color: #475569; line-height: 1.65; margin: 6px 0; }
+    code { background: #ecfeff; color: #0f766e; border-radius: 6px; padding: 2px 7px; font-size: 12.5px; word-break: break-all; }
+    pre { background: #0f172a; color: #e2e8f0; border-radius: 12px; padding: 16px; overflow-x: auto; font-size: 12.5px; line-height: 1.6; }
+    pre code { background: none; color: inherit; padding: 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+    th { background: #f8fafc; text-align: left; padding: 10px 12px; border-bottom: 2px solid #e2e8f0; font-size: 12px; }
+    td { padding: 9px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+    tr:hover td { background: #f8fafc; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 9999px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+    .badge-formatif { background: #dbeafe; color: #1e40af; }
+    .badge-sumatif { background: #fecdd3; color: #9f1239; }
+    .badge-sikap { background: #dcfce7; color: #166534; }
+    .catatan { background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 0 10px 10px 0; padding: 12px 16px; font-size: 13px; margin: 14px 0; }
+    .catatan.ok { background: #f0fdf4; border-left-color: #22c55e; }
+    .catatan.info { background: #eff6ff; border-left-color: #3b82f6; }
+    .catatan.warn { background: #fef2f2; border-left-color: #ef4444; }
+    .alur { display: flex; flex-direction: column; gap: 8px; margin: 16px 0; }
+    .alur .step { display: flex; gap: 12px; align-items: flex-start; }
+    .alur .step .no { background: #0d9488; color: #fff; border-radius: 9999px; min-width: 26px; height: 26px; display: grid; place-items: center; font-weight: 800; font-size: 13px; flex: 0 0 auto; }
+    .alur .step .isi { font-size: 14px; color: #334155; line-height: 1.6; }
+    .rumus { background: #0f172a; color: #5eead4; border-radius: 12px; padding: 14px 16px; font-size: 14px; font-weight: 700; text-align: center; margin: 10px 0; }
+    .rumus.alt { color: #fbbf24; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 720px) { .grid2 { grid-template-columns: 1fr; } }
+  </style>
+</head>
+
+<body>
+  <div class="halaman">
+    <header class="hero">
+      <h1>Tutor: Upgrade v6 — Kurikulum Merdeka</h1>
+      <p>Pemisahan <strong>progress tracking (formatif)</strong> dari <strong>rapor (sumatif)</strong> pada
+        <code>&lt;dasbor-kuis&gt;</code>, dengan tiga sheet inti, rumus nilai rapor, interval capaian,
+        dan catatan anekdot sikap.</p>
+    </header>
+
+    <div class="nav-links">
+      <a href="/">Demo utama (index.html)</a>
+      <a href="tutor-rangkuman.html">Tutor Rangkuman</a>
+      <a href="tutor-akumulasi-nilai-rapor.html">Tutor Akumulasi Nilai Rapor</a>
+      <button onclick="document.getElementById('model').scrollIntoView()">Model</button>
+      <button onclick="document.getElementById('sheet').scrollIntoView()">3 Sheet</button>
+      <button onclick="document.getElementById('rumus').scrollIntoView()">Rumus</button>
+      <button onclick="document.getElementById('interval').scrollIntoView()">Interval</button>
+      <button onclick="document.getElementById('sikap').scrollIntoView()">Sikap</button>
+      <button onclick="document.getElementById('deploy').scrollIntoView()">Deploy</button>
+    </div>
+
+    <div class="kartu" id="model">
+      <h2>Model Kurikulum Merdeka: Formatif tidak sama dengan Sumatif</h2>
+      <p>Dalam Kurikulum Merdeka, penilaian dibagi menjadi dua jalur yang <strong>tidak boleh tercampur</strong>:</p>
+      <div class="grid2">
+        <div>
+          <h3><span class="badge badge-formatif">FORMATIF</span> Progress Tracking</h3>
+          <p>Digunakan murni untuk <strong>pemantauan perkembangan</strong> siswa selama proses belajar.
+            Skor formatif (kuis harian, latihan, observasi) bersifat diagnostik — membantu guru dan siswa
+            melihat di mana perlu remedial atau pengayaan.</p>
+          <p><strong>Tidak</strong> dimasukkan ke dalam rumus perhitungan rapor akhir.</p>
+        </div>
+        <div>
+          <h3><span class="badge badge-sumatif">SUMATIF</span> Rapor</h3>
+          <p>Merupakan penilaian akhir yang <strong>resmi tercatat di rapor</strong>. Hanya asesmen sumatif
+            (Lingkup Materi / LM dan Sumatif Akhir Semester / SAS) yang dipakai untuk menghitung
+            <code>Nilai_Rapor</code>.</p>
+          <p>Formatif hanya menjadi <em>rujukan pantauan</em>, bukan komponen angka rapor.</p>
+        </div>
+      </div>
+      <div class="catatan info">
+        <strong>Prinsip kunci:</strong> Formatif memandu proses, Sumatif mencatat hasil.
+        Engine v6 memastikan kolom rapor hanya diisi dari jalur sumatif, sehingga nilai latihan harian
+        tidak menggembosi atau menggelembungkan rapor siswa.
+      </div>
+    </div>
+
+    <div class="kartu" id="sheet">
+      <h2>3 Sheet Inti di Google Spreadsheet</h2>
+      <p>Upgrade v6 menggunakan tiga sheet terstruktur. Sheet pertama menampung hasil rapor sumatif,
+        dua lainnya menampung data pendukung (sikap dan presensi).</p>
+
+      <h3>1. <code>Akumulasi_Nilai_Rapor</code></h3>
+      <table>
+        <thead><tr><th>Kolom</th><th>Keterangan</th></tr></thead>
+        <tbody>
+          <tr><td><code>Timestamp</code></td><td>Waktu generateReport dijalankan</td></tr>
+          <tr><td><code>StudentID</code></td><td>ID unik siswa (mis. <code>STD-65108053</code>)</td></tr>
+          <tr><td><code>Nama</code></td><td>Nama lengkap siswa</td></tr>
+          <tr><td><code>Kelas</code></td><td>Kelas / rombel (mis. <code>XI-1</code>)</td></tr>
+          <tr><td><code>LM1</code> sampai <code>LM5</code></td><td>Nilai akhir tiap Lingkup Materi (sumatif)</td></tr>
+          <tr><td><code>Rerata_LM</code></td><td>Rata-rata dari LM1 hingga LM5</td></tr>
+          <tr><td><code>STS</code></td><td>Sumatif Tengah Semester (bila ada)</td></tr>
+          <tr><td><code>SAS</code></td><td>Sumatif Akhir Semester</td></tr>
+          <tr><td><code>Nilai_Rapor</code></td><td>Hasil rumus Kurikulum Merdeka</td></tr>
+          <tr><td><code>Interval_Capaian</code></td><td>Mencapai TP / Perlu Pengayaan / Perlu Remedial</td></tr>
+          <tr><td><code>Deskripsi_Capaian</code></td><td>Narasi capaian (dihasilkan engine)</td></tr>
+        </tbody>
+      </table>
+
+      <h3>2. <code>Catatan_Anekdot_Sikap</code></h3>
+      <table>
+        <thead><tr><th>Kolom</th><th>Keterangan</th></tr></thead>
+        <tbody>
+          <tr><td><code>Timestamp</code></td><td>Waktu pencatatan</td></tr>
+          <tr><td><code>StudentID</code></td><td>ID unik siswa</td></tr>
+          <tr><td><code>Nama</code></td><td>Nama lengkap siswa</td></tr>
+          <tr><td><code>Tanggal_Observasi</code></td><td>Tanggal perilaku diamati</td></tr>
+          <tr><td><code>Dimensi_Pancasila</code></td><td>Gotong Royong, Bernalar Kritis, Mandiri, dan lainnya</td></tr>
+          <tr><td><code>Catatan_Perilaku</code></td><td>Deskripsi anekdot (narasi, bukan angka)</td></tr>
+        </tbody>
+      </table>
+
+      <h3>3. <code>Presensi_Administratif</code></h3>
+      <table>
+        <thead><tr><th>Kolom</th><th>Keterangan</th></tr></thead>
+        <tbody>
+          <tr><td><code>StudentID</code></td><td>ID unik siswa</td></tr>
+          <tr><td><code>Nama</code></td><td>Nama lengkap siswa</td></tr>
+          <tr><td><code>Kelas</code></td><td>Kelas / rombel</td></tr>
+          <tr><td><code>Sakit</code></td><td>Jumlah hari sakit</td></tr>
+          <tr><td><code>Izin</code></td><td>Jumlah hari izin</td></tr>
+          <tr><td><code>Tanpa_Keterangan</code></td><td>Jumlah hari tanpa keterangan (alfa)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="kartu" id="rumus">
+      <h2>Rumus Nilai Rapor (Kurikulum Merdeka)</h2>
+      <p>Nilai rapor dihitung murni dari jalur sumatif: gabungan rata-rata Lingkup Materi (bobot 60%)
+        dan Sumatif Akhir Semester (bobot 40%).</p>
+      <div class="rumus">Nilai_Rapor = ( Rerata_LM x 0.6 ) + ( SAS x 0.4 )</div>
+
+      <h3>Contoh Terhitung (data siswa uji)</h3>
+      <p>Skor tiap LM dihitung sebagai rata-rata <code>skor_tulis</code> dan <code>skor_performa</code>:</p>
+      <table>
+        <thead><tr><th>LM</th><th>Tulis</th><th>Performa</th><th>Nilai Akhir LM</th></tr></thead>
+        <tbody>
+          <tr><td>LM-1</td><td>80</td><td>86</td><td>(80+86)/2 = <strong>83,0</strong></td></tr>
+          <tr><td>LM-2</td><td>85</td><td>90</td><td>(85+90)/2 = <strong>87,5</strong></td></tr>
+          <tr><td>LM-3</td><td>75</td><td>85</td><td>(75+85)/2 = <strong>80,0</strong></td></tr>
+          <tr><td>LM-4</td><td>78</td><td>82</td><td>(78+82)/2 = <strong>80,0</strong></td></tr>
+          <tr><td>LM-5</td><td>70</td><td>74</td><td>(70+74)/2 = <strong>72,0</strong></td></tr>
+        </tbody>
+      </table>
+      <p><strong>Rerata_LM</strong> = (83,0 + 87,5 + 80,0 + 80,0 + 72,0) / 5 = 402,5 / 5 = <strong>80,5</strong></p>
+      <p><strong>SAS</strong> = <code>sumatif_akhir_semester</code> = <strong>82</strong></p>
+      <div class="rumus alt">Nilai_Rapor = (80,5 x 0.6) + (82 x 0.4) = 48,3 + 32,8 = <strong>81,1</strong></div>
+      <div class="catatan ok">
+        Hasil <code>Nilai_Rapor = 81,1</code> dengan <code>SAS = 82</code> akan dipetakan ke
+        <code>Interval_Capaian</code> pada langkah berikutnya.
+      </div>
+    </div>
+
+    <div class="kartu" id="interval">
+      <h2>Interval Capaian (Pengganti Lulus / Tidak Lulus)</h2>
+      <p>Kurikulum Merdeka tidak lagi melabeli siswa "lulus/tidak lulus" pada rapor, melainkan
+        <strong>Interval Capaian</strong> berdasarkan <code>Nilai_Rapor</code>:</p>
+      <div class="rumus">Mencapai TP  (&gt;= 75)  -  Perlu Pengayaan  (&gt;= 60)  -  Perlu Remedial  (&lt; 60)</div>
+      <table>
+        <thead><tr><th>Interval</th><th>Syarat Nilai_Rapor</th><th>Makna</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge badge-sikap">Mencapai TP</span></td><td>&gt;= 75</td><td>Tujuan Pembelajaran tercapai, siap lanjut / pengayaan opsional</td></tr>
+          <tr><td><span class="badge badge-formatif">Perlu Pengayaan</span></td><td>&gt;= 60 dan &lt; 75</td><td>Capaian dasar sudah terpenuhi, perlu diperkaya</td></tr>
+          <tr><td><span class="badge badge-sumatif">Perlu Remedial</span></td><td>&lt; 60</td><td>Belum mencapai TP, perlu remedial/pembelajaran ulang</td></tr>
+        </tbody>
+      </table>
+      <div class="catatan">
+        Pada contoh di atas, <code>Nilai_Rapor = 81,1 &gt;= 75</code> maka <strong>Interval_Capaian = "Mencapai TP"</strong>.
+        Fungsi <code>tentukanIntervalCapaian(nilaiRapor)</code> menangani pemetaan ini.
+      </div>
+    </div>
+
+    <div class="kartu" id="sikap">
+      <h2>Skor Sikap diganti Catatan Anekdot / Observasi Karakter</h2>
+      <p>Untuk dimensi sikap (Profil Pelajar Pancasila), <strong>angka diganti dengan narasi deskriptif</strong>.
+        Guru mencatat anekdot perilaku nyata, lalu engine menyusun ringkasannya melalui
+        <code>rangkumCatatanSikap()</code>.</p>
+
+      <h3>Contoh data masukan (dua observasi)</h3>
+      <pre><code>Catatan_Anekdot_Sikap:
+  2026-08-05 | Gotong Royong   | "Sangat aktif membantu teman
+             |                 |  kelompoknya menyelesaikan
+             |                 |  konfigurasi Web Component."
+  2026-08-10 | Bernalar Kritis | "Mampu memberikan sanggahan
+             |                 |  logis disertai bukti
+             |                 |  dokumentasi resmi saat diskusi
+             |                 |  materi energi biomassa."</code></pre>
+
+      <h3>Generator narasi (konsep <code>rangkumCatatanSikap</code>)</h3>
+      <pre><code>function rangkumCatatanSikap(catatan) {
+  return catatan.map(c =&gt;
+    "Pada " + c.tanggal + ", dalam dimensi " + c.dimensi_pancasila + ", " +
+    "siswa " + c.perilaku
+  ).join(" ");
+}
+
+// Hasil:
+// "Pada 2026-08-05, dalam dimensi Gotong Royong, siswa sangat
+//  aktif membantu teman kelompoknya menyelesaikan konfigurasi
+//  Web Component. Pada 2026-08-10, dalam dimensi Bernalar Kritis,
+//  siswa mampu memberikan sanggahan logis disertai bukti
+//  dokumentasi resmi saat diskusi materi energi biomassa."</code></pre>
+      <div class="catatan info">
+        Narasi ini ditulis ke kolom <code>Catatan_Perilaku</code> (sheet <code>Catatan_Anekdot_Sikap</code>)
+        dan dapat dirangkum lebih lanjut ke <code>Deskripsi_Capaian</code> pada rapor.
+      </div>
+    </div>
+
+    <div class="kartu" id="input">
+      <h2>Contoh Input JSON</h2>
+      <p>Payload ini dikirim oleh <code>&lt;dasbor-kuis&gt;</code> sebelum diproses engine v6:</p>
+      <pre><code>{
+  "profil_siswa": {
+    "student_id": "STD-65108053",
+    "nis": "65108053",
+    "nama": "Andy Yulianto",
+    "kelas": "XI-1",
+    "fase": "F"
+  },
+  "presensi": { "sakit": 2, "izin": 1, "tanpa_keterangan": 0 },
+  "catatan_anekdot_sikap": [
+    { "tanggal": "2026-08-05", "dimensi_pancasila": "Gotong Royong", "perilaku": "Sangat aktif membantu teman kelompoknya menyelesaikan konfigurasi Web Component." },
+    { "tanggal": "2026-08-10", "dimensi_pancasila": "Bernalar Kritis", "perilaku": "Mampu memberikan sanggahan logis disertai bukti dokumentasi resmi saat diskusi materi energi biomassa." }
+  ],
+  "asesmen_lingkup_materi": [
+    { "id_lm": "LM-1", "nama_tp": "Memahami Konsep Dasar Web Component", "skor_tulis": 80, "skor_performa": 86 },
+    { "id_lm": "LM-2", "nama_tp": "Menerapkan Shadow DOM dan State Management", "skor_tulis": 85, "skor_performa": 90 },
+    { "id_lm": "LM-3", "nama_tp": "Mengembangkan Aplikasi Interaktif Berbasis Lit", "skor_tulis": 75, "skor_performa": 85 },
+    { "id_lm": "LM-4", "nama_tp": "Menganalisis Integrasi API Flat-File", "skor_tulis": 78, "skor_performa": 82 },
+    { "id_lm": "LM-5", "nama_tp": "Mengevaluasi Keamanan Data dan Deployment", "skor_tulis": 70, "skor_performa": 74 }
+  ],
+  "sumatif_akhir_semester": 82
+}</code></pre>
+    </div>
+
+    <div class="kartu" id="payload">
+      <h2>Contoh doPost Payload (Aksi)</h2>
+      <p>Backend <code>codev6.gs</code> menerima aksi via <code>doPost</code>. Berikut empat aksi inti:</p>
+
+      <h3><code>simpanNilaiAkademik</code></h3>
+      <pre><code>{
+  "action": "simpanNilaiAkademik",
+  "student_id": "STD-65108053",
+  "nama": "Andy Yulianto",
+  "kelas": "XI-1",
+  "asesmen_lingkup_materi": [
+    { "id_lm": "LM-1", "nama_tp": "Memahami Konsep Dasar Web Component", "skor_tulis": 80, "skor_performa": 86 }
+  ],
+  "sumatif_akhir_semester": 82
+}</code></pre>
+
+      <h3><code>simpanAnekdotSikap</code></h3>
+      <pre><code>{
+  "action": "simpanAnekdotSikap",
+  "student_id": "STD-65108053",
+  "nama": "Andy Yulianto",
+  "tanggal": "2026-08-10",
+  "dimensi_pancasila": "Bernalar Kritis",
+  "perilaku": "Mampu memberikan sanggahan logis disertai bukti dokumentasi resmi saat diskusi materi energi biomassa."
+}</code></pre>
+
+      <h3><code>updatePresensi</code></h3>
+      <pre><code>{
+  "action": "updatePresensi",
+  "student_id": "STD-65108053",
+  "nama": "Andy Yulianto",
+  "kelas": "XI-1",
+  "sakit": 2,
+  "izin": 1,
+  "tanpa_keterangan": 0
+}</code></pre>
+
+      <h3><code>generateReport</code></h3>
+      <pre><code>{
+  "action": "generateReport",
+  "student_id": "STD-65108053"
+}</code></pre>
+    </div>
+
+    <div class="kartu" id="engine">
+      <h2>Cara Kerja <code>generateReport</code></h2>
+      <p>Ketika <code>action=generateReport</code> dipanggil, engine membaca tiga sumber lalu menulis
+        <code>Akumulasi_Nilai_Rapor</code> secara murni (tanpa angka formatif):</p>
+      <div class="alur">
+        <div class="step"><div class="no">1</div><div class="isi"><strong>Baca sumber.</strong>
+          Engine mengambil <code>db_asesmen</code> (LM + SAS), <code>Catatan_Anekdot_Sikap</code>,
+          dan <code>Presensi_Administratif</code>.</div></div>
+        <div class="step"><div class="no">2</div><div class="isi"><strong>Proses nilai sumatif.</strong>
+          <code>prosesNilaiLingkupMateri()</code> menghitung nilai akhir tiap LM, lalu
+          <code>hitungRaporKurikulumMerdeka()</code> menjalankan rumus
+          <code>(Rerata_LM x 0.6) + (SAS x 0.4)</code>.</div></div>
+        <div class="step"><div class="no">3</div><div class="isi"><strong>Tentukan interval dan narasi.</strong>
+          <code>tentukanIntervalCapaian()</code> memetakan nilai ke interval;
+          <code>rangkumCatatanSikap()</code> menyusun deskripsi sikap.</div></div>
+        <div class="step"><div class="no">4</div><div class="isi"><strong>Hasilkan rapor.</strong>
+          <code>generateLaporanSiswa()</code> menggabungkan semua ke dalam satu baris
+          <code>Akumulasi_Nilai_Rapor</code> (menimpa baris lama sehingga idempoten).</div></div>
+      </div>
+      <table>
+        <thead><tr><th>Fungsi Engine</th><th>Peran</th></tr></thead>
+        <tbody>
+          <tr><td><code>prosesNilaiLingkupMateri</code></td><td>Hitung nilai akhir LM-1 sampai LM-5 dan Rerata_LM</td></tr>
+          <tr><td><code>hitungRaporKurikulumMerdeka</code></td><td>Rumus (Rerata_LM x 0.6) + (SAS x 0.4) menghasilkan Nilai_Rapor</td></tr>
+          <tr><td><code>tentukanIntervalCapaian</code></td><td>Petakan Nilai_Rapor ke Mencapai TP / Pengayaan / Remedial</td></tr>
+          <tr><td><code>rangkumCatatanSikap</code></td><td>Ubah anekdot menjadi narasi deskriptif sikap</td></tr>
+          <tr><td><code>generateLaporanSiswa</code></td><td>Rangkai semua hasil lalu tulis Akumulasi_Nilai_Rapor</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="kartu" id="output">
+      <h2>Contoh Output Narasi Engine (Siswa Uji)</h2>
+      <p>Berikut baris yang ditulis ke <code>Akumulasi_Nilai_Rapor</code> untuk <code>STD-65108053</code>
+        setelah engine memproses JSON di atas:</p>
+      <table>
+        <thead><tr><th>Kolom</th><th>Nilai</th></tr></thead>
+        <tbody>
+          <tr><td>StudentID</td><td>STD-65108053</td></tr>
+          <tr><td>Nama</td><td>Andy Yulianto</td></tr>
+          <tr><td>Kelas</td><td>XI-1</td></tr>
+          <tr><td>LM1 / LM2 / LM3 / LM4 / LM5</td><td>83,0 / 87,5 / 80,0 / 80,0 / 72,0</td></tr>
+          <tr><td>Rerata_LM</td><td>80,5</td></tr>
+          <tr><td>STS</td><td>kosong</td></tr>
+          <tr><td>SAS</td><td>82</td></tr>
+          <tr><td>Nilai_Rapor</td><td>81,1</td></tr>
+          <tr><td>Interval_Capaian</td><td><strong>Mencapai TP</strong></td></tr>
+        </tbody>
+      </table>
+      <h3>Deskripsi_Capaian (narasi)</h3>
+      <pre><code>Andy Yulianto (XI-1, Fase F) mencapai Tujuan Pembelajaran dengan
+Nilai Rapor 81,1 (kategori: Mencapai TP). Rerata lingkup materi
+80,5 didukung oleh penguasaan kuat pada LM-2 (87,5) dan LM-1 (83,0),
+serta capaian stabil di LM-3 (80,0) dan LM-4 (80,0); LM-5 (72,0)
+menjadi area yang dapat diperkaya. Pada asesmen sikap, siswa
+menunjukkan profil Gotong Royong yang sangat aktif membantu teman
+kelompoknya menyelesaikan konfigurasi Web Component, serta Bernalar
+Kritis dengan sanggahan logis disertai bukti dokumentasi resmi saat
+diskusi materi energi biomassa. Presensi: Sakit 2, Izin 1, Tanpa
+Keterangan 0.</code></pre>
+      <div class="catatan warn">
+        Catatan: <code>Rerata_LM</code> pada rumus adalah 80,5. Pada data uji STS kosong, sehingga
+        engine menggunakan 80,5 (bukan rata-rata yang menyertakan STS). Sesuaikan narasi dengan
+        kolom yang tersedia di spreadsheet.
+      </div>
+    </div>
+
+    <div class="kartu" id="deploy">
+      <h2>Langkah Deploy</h2>
+      <div class="alur">
+        <div class="step"><div class="no">1</div><div class="isi"><strong>Salin backend.</strong> Salin seluruh isi
+          <code>codev6.gs</code> ke editor <strong>Apps Script</strong> yang terikat pada spreadsheet kamu.</div></div>
+        <div class="step"><div class="no">2</div><div class="isi"><strong>Deploy.</strong> Pilih
+          <code>Deploy &gt; New deployment</code> lalu tipe <strong>Web app</strong>;
+          <em>Execute as:</em> <strong>Me</strong>; <em>Who has access:</em> <strong>Anyone</strong>.</div></div>
+        <div class="step"><div class="no">3</div><div class="isi"><strong>Tempel URL.</strong> Salin URL <code>/exec</code>
+          hasil deploy, lalu tempel ke atribut <code>apps-script-url</code> pada
+          <code>&lt;dasbor-kuis&gt;</code> (misalnya <code>&lt;dasbor-kuis apps-script-url="https://script.google.com/.../exec"&gt;</code>).</div></div>
+        <div class="step"><div class="no">4</div><div class="isi"><strong>Uji.</strong> Panggil
+          <code>?action=generateReport</code> (atau kirim payload <code>generateReport</code> via doPost)
+          untuk mengisi <code>Akumulasi_Nilai_Rapor</code>, lalu pantau di Mode Guru.</div></div>
+      </div>
+      <div class="catatan ok">
+        Backend <code>codev6.gs</code> dan skrip penyalin disiapkan oleh agen lain — tutorial ini hanya
+        menjelaskan cara penggunaan dan alur datanya.
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

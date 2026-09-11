@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contoh: ruang-diskusi — Ruang Diskusi Bertingkat</title>
+  <script type="module" src="../lib/quiz-user-auth.js"></script>
+  <script type="module" src="../lib/ruang-diskusi.js"></script>
+  <style>
+    body { padding: 24px; max-width: 860px; margin: 0 auto; font-family: system-ui; }
+    h1 { color: #4a1d6e; }
+    .info { background: #f3e8ff; border: 1px solid #d8b4fe; border-radius: 8px; padding: 12px; margin-bottom: 16px; font-size: 13px; line-height: 1.6; }
+    .info code { background: #e9d5ff; color: #6b21a8; border-radius: 4px; padding: 1px 6px; font-size: 12px; }
+    .section-title { color: #334155; margin: 28px 0 10px; }
+  </style>
+</head>
+<body>
+  <h1>💬 Contoh: &lt;ruang-diskusi&gt;</h1>
+  <div class="info">
+    Ruang diskusi bertingkat (adaptasi <code>forum-component</code>): komentar utama +
+    balasan/reply rekursif, tombol like, urutan Terbaik/Terbaru/Terlama, dan hapus
+    (mode <code>view-mode="lecturer"</code>).
+    <ul>
+      <li><code>forum-api-url</code> — <strong>opsional</strong>; bila dikosongkan memakai <code>apps-script-url</code> (codev5.gs kini menangani aksi forum juga, sheet <code>Forum Log</code>).</li>
+      <li><code>apps-script-url</code> — URL /exec utama (action=logActivity, saveForumComment, deleteForumComment, getForumComments, deployment lib/codev5.gs) untuk rekap <code>discussion</code> + data forum.</li>
+      <li><code>forum-topic</code>, <code>sheet-name</code> (kd-materi), <code>view-mode</code>, <code>hide-delete</code>.</li>
+      <li>Contoh guru/dosen di bawah memakai <code>view-mode="lecturer"</code> (ada tombol Hapus).</li>
+    </ul>
+  </div>
+
+  <quiz-user-auth
+    apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec"
+    auto-login="true"></quiz-user-auth>
+
+  <h2 class="section-title">💬 Ruang Diskusi — Mode Siswa</h2>
+  <ruang-diskusi
+    forum-api-url="https://script.google.com/macros/s/AKfycbzwvWA-4FgTkyCV_FDt5McjnkkeUwNZIZb0dt3ZU-ABsSbZkUnBq9qSoUfJscItXb1dtg/exec"
+    apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec"
+    forum-topic="Diskusi Materi Pertemuan 1"
+    sheet-name="Pertemuan 1"
+    view-mode="student"></ruang-diskusi>
+
+  <h2 class="section-title">🧑‍🏫 Ruang Diskusi — Mode Dosen (ada tombol Hapus)</h2>
+  <ruang-diskusi
+    forum-api-url="https://script.google.com/macros/s/AKfycbzwvWA-4FgTkyCV_FDt5McjnkkeUwNZIZb0dt3ZU-ABsSbZkUnBq9qSoUfJscItXb1dtg/exec"
+    apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec"
+    forum-topic="Pemantauan Diskusi Pertemuan 1"
+    sheet-name="Pertemuan 1"
+    view-mode="lecturer"></ruang-diskusi>
+</body>
+</html>

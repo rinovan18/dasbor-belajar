@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <base href="/">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="Description" content="Demonstration for dasbor-kuis">
+
+  <style>
+    :root, html, body {
+      margin: var(--ddd-spacing-0);
+      padding: var(--ddd-spacing-0);
+    }
+    #demo {
+      margin: var(--ddd-spacing-2);
+      font-family: system-ui, sans-serif;
+    }
+    dasbor-kuis {
+      margin: var(--ddd-spacing-2);
+      border-radius: var(--ddd-radius-lg);
+    }
+    .demo-section {
+      margin: var(--ddd-spacing-6) auto;
+      max-width: 1240px;
+    }
+    .demo-section h2 {
+      font-size: var(--ddd-font-size-l);
+      color: #1e293b;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: var(--ddd-spacing-4) var(--ddd-spacing-2);
+    }
+  </style>
+  <title>dasbor-kuis</title>
+</head>
+
+<body>
+  <div id="demo">
+    <h1 style="text-align:center; color:#1e293b;">dasbor-kuis</h1>
+    <p style="text-align:center; color:#64748b;">Dua peran: <strong>Guru</strong> (pantauan, leaderboard, Peringkat Nilai Bimbingan kelas, input nilai, edit soal, atur) dan <strong>Siswa</strong> (hasil nilai &amp; evaluasi mandiri). Tombol pindah mode disembunyikan secara default — set peran lewat properti HAX <code>mode</code>; tambahkan <code>allow-mode-switch</code> hanya pada halaman admin.</p>
+
+    <div class="demo-section">
+      <h2>🔐 Autentikasi & Daftar (quiz-user-auth)</h2>
+      <quiz-user-auth
+        apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec">
+      </quiz-user-auth>
+    </div>
+
+    <div class="demo-section">
+      <h2>🗂️ Peta Relasi Sheet & Demo Lengkap</h2>
+      <p style="color:#64748b;">
+        Dokumentasi skema spreadsheet backend, alur data tiap aksi, dan demo gabungan ada di
+        <a href="/demo/index.html" style="color:#4338ca; font-weight:600;">demo/index.html</a>.<br>
+        Contoh soal AKM lengkap (PG, PG Kompleks, Menjodohkan, Isian Singkat):
+        <a href="/demo/soal-akm-lengkap.html" style="color:#4338ca; font-weight:600;">soal-akm-lengkap.html</a>.<br>
+        Demo login / registrasi siswa:
+        <a href="/demo/quiz-user-auth.html" style="color:#4338ca; font-weight:600;">quiz-user-auth.html</a>.<br>
+        Tutorial semua properti HAX (Guru/Dosen/Siswa):
+        <a href="/demo/tutorial-hax.html" style="color:#4338ca; font-weight:600;">tutorial-hax.html</a>.<br>
+        Halaman contoh pengumpulan tugas mandiri:
+        <a href="/demo/kirim-tugas.html" style="color:#4338ca; font-weight:600;">kirim-tugas.html</a>.<br>
+        Halaman contoh ruang diskusi bertingkat:
+        <a href="/demo/ruang-diskusi.html" style="color:#4338ca; font-weight:600;">ruang-diskusi.html</a>.<br>
+        Hasil cek perubahan backend (v5 → v5.1, kuis → db_nilai):
+        <a href="/demo/hasil-cek-perubahan.html" style="color:#4338ca; font-weight:600;">hasil-cek-perubahan.html</a>.<br>
+        Tutor cara kerja sheet Rangkuman &amp; Akumulasi Nilai Rapor serta contoh HTML perubahan:
+        <a href="/demo/tutor-rangkuman.html" style="color:#4338ca; font-weight:600;">tutor-rangkuman.html</a>,
+        <a href="/demo/tutor-akumulasi-nilai-rapor.html" style="color:#4338ca; font-weight:600;">tutor-akumulasi-nilai-rapor.html</a>,
+        <a href="/demo/contoh-perubahan.html" style="color:#4338ca; font-weight:600;">contoh-perubahan.html</a>.<br>
+        Halaman frontend siap HAX/HAXcms (bisa diedit lewat HAX editor) + tutor hasil kuis AKM masuk sheet:
+        <a href="/demo/haxcms-page.html" style="color:#4338ca; font-weight:600;">haxcms-page.html</a>,
+        <a href="/demo/tutor-akm-sheet.html" style="color:#4338ca; font-weight:600;">tutor-akm-sheet.html</a>,
+        <a href="/demo/contoh-api-langsung.html" style="color:#4338ca; font-weight:600;">contoh-api-langsung.html</a>.
+      </p>
+    </div>
+
+    <div class="demo-section">
+      <h2>👨‍🏫 Mode Guru</h2>
+      <dasbor-kuis
+        mode="guru"
+        kd-materi="Pertemuan 1"
+        apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec">
+      </dasbor-kuis>
+    </div>
+
+    <div class="demo-section">
+      <h2>👨‍🏫 Mode Guru (label lama "dosen") — Peringkat Nilai Bimbingan di tab Guru</h2>
+      <dasbor-kuis
+        mode="dosen"
+        kd-materi="Pertemuan 1"
+        apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec">
+      </dasbor-kuis>
+    </div>
+
+    <div class="demo-section">
+      <h2>🎓 Mode Siswa</h2>
+      <dasbor-kuis
+        mode="siswa"
+        apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec">
+      </dasbor-kuis>
+    </div>
+
+    <div class="demo-section">
+      <h2>💥 Halaman Ledakan Kuis (kuis-ledakan)</h2>
+      <kuis-ledakan
+        judul="Evaluasi Kuis Interaktif"
+        mode="siswa"
+        kd-materi="Pertemuan 1"
+        apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec">
+      </kuis-ledakan>
+    </div>
+    <div class="demo-section">
+      <h2>💥 Halaman Ledakan Kuis (kuis-ledakan)</h2>
+
+      <quiz-user-auth
+       apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec"
+      ></quiz-user-auth>
+
+    </div>
+
+  </div>
+  <script type="module" src="./dasbor-kuis.js"></script>
+  <script type="module" src="./lib/quiz-user-auth.js"></script>
+
+  <!-- Take HAX, the Web and you further down the rabbit hole -->
+  <style>
+    #follow-the-white-rabbit {
+      margin: var(--ddd-spacing-4) auto var(--ddd-spacing-16)  var(--ddd-spacing-4);
+      background-color: var(--ddd-accent-4);
+      color: var(--ddd-theme-default-coalyGray);
+    }
+    #follow-the-white-rabbit[open] summary {
+      background-color: var(--ddd-accent-4) !important;
+      color: var(--ddd-theme-default-coalyGray);
+    }
+    #follow-the-white-rabbit[open] .content {
+      padding: var(--ddd-spacing-0) var(--ddd-spacing-4);
+    }
+    #follow-the-white-rabbit ul,
+    #follow-the-white-rabbit li {
+      padding: var(--ddd-spacing-0);
+      margin: var(--ddd-spacing-0);
+    }
+    #follow-the-white-rabbit li {
+      font-size: var(--ddd-font-size-xs);
+      list-style: none;
+    }
+    #follow-the-white-rabbit li strong,
+    #follow-the-white-rabbit li a {
+      padding: var(--ddd-spacing-2) var(--ddd-spacing-4);
+      color: var(--ddd-theme-default-coalyGray);
+      display: block;
+      font-weight: var(--ddd-font-weight-bold);
+    }
+    #follow-the-white-rabbit li:focus-within a,
+    #follow-the-white-rabbit li:hover a {
+      background-color: var(--ddd-theme-default-coalyGray);
+      color: var(--ddd-theme-default-globalNeon);
+    }
+  </style>
+  <details id="follow-the-white-rabbit" open>
+    <summary>How to Develop</summary>
+    <div class="content">
+      <p>
+        Anda dapat mengedit halaman ini dengan memodifikasi <code>index.html</code><br />
+        Untuk mengedit tag <strong>dasbor-kuis</strong>, modifikasi <code>dasbor-kuis.js</code>.
+      </p>
+      <h3>Properti HAX (Guru, Dosen &amp; Siswa)</h3>
+      <ul>
+        <li><code>mode</code> — guru (admin lengkap, termasuk Peringkat Nilai Bimbingan) / siswa (hasil nilai)</li>
+        <li><code>allow-mode-switch</code> — tampilkan tombol pindah mode (default tersembunyi)</li>
+        <li><code>apps-script-url</code> — URL /exec Apps Script</li>
+        <li><code>kd-materi</code> — kode pertemuan</li>
+        <li><code>kelas</code> — filter kelas guru / kelas siswa</li>
+        <li><code>student-id</code>, <code>nama-siswa</code>, <code>nis</code>, <code>absen</code> — identitas siswa</li>
+        <li><code>judul-kuis</code>, <code>questions</code>, <code>shuffle-choices</code>, <code>hide-answers</code> — konfigurasi kuis oleh guru</li>
+      </ul>
+      <h3>Properti HAX (kuis-ledakan)</h3>
+      <ul>
+        <li><code>judul</code> — judul kartu kuis</li>
+        <li><code>mode</code> — guru (bisa ulangi) / siswa (kunci hasil)</li>
+        <li><code>kd-materi</code> — kode pertemuan pada log aktivitas</li>
+        <li><code>apps-script-url</code> — URL /exec Apps Script (action=logActivity)</li>
+        <li><code>questions</code> — JSON array soal AKM: PG <code>[{ question, choices, correctIndex }]</code>, PG kompleks <code>correctAnswers:[0,2]</code>, PGK <code>{type:"pgk", statements:[{text,answer}]}</code>, menjodohkan <code>{type:"matching", leftItems, rightItems, correctPairs}</code>, isian <code>{type:"shortAnswer", acceptedAnswers}</code>; format lama <code>[{ q, a, b, c, k }]</code> tetap didukung</li>
+      </ul>
+      <h3>Properti HAX (quiz-user-auth)</h3>
+      <ul>
+        <li><code>apps-script-url</code> — URL /exec Apps Script (action=register|login|verify)</li>
+      </ul>
+      <p>
+        Web components are easy to follow once you get used to their pattern.
+        Below are links to help on your journey. Good luck, we need you!
+      </p>
+      <ul>
+        <li><a href="https://haxtheweb.org/documentation/ddd" target="_blank">🧑‍🎨 Learn DDD HAX Design system</a></li>
+        <li><a href="https://lit.dev/playground/" target="_blank" rel="nofollow">🔥 Learn Lit</a></li>
+        <li><a href="https://hax.psu.edu" target="_blank">🧙 HAX The Web @ Penn State</a></li>
+      </ul>
+    </div>
+  </details>
+</body>
+</html>

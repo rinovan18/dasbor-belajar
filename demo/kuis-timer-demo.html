@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo: Kuis Berbatas Waktu — timer-kuis & timer-materi-kuis</title>
+  <script type="module" src="../lib/kuis-ledakan.js"></script>
+  <script type="module" src="../lib/timer-kuis.js"></script>
+  <script type="module" src="../lib/timer-materi-kuis.js"></script>
+  <style>
+    :root, html, body { margin:0; padding:0; font-family: system-ui, sans-serif; background:#f1f5f9; color:#0f172a; }
+    .halaman { max-width:1000px; margin:0 auto; padding:24px 20px 60px; }
+    header.hero { background:linear-gradient(120deg,#312e81,#4f46e5 55%,#6d28d9); color:#fff; border-radius:20px; padding:26px 30px; margin-bottom:22px; }
+    header.hero h1 { margin:0; font-size:23px; }
+    header.hero p { margin:8px 0 0; opacity:0.85; font-size:14px; }
+    .nav-links { margin:0 0 20px; display:flex; gap:10px; flex-wrap:wrap; }
+    .nav-links a { padding:8px 14px; border-radius:10px; border:1px solid #c7d2fe; background:#fff; color:#4338ca; font-weight:600; font-size:13px; text-decoration:none; }
+    .nav-links a:hover { background:#eef2ff; }
+    .section { background:#fff; border-radius:14px; padding:22px; margin:18px 0; border:1px solid #e2e8f0; }
+    h2 { color:#1e293b; font-size:16px; margin:26px 0 10px; border-left:4px solid #4f46e5; padding-left:10px; }
+    .ket { font-size:13px; color:#555; margin-bottom:12px; }
+    code { background:#eef2ff; color:#4338ca; border-radius:6px; padding:2px 7px; font-size:12px; }
+  </style>
+</head>
+<body>
+  <div class="halaman">
+    <header class="hero">
+      <h1>⏱️ Demo: Kuis Berbatas Waktu</h1>
+      <p><code style="background:rgb(255 255 255/.15);color:#fff;">&lt;kuis-ledakan&gt;</code> + <code style="background:rgb(255 255 255/.15);color:#fff;">&lt;timer-kuis&gt;</code> / <code style="background:rgb(255 255 255/.15);color:#fff;">&lt;timer-materi-kuis&gt;</code></p>
+    </header>
+    <div class="nav-links">
+      <a href="/">← Demo utama</a>
+      <a href="soal-akm-lengkap.html">📝 Soal AKM Lengkap</a>
+      <a href="timer.html">⏱️ Timer dasar</a>
+    </div>
+
+    <h2>1. Kuis dengan Timer Internal (timer-duration)</h2>
+    <div class="section">
+      <p class="ket">Atur <code>timer-duration="30"</code>. Setelah 30 dtk mengerjakan, kuis otomatis selesai & skor terkunci.</p>
+      <kuis-ledakan
+        judul="Kuis Cepat (30 dtk)"
+        timer-duration="30"
+        timer-autostart
+        mode="siswa"
+        kd-materi="Demo Timer"
+        questions='[{"question":"1+1=?","choices":["1","2","3"],"correctIndex":1}]'>
+      </kuis-ledakan>
+    </div>
+
+    <h2>2. Materi + Kuis Terpisah (timer-materi-kuis)</h2>
+    <div class="section">
+      <p class="ket">Timer materi 20 dtk &amp; timer kuis 15 dtk berjalan independen. Kuis di bawah <strong>tanpa</strong> timer internal; phase "kuis" dari <code>timer-materi-kuis</code> yang memaksa selesai.</p>
+      <timer-materi-kuis durasi-materi="20" durasi-kuis="15"></timer-materi-kuis>
+      <kuis-ledakan id="quiz2" timer-duration="0" mode="siswa" kd-materi="Demo Timer"
+        questions='[{"question":"Capital of France?","choices":["Paris","Rome","Berlin"],"correctIndex":0}]'>
+      </kuis-ledakan>
+    </div>
+  </div>
+
+  <script type="module">
+    const quiz2 = document.getElementById('quiz2');
+    const tmk = document.querySelector('timer-materi-kuis');
+    tmk.addEventListener('timer-kuis-expired', () => quiz2.forceFinish());
+    tmk.addEventListener('timer-materi-expired', () => console.log('Waktu materi habis'));
+  </script>
+</body>
+</html>

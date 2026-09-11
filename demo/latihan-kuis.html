@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contoh: Latihan Kuis Berwaktu</title>
+  <style>
+    :root, html, body { margin: 0; padding: 0; font-family: system-ui, sans-serif; }
+    body { background: #f5f3fb; }
+    .petunjuk {
+      max-width: 920px; margin: 16px auto; padding: 16px 20px;
+      background: #fff; border: 1px solid #e0e0e0; border-radius: 12px;
+    }
+    .petunjuk h2 { color: #6750a4; margin-top: 0; }
+    .petunjuk code { background: #f0ecfa; padding: 2px 6px; border-radius: 4px; }
+    .petunjuk ol { line-height: 1.7; }
+    .petunjuk a { color: #6750a4; }
+    .gas {
+      display: block; width: 100%; box-sizing: border-box; margin: 8px 0;
+      padding: 10px; border: 1px dashed #6750a4; border-radius: 8px;
+      font-family: monospace; font-size: 13px; color: #444;
+    }
+  </style>
+  <script type="module" src="../dasbor-kuis.js"></script>
+</head>
+<body>
+
+  <div class="petunjuk">
+    <h2>📘 Cara Memasukkan Nilai ke Google Spreadsheet</h2>
+    <ol>
+      <li>Siapkan <strong>Google Apps Script</strong> (Web App) yang menerima
+          <code>action=logActivity</code> dan menulis ke Spreadsheet. Salin URL-nya.</li>
+      <li>Tempel URL tersebut ke atribut <code>apps-script-url</code> di bawah
+          (atau atur lewat panel HAX: <em>URL Apps Script (kirim nilai)</em>).</li>
+      <li>Siswa <strong>login</strong> dulu via <code>&lt;quiz-user-auth&gt;</code> agar
+          nilai terikat ke Student ID (lihat kotak auth di bawah).</li>
+      <li>Kartu hasil muncul di <strong>dua jalur</strong>: (a) siswa menjawab semua soal
+          &amp; submit manual, <em>atau</em> (b) <code>timer-kuis</code> habis. Di kedua
+          jalur, <code>&lt;kuis-ledakan&gt;</code> mengirim skor lalu <code>&lt;latihan-kuis&gt;</code>
+          menampilkan kartu "Nilai terkirim" + skor.</li>
+      <li><strong>Link sheet opt-in (default OFF):</strong> tombol "Buka Spreadsheet Nilai"
+          hanya muncul bila atribut <code>show-sheet-link="true"</code> DAN
+          <code>spreadsheet-url</code> diisi. Aktifkan hanya untuk guru / view agregat aman,
+          sebab siswa bisa lihat isi sheet. Di demo ini sudah diaktifkan.</li>
+      <li><strong>Login diwajibkan (anti hilang nilai):</strong> form login
+          (<code>&lt;quiz-user-auth&gt;</code>) sudah <em>tertanam di dalam</em> elemen ini.
+          Tombol "Mulai" dikunci sampai siswa login (H1/H2). Bila kuis dipaksa tanpa login,
+          kartu hasil menampilkan peringatan "Nilai belum tersimpan karena belum login"
+          dan tidak ada baris baru di Spreadsheet (H3). Kode materi diteruskan ke
+          <code>&lt;kuis-ledakan&gt;</code> lewat <code>kd-materi</code> (H4).</li>
+      <li><strong>Edit / upload soal:</strong> soal bisa diketik langsung lewat panel HAX
+          (<em>Soal (JSON)</em>, inputMethod <code>code-editor</code>) atau diunggah dari
+          file via <em>Upload File Soal (JSON)</em> (<code>haxupload</code> → atribut
+          <code>soal-file-url</code>). Bila <code>soal-file-url</code> berhasil di-parse,
+          isinya <em>menimpa</em> soal inline; bila file rusak/cosong, soal inline tetap dipakai
+          dan pesan error tampil di atas kuis.</li>
+      <li>Cek hasil di Spreadsheet lewat atribut <code>spreadsheet-url</code>
+          (tombol "Buka Spreadsheet Nilai" di layar akhir, bila <code>show-sheet-link</code> aktif).</li>
+    </ol>
+    <strong>URL Apps Script (contoh — ganti dengan milik Anda):</strong>
+    <input class="gas" readonly value="https://script.google.com/macros/s/AKfycbwEXAMPLE1234567890/exec" id="gasUrl" />
+    <button onclick="navigator.clipboard.writeText(document.getElementById('gasUrl').value);this.textContent='Tersalin!'">📋 Salin URL GAS</button>
+  </div>
+
+  <!--
+    Auth kini TERPASANG DI DALAM <latihan-kuis> (H2): elemen menanam
+    <quiz-user-auth> di shadow DOM & menyinkronkan Student ID ke kuis.
+    Tombol "Mulai" dikunci sampai siswa login (H1). Tidak butuh auth luar.
+  -->
+
+  <!-- Komponen utama: materi + kuis + timer -->
+  <!--
+    show-sheet-link="true"  -> tampilkan tombol "Buka Spreadsheet Nilai" di layar akhir.
+                               PERINGATAN: bila diaktifkan, siswa bisa lihat isi sheet.
+                               Default OFF. Aktifkan hanya untuk guru / view agregat aman.
+    soal-file-url="soal-contoh.json" -> (contoh) soal diambil dari file JSON; otomatis
+                               di-parse dan MENIMPA soal inline di atas. Kosongkan untuk
+                               pakai soal inline. Coba hapus komentar untuk mengujinya.
+                           https://script.google.com/macros/s/AKfycbxGvruTao7sbhdjhT9TJ1c2Mn1bjOS-yWUCbmMfW2W-3_dj-sf6XSFCpDJCK6ETYCqy/exec
+  hide-confetti
+
+                                 hide-score
+  -->
+<latihan-kuis
+  mode="siswa"
+  allow-retake="true"
+  max-retake="4"
+  duration="900"
+  judul-materi="📖 Ulangan Bab 1"
+  teks-materi="Ini adalah sesi ulangan. Kerjakan berulang, lihat petunjuk, dan tinjau jawaban."
+  judul-kuis="Latihan Ulangan - Bab 1"
+  apps-script-url="https://script.google.com/macros/s/AKfycbxGvruTao7sbhdjhT9TJ1c2Mn1bjOS-yWUCbmMfW2W-3_dj-sf6XSFCpDJCK6ETYCqy/exec"
+  kd-materi="ulangan_bab1"
+  kategori="formatif"
+  student-id=""
+  student-name=""
+  student-nis=""
+  student-kelas=""
+  soal-file-url="soal-latihan-hint.json"
+  practice-mode
+  show-question-nav
+  allow-backward-nav
+  question-delay="0"
+  review-answers
+  timer-autostart="false">
+</latihan-kuis>
+
+
+<latihan-kuis
+  mode="siswa"
+  duration="900"
+  timer-autostart="true"
+  hide-pause-restart="true"
+  hide-confetti="true"
+  hide-answers="false"
+  hide-score="false"
+  shuffle-questions="true"
+  shuffle-choices="true"
+  kategori="sumatif_lm" 
+  apps-script-url="https://script.google.com/macros/s/AKfycbxGvruTao7sbhdjhT9TJ1c2Mn1bjOS-yWUCbmMfW2W-3_dj-sf6XSFCpDJCK6ETYCqy/exec"
+  kd-materi="LM1"
+  student-id=""
+  judul-kuis="Ulangan Harian"
+  allow-backward-nav="true"
+  show-sheet-link="false"
+  soal-file-url="./soal-latihan-hint.json"
+>
+</latihan-kuis>
+
+
+
+  <script>
+    // reduce FOUC for dark mode so it starts in dark rapidly if selected
+    (function () {
+    try {
+    var ls = globalThis.localStorage;
+    var stored = ls ? ls.getItem('app-hax-darkMode') : null;
+    var dark = stored !== null
+    ? stored === 'true'
+    : !!(globalThis.matchMedia && globalThis.matchMedia('(prefers-color-scheme: dark)').matches);
+    if (dark) {
+    document.body.classList.add('dark-mode');
+    } else {
+    document.body.classList.remove('dark-mode');
+    }
+    } catch (e) {}
+    })();
+  </script>
+  <script type="module">
+    // Sinkronkan data login siswa ke komponen latihan agar nilai terkirim
+    // dengan identitas yang benar ke Spreadsheet.
+    const latihan = document.querySelector('#latihan');
+    window.addEventListener('quiz-user-login', (e) => {
+      latihan.studentId = e.detail.studentId;
+      latihan.studentName = e.detail.nama;
+      latihan.studentNis = e.detail.nis;
+      latihan.studentAbsen = e.detail.absen;
+      latihan.studentKelas = e.detail.kelas;
+    });
+    window.addEventListener('quiz-user-logout', () => {
+      latihan.studentId = "";
+      latihan.studentName = "";
+      latihan.studentNis = "";
+      latihan.studentAbsen = "";
+      latihan.studentKelas = "";
+    });
+  </script>
+</body>
+</html>

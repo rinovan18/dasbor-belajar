@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <base href="/">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="Description" content="Halaman frontend dasbor-kuis siap HAX/HAXcms: elemen terdaftar di HaxStore, bisa diedit lewat HAX editor, plus snippet embed" />
+  <title>dasbor-kuis — Halaman HAX/HAXcms (Bisa Diedit via HAX)</title>
+  <style>
+    :root, html, body { margin: 0; padding: 0; font-family: system-ui, sans-serif; background: #f1f5f9; color: #0f172a; }
+    .halaman { max-width: 1200px; margin: 0 auto; padding: 24px 20px 60px; }
+    header.hero {
+      background: linear-gradient(120deg, #064e3b, #059669 55%, #10b981);
+      color: #fff; border-radius: 20px; padding: 26px 32px; margin-bottom: 22px;
+      box-shadow: 0 12px 28px -12px rgb(5 150 105 / 0.55);
+    }
+    header.hero h1 { margin: 0; font-size: 25px; }
+    header.hero p { margin: 8px 0 0; opacity: 0.85; font-size: 14px; }
+    .nav-links { margin: 12px 0 24px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .nav-links a, .nav-links button {
+      padding: 8px 14px; border-radius: 10px; border: 1px solid #a7f3d0; background: #fff;
+      color: #065f46; font-weight: 600; font-size: 13px; text-decoration: none; cursor: pointer;
+    }
+    .nav-links a:hover, .nav-links button:hover { background: #ecfdf5; }
+    .kartu { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 22px; margin-bottom: 20px; box-shadow: 0 2px 8px -2px rgb(15 23 42 / 0.08); }
+    .kartu h2 { margin: 0 0 10px; font-size: 19px; color: #1e293b; }
+    .kartu h3 { margin: 20px 0 8px; font-size: 15px; color: #064e3b; }
+    .kartu p { font-size: 14px; color: #475569; line-height: 1.65; margin: 6px 0; }
+    code { background: #ecfdf5; color: #065f46; border-radius: 6px; padding: 2px 7px; font-size: 12.5px; word-break: break-all; }
+    pre { background: #0f172a; color: #e2e8f0; border-radius: 12px; padding: 16px; overflow-x: auto; font-size: 12.5px; line-height: 1.6; }
+    pre code { background: none; color: inherit; padding: 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+    th { background: #f8fafc; text-align: left; padding: 10px 12px; border-bottom: 2px solid #e2e8f0; font-size: 12px; }
+    td { padding: 9px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+    tr:hover td { background: #f8fafc; }
+    .catatan { background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 0 10px 10px 0; padding: 12px 16px; font-size: 13px; margin: 14px 0; }
+    .catatan.ok { background: #f0fdf4; border-left-color: #22c55e; }
+    .catatan.info { background: #eff6ff; border-left-color: #3b82f6; }
+    .demo-area { border: 2px dashed #94a3b8; border-radius: 14px; padding: 18px; margin: 14px 0; background: #f8fafc; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 9999px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+    .badge-ok { background: #dcfce7; color: #166534; }
+    .badge-hax { background: #d1fae5; color: #065f46; }
+    .badge-info { background: #f1f5f9; color: #334155; }
+  </style>
+</head>
+
+<body>
+  <div class="halaman">
+    <header class="hero">
+      <h1>🧩 Halaman HAX/HAXcms — dasbor-kuis</h1>
+      <p>Halaman frontend yang <strong>siap diedit lewat HAX editor</strong>: semua elemen terdaftar ke
+        <code>HaxStore.elementList</code> saat editor tersedia, plus snippet untuk menyisipkannya di halaman HAXcms.</p>
+    </header>
+
+    <div class="nav-links">
+      <a href="/">← Demo utama (index.html)</a>
+      <a href="index.html">🗂 Hubungan Sheet</a>
+      <a href="tutorial-hax.html">📘 Tutorial Semua Properti HAX</a>
+      <a href="tutor-akm-sheet.html">📝 Tutor AKM → Sheet</a>
+      <a href="contoh-api-langsung.html">🌐 Contoh API Langsung</a>
+      <button onclick="document.getElementById('daftar').scrollIntoView()">Daftar Elemen</button>
+      <button onclick="document.getElementById('snippet').scrollIntoView()">Snippet Embed</button>
+      <button onclick="document.getElementById('langkah').scrollIntoView()">Langkah HAXcms</button>
+      <button onclick="document.getElementById('pratinjau').scrollIntoView()">Pratinjau</button>
+    </div>
+
+    <div class="kartu" id="daftar">
+      <h2>📋 Elemen yang Terdaftar di HaxStore</h2>
+      <p>Setiap komponen memanggil <code>HaxStore.requestAvailability()</code> di <code>constructor</code>
+        dan mendaftarkan <code>haxProperties</code> ke <code>store.elementList</code>. Karena itu, begitu
+        editor HAX (haxcms-elements) dimuat, elemen di bawah muncul di pencarian "add element" dan semua
+        propertinya bisa diedit lewat panel HAX.</p>
+      <table>
+        <thead>
+          <tr><th>Tag</th><th>haxProperties</th><th>Status</th><th>Fungsi</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>&lt;dasbor-kuis&gt;</code></td><td>statis + <code>haxProperties.json</code></td><td><span class="badge badge-hax">HAX-ready</span></td><td>Dasbor utama (mode guru/siswa)</td></tr>
+          <tr><td><code>&lt;kuis-ledakan&gt;</code></td><td><code>kuis-ledakan.haxProperties.json</code></td><td><span class="badge badge-hax">HAX-ready</span></td><td>Kuis AKM interaktif</td></tr>
+          <tr><td><code>&lt;quiz-user-auth&gt;</code></td><td>statis</td><td><span class="badge badge-hax">HAX-ready</span></td><td>Login / registrasi siswa</td></tr>
+          <tr><td><code>&lt;ruang-diskusi&gt;</code></td><td>statis</td><td><span class="badge badge-hax">HAX-ready</span></td><td>Diskusi bertingkat</td></tr>
+          <tr><td><code>&lt;kirim-tugas&gt;</code></td><td>statis</td><td><span class="badge badge-hax">HAX-ready</span></td><td>Pengumpulan tugas</td></tr>
+          <tr><td><code>&lt;sistem-kehadiran&gt;</code></td><td>statis</td><td><span class="badge badge-hax">HAX-ready</span></td><td>Kehadiran &amp; ruang baca</td></tr>
+          <tr><td><code>&lt;diskusi-tugas&gt;</code></td><td>— (agregat)</td><td><span class="badge badge-info">di-load via dasbor</span></td><td>Agregasi forum + tugas</td></tr>
+        </tbody>
+      </table>
+      <div class="catatan info">
+        <strong>Cara kerjanya:</strong> saat HAX editor aktif di halaman, elemen yang belum terpasang tetap muncul
+        di daftar elemen HAX. Setelah ditarik ke halaman, HAX menulis tag + atribut ke body, sehingga semua
+        konfigurasi (mode, kelas, kd-materi, apps-script-url, questions, dst.) dapat diubah lewat panel properti HAX.
+      </div>
+    </div>
+
+    <div class="kartu" id="snippet">
+      <h2>🧱 Snippet Embed (untuk HAXcms / halaman apa pun)</h2>
+      <h3>Opsi 1 — Masukkan lewat HTML / Source View editor HAX</h3>
+      <pre><code>&lt;script type="module" src="https://unpkg.com/dasbor-kuis@0.0.0/dasbor-kuis.js"&gt;&lt;/script&gt;
+
+&lt;dasbor-kuis
+  mode="siswa"
+  kd-materi="Pertemuan 1"
+  apps-script-url="https://script.google.com/macros/s/AKfycby6leZPfcyjVfNtK_fAEnXIgCPvAkuLI9YlcTjg7cGhwcpVrZdJObg-byyjg8vm0YvXsQ/exec"&gt;
+&lt;/dasbor-kuis&gt;</code></pre>
+      <h3>Opsi 2 — Satu halaman lengkap (mode guru)</h3>
+      <pre><code>&lt;!doctype html&gt;
+&lt;html lang="id"&gt;
+&lt;head&gt;
+  &lt;meta charset="utf-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;Dasbor Guru&lt;/title&gt;
+  &lt;script type="module" src="./dasbor-kuis.js"&gt;&lt;/script&gt;
+  &lt;script type="module" src="./lib/quiz-user-auth.js"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;quiz-user-auth apps-script-url="https://script.google.com/macros/s/XYZ/exec"&gt;&lt;/quiz-user-auth&gt;
+  &lt;dasbor-kuis
+    mode="guru"
+    allow-mode-switch
+    kelas="XI-1"
+    kd-materi="Pertemuan 1"
+    apps-script-url="https://script.google.com/macros/s/XYZ/exec"&gt;
+  &lt;/dasbor-kuis&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+      <div class="catatan ok">
+        <strong>Registrasi HAX terjadi otomatis.</strong> Tidak perlu memanggil API HAX secara manual —
+        lihat contoh kode di <code>lib/kuis-ledakan.js</code> (baris ~220):
+        <pre style="margin:8px 0 0;"><code>globalThis.HaxStore &amp;&amp;
+  typeof globalThis.HaxStore.requestAvailability === "function" &amp;&amp;
+  (() => { const store = globalThis.HaxStore.requestAvailability();
+    store.elementList[ModularQuiz.tag] = ModularQuiz.haxProperties; })();</code></pre>
+      </div>
+    </div>
+
+    <div class="kartu" id="langkah">
+      <h2>🛠 Langkah Agar Halaman Bisa Diedit via HAX</h2>
+      <table>
+        <thead><tr><th>#</th><th>Langkah</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Pasang <code>@haxtheweb/haxcms-elements</code> (atau buka situs HAXcms yang sudah ada, mis. <code>haxme/</code>) — inilah yang menyediakan HAX editor.</td></tr>
+          <tr><td>2</td><td>Impor <code>dasbor-kuis</code> pada halaman/theme (atau publish ke npm lalu tambahkan ke appstore HAX via <code>npm run release</code>).</td></tr>
+          <tr><td>3</td><td>Buka halaman di HAX editor (modus edit). Semua tag di tabel di atas muncul di pencarian "add element".</td></tr>
+          <tr><td>4</td><td>Klik elemen yang sudah ada di halaman → panel properti HAX menampilkan atribut (mode, kelas, kd-materi, apps-script-url, questions, dll.) yang bisa diedit.</td></tr>
+          <tr><td>5</td><td>Untuk dasbor penuh, cukup satu <code>&lt;dasbor-kuis&gt;</code>; untuk halaman kuis/forum/tugas standalone, tarik <code>&lt;kuis-ledakan&gt;</code>, <code>&lt;ruang-diskusi&gt;</code>, atau <code>&lt;kirim-tugas&gt;</code> masing-masing.</td></tr>
+        </tbody>
+      </table>
+      <div class="catatan">
+        <strong>Catatan repo:</strong> package ini tidak menyertakan <code>haxcms-elements</code> sebagai
+        dependensi (editor berat). Registrasi HaxStore di <code>lib/*.js</code> bersifat opsional — bila editor
+        tidak ada, komponen tetap berjalan sebagai elemen Lit biasa.
+      </div>
+    </div>
+
+    <div class="kartu" id="pratinjau">
+      <h2>👁 Pratinjau Langsung</h2>
+      <p>Di bawah adalah elemen yang terpasang pada halaman ini. Bila dibuka di dalam HAX editor,
+        masing-masing bisa diklik dan diedit propertinya. Login siswa dipakai untuk mengisi identitas.</p>
+      <div class="demo-area">
+        <quiz-user-auth
+          apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec">
+        </quiz-user-auth>
+      </div>
+      <div class="demo-area">
+        <dasbor-kuis
+          mode="siswa"
+          kd-materi="Pertemuan 1"
+          apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec">
+        </dasbor-kuis>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="../dasbor-kuis.js"></script>
+  <script type="module" src="../lib/quiz-user-auth.js"></script>
+</body>
+
+</html>

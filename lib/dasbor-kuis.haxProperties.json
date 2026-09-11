@@ -1,0 +1,154 @@
+{
+    "api": "1",
+    "canScale": false,
+    "canPosition": false,
+    "canEditSource": true,
+    "type": "element",
+    "designSystem": {
+        "accent": true,
+        "primary": true,
+        "card": true,
+        "text": true,
+        "designTreatment": false
+    },
+    "gizmo": {
+        "title": "Dasbor Evaluasi Terintegrasi V5",
+        "description": "Dasbor monitoring Guru, Leaderboard Kelas, dan ruang evaluasi mandiri siswa.",
+        "icon": "icons:dashboard",
+        "color": "indigo",
+        "tags": [
+            "Dasbor",
+            "Evaluasi",
+            "Monitoring"
+        ],
+        "meta": {
+            "author": "andyinformatika23-hash"
+        }
+    },
+    "settings": {
+        "configure": [
+            {
+                "property": "appsScriptUrl",
+                "title": "URL Web App Google Apps Script",
+                "description": "Tempelkan URL eksekusi (/exec) dari deploy web app Google Apps Script Anda.",
+                "inputMethod": "textfield",
+                "required": true
+            },
+            {
+                "property": "kdMateri",
+                "title": "Kode Topik / Pertemuan",
+                "description": "Ganti sesi bimbingan secara dinamis, misal: Pertemuan 1, Pertemuan 2.",
+                "inputMethod": "textfield",
+                "required": true
+            },
+            {
+                "property": "mode",
+                "title": "Mode Tampilan",
+                "description": "Mode Guru menampilkan seluruh tab admin (Pantauan, Leaderboard, Peringkat Nilai Bimbingan Kelas, Dashboard Pembelajaran, Input Nilai, Kuis, Diskusi, Edit Soal, Atur); Mode Siswa menampilkan hasil nilai & evaluasi mandiri. Label 'dosen' kini untuk kemunduran dan diperlakukan sebagai Guru.",
+                "inputMethod": "select",
+                "options": {
+                    "guru": "Guru - Admin Kelas Lengkap",
+                    "siswa": "Siswa - Hasil Nilai & Evaluasi Mandiri"
+                }
+            },
+            {
+                "property": "allowModeSwitch",
+                "title": "Tampilkan Tombol Pindah Mode",
+                "description": "Secara default tombol Guru/Siswa disembunyikan agar siswa tidak bisa beralih ke tampilan guru (dan sebaliknya). Aktifkan hanya pada halaman administrasi.",
+                "inputMethod": "boolean"
+            },
+            {
+                "property": "kelas",
+                "title": "Kelas (Filter Guru)",
+                "description": "Filter pantauan guru per kelas, misal: XI-1. Kosongkan untuk semua kelas.",
+                "inputMethod": "textfield"
+            },
+            {
+                "property": "studentId",
+                "title": "Student ID (Mode Siswa)",
+                "description": "ID siswa untuk memuat hasil nilai (otomatis terisi dari event login autentikasi-kuis).",
+                "inputMethod": "textfield"
+            },
+            {
+                "property": "namaSiswa",
+                "title": "Nama Siswa (Mode Siswa)",
+                "description": "Nama siswa yang sedang login untuk identifikasi pada ruang diskusi dan log aktivitas.",
+                "inputMethod": "textfield"
+            },
+            {
+                "property": "nis",
+                "title": "NIS (Mode Siswa)",
+                "description": "Nomor Induk Siswa yang terdaftar pada sheet Users.",
+                "inputMethod": "textfield"
+            },
+            {
+                "property": "absen",
+                "title": "Nomor Absen (Mode Siswa)",
+                "description": "Nomor absen siswa pada kelas.",
+                "inputMethod": "textfield"
+            },
+            {
+                "property": "judulKuis",
+                "title": "Judul Kuis Evaluasi",
+                "description": "Judul kartu kuis pada tab Evaluasi Kuis (dapat diedit oleh guru/dosen).",
+                "inputMethod": "textfield"
+            },
+            {
+                "property": "questions",
+                "title": "Soal Bank (Json) - Edit Guru/Dosen",
+                "description": "Array soal AKM: PG {question, choices, correctIndex}, PG kompleks {correctAnswers:[0,2]}, PGK {type:'pgk', statements:[{text,answer}]}, menjodohkan {type:'matching', leftItems, rightItems, correctPairs}, isian {type:'shortAnswer', acceptedAnswers}, gambar soal {image}, pilihan bergambar {text,image}. Kosongkan untuk memuat otomatis dari Bank Soal sheet.",
+                "inputMethod": "code-editor"
+            },
+            {
+                "property": "shuffleChoices",
+                "title": "Acak Pilihan Jawaban",
+                "description": "Mengacak urutan pilihan jawaban setiap kali kuis dimulai.",
+                "inputMethod": "boolean"
+            },
+            {
+                "property": "hideAnswers",
+                "title": "Sembunyikan Jawaban",
+                "description": "Tidak menampilkan jawaban benar/salah setelah menjawab (mode ujian).",
+                "inputMethod": "boolean"
+            },
+            {
+                "property": "hideScore",
+                "title": "Sembunyikan Nilai",
+                "description": "Menyembunyikan angka skor berjalan dan nilai akhir (pesan selesai tetap tampil).",
+                "inputMethod": "boolean"
+            },
+            {
+                "property": "hideConfetti",
+                "title": "Nonaktifkan Konfeti",
+                "description": "Tidak menampilkan efek konfeti saat jawaban benar.",
+                "inputMethod": "boolean"
+            }
+        ]
+    },
+    "saveOptions": {
+        "wipeSlot": false,
+        "unsetAttributes": []
+    },
+    "demoSchema": [
+        {
+            "tag": "dasbor-kuis",
+            "properties": {
+                "mode": "guru",
+                "kelas": "XI-1",
+                "kdMateri": "Pertemuan 1"
+            },
+            "content": ""
+        },
+        {
+            "tag": "dasbor-kuis",
+            "properties": {
+                "mode": "siswa",
+                "studentId": "STD-65108053",
+                "namaSiswa": "Andy Yulianto",
+                "kelas": "XI-1",
+                "kdMateri": "Pertemuan 1"
+            },
+            "content": ""
+        }
+    ]
+}

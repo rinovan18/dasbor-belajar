@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <base href="/">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="Description" content="Contoh pemanggilan API Apps Script (codev5.gs v5.1) dari halaman HTML: generateReport, getLeaderboard, getStudentRoster, getScores, getActivityHistory, login + code copas" />
+  <title>dasbor-kuis — Contoh API Langsung (code copas)</title>
+  <style>
+    :root, html, body { margin: 0; padding: 0; font-family: system-ui, sans-serif; background: #f1f5f9; color: #0f172a; }
+    .halaman { max-width: 1180px; margin: 0 auto; padding: 24px 20px 60px; }
+    header.hero {
+      background: linear-gradient(120deg, #1e3a8a, #2563eb 55%, #7c3aed);
+      color: #fff; border-radius: 20px; padding: 26px 32px; margin-bottom: 22px;
+      box-shadow: 0 12px 28px -12px rgb(37 99 235 / 0.55);
+    }
+    header.hero h1 { margin: 0; font-size: 25px; }
+    header.hero p { margin: 8px 0 0; opacity: 0.85; font-size: 14px; }
+    .nav-links { margin: 12px 0 24px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .nav-links a, .nav-links button {
+      padding: 8px 14px; border-radius: 10px; border: 1px solid #c7d2fe; background: #fff;
+      color: #4338ca; font-weight: 600; font-size: 13px; text-decoration: none; cursor: pointer;
+    }
+    .nav-links a:hover, .nav-links button:hover { background: #eef2ff; }
+    .kartu { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 22px; margin-bottom: 20px; }
+    .kartu h2 { margin: 0 0 10px; font-size: 19px; color: #1e293b; }
+    .kartu h3 { margin: 18px 0 8px; font-size: 15px; color: #1e3a8a; }
+    .kartu p { font-size: 14px; color: #475569; line-height: 1.65; margin: 6px 0; }
+    code { background: #eef2ff; color: #4338ca; border-radius: 6px; padding: 2px 7px; font-size: 12.5px; word-break: break-all; }
+    pre { background: #0f172a; color: #e2e8f0; border-radius: 12px; padding: 16px; overflow-x: auto; font-size: 12.5px; line-height: 1.6; position: relative; }
+    pre code { background: none; color: inherit; padding: 0; }
+    pre button.salin { position: absolute; top: 10px; right: 10px; font-size: 11px; padding: 4px 10px; border: 0; border-radius: 8px; background: #334155; color: #fff; cursor: pointer; }
+    pre button.salin:hover { background: #475569; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+    th { background: #f8fafc; text-align: left; padding: 10px 12px; border-bottom: 2px solid #e2e8f0; font-size: 12px; }
+    td { padding: 9px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+    tr:hover td { background: #f8fafc; }
+    .catatan { background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 0 10px 10px 0; padding: 12px 16px; font-size: 13px; margin: 14px 0; }
+    .catatan.ok { background: #f0fdf4; border-left-color: #22c55e; }
+    .catatan.info { background: #eff6ff; border-left-color: #3b82f6; }
+    .tombol { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 10px; border: 0; background: #2563eb; color: #fff; font-weight: 700; font-size: 14px; cursor: pointer; }
+    .tombol:hover { background: #1d4ed8; }
+    .tombol:disabled { opacity: .55; cursor: wait; }
+    .tombol.abu { background: #475569; }
+    .status { font-size: 12.5px; color: #64748b; margin: 8px 0; }
+    .keluar { background: #0f172a; border-radius: 12px; padding: 14px 16px; font-size: 12.5px; color: #a5f3fc; overflow-x: auto; white-space: pre-wrap; word-break: break-all; min-height: 24px; }
+  </style>
+</head>
+
+<body>
+  <div class="halaman">
+    <header class="hero">
+      <h1>🌐 Contoh API Langsung — code copas</h1>
+      <p>Memanggil backend <code>lib/codev5.gs</code> (v5.1) dari halaman HTML biasa: tombol demo + snippet yang bisa disalin.</p>
+    </header>
+
+    <div class="nav-links">
+      <a href="/">← Demo utama (index.html)</a>
+      <a href="index.html">🗂 Hubungan Sheet</a>
+      <a href="hasil-cek-perubahan.html">🔎 Hasil Cek Perubahan</a>
+      <a href="contoh-perubahan.html">🧪 Contoh HTML Perubahan</a>
+      <a href="tutor-akumulasi-nilai-rapor.html">📊 Tutor Akumulasi Nilai Rapor</a>
+    </div>
+
+    <div class="kartu">
+      <h2>❓ Kenapa URL mentah "tidak bisa" dibuka di browser?</h2>
+      <p>Apps Script web app <em>selalu</em> mengembalikan <strong>redirect 302</strong> ke
+        <code>script.googleusercontent.com</code> sebelum JSON-nya ditampilkan. Saat kamu mengetik
+        <code>…/exec?action=generateReport</code> langsung di address bar, browser biasanya tetap bisa menampilkan
+        JSON <em>setelah</em> redirect — tapi beberapa browser/konteks (mis. <code>&lt;a href&gt;</code> tanpa
+        <code>target</code>, atau tool yang tidak mengikuti redirect) hanya menunjukkan halaman kosong atau URL redirect panjang.</div></div>
+      <p><strong>Solusi andal:</strong> panggil lewat <code>fetch(..., {redirect: "follow"})</code> dari JavaScript.
+        CORS sudah dibuka (<code>Access-Control-Allow-Origin: *</code>), jadi halaman mana pun bisa memanggilnya:</p>
+      <pre id="pola-fetch"><button class="salin" onclick="salin('pola-fetch')">Salin</button><code>const API = "https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec";
+
+async function panggil(params) {
+  const qs = new URLSearchParams(params).toString();
+  const res = await fetch(`${API}?${qs}`, { method: "GET", redirect: "follow", mode: "cors" });
+  const teks = await res.text();
+  return JSON.parse(teks); // backend selalu JSON
+}</code></pre>
+    </div>
+
+    <!-- ================= generateReport ================= -->
+    <div class="kartu" id="report">
+      <h2>🗳️ 1. Tombol generateReport (perbarui Rangkuman &amp; Rapor)</h2>
+      <p>Backend membaca <code>db_nilai</code>, <code>db_aktivitas</code>, <code>Users</code>, <code>db_kehadiran</code>
+        lalu <em>menimpa</em> sheet <code>Rangkuman</code> dan <code>Akumulasi Nilai Rapor</code>.</p>
+      <button class="tombol" id="btn-report" onclick="jalankan('report')">🔁 Jalankan generateReport</button>
+      <div class="status" id="st-report"></div>
+      <pre id="code-report"><button class="salin" onclick="salin('code-report')">Salin</button><code>// Tombol sederhana — generateReport
+&lt;button onclick="generateReport()"&gt;Perbarui Rangkuman &amp; Rapor&lt;/button&gt;
+&lt;script&gt;
+async function generateReport() {
+  const API = "https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec";
+  const res = await fetch(`${API}?action=generateReport`, { redirect: "follow" });
+  const j = await res.json();
+  alert(j.message); // "Rangkuman &amp; Akumulasi Nilai Rapor diperbarui untuk N siswa."
+}
+&lt;/script&gt;</code></pre>
+    </div>
+
+    <!-- ================= leaderboard ================= -->
+    <div class="kartu" id="leaderboard">
+      <h2>🏆 2. getLeaderboard — 6 siswa, Siti Rahmawati teratas (89)</h2>
+      <p>Membaca sheet <code>Rangkuman</code>, urut berdasar <strong>Rata-rata Skor</strong> tertinggi.</p>
+      <button class="tombol" onclick="jalankan('leaderboard')">📊 Muat Leaderboard</button>
+      <div class="status" id="st-leaderboard"></div>
+      <div class="keluar" id="out-leaderboard">—</div>
+      <pre id="code-leaderboard"><button class="salin" onclick="salin('code-leaderboard')">Salin</button><code>fetch("API?action=getLeaderboard&kelas=XI-1", { redirect: "follow" })
+  .then(r => r.json()).then(j => console.table(j.leaderboard));</code></pre>
+    </div>
+
+    <!-- ================= roster ================= -->
+    <div class="kartu" id="roster">
+      <h2>👥 3. getStudentRoster — roster + status aktivitas</h2>
+      <p>Daftar siswa dari <code>Users</code> + hitungan aktivitas + nilai rapor (satu baris per siswa).</p>
+      <button class="tombol" onclick="jalankan('roster')">🧾 Muat Roster</button>
+      <div class="status" id="st-roster"></div>
+      <div class="keluar" id="out-roster">—</div>
+      <pre id="code-roster"><button class="salin" onclick="salin('code-roster')">Salin</button><code>fetch("API?action=getStudentRoster&kelas=XI-1", { redirect: "follow" })
+  .then(r => r.json()).then(j => console.table(j.roster));</code></pre>
+    </div>
+
+    <!-- ================= scores ================= -->
+    <div class="kartu" id="scores">
+      <h2>🎯 4. getScores — hasil Andy (Nilai Akhir, grade)</h2>
+      <p><code>studentId=STD-65108053</code> → Andy Yulianto (Nilai Akhir, B+).</p>
+      <button class="tombol" onclick="jalankan('scores')">📈 Muat Skor Andy</button>
+      <div class="status" id="st-scores"></div>
+      <div class="keluar" id="out-scores">—</div>
+      <pre id="code-scores"><button class="salin" onclick="salin('code-scores')">Salin</button><code>fetch("API?action=getScores&studentId=STD-65108053", { redirect: "follow" })
+  .then(r => r.json()).then(j => console.log(j.data));</code></pre>
+    </div>
+
+    <!-- ================= history ================= -->
+    <div class="kartu" id="history">
+      <h2>🔥 5. getActivityHistory — 8 hari aktif (28 hari)</h2>
+      <p>Riwayat aktivitas 28 hari terakhir per siswa, untuk heatmap.</p>
+      <button class="tombol" onclick="jalankan('history')">🗓️ Muat Riwayat</button>
+      <div class="status" id="st-history"></div>
+      <div class="keluar" id="out-history">—</div>
+      <pre id="code-history"><button class="salin" onclick="salin('code-history')">Salin</button><code>fetch("API?action=getActivityHistory&studentId=STD-65108053&days=28", { redirect: "follow" })
+  .then(r => r.json()).then(j => console.table(j.history));</code></pre>
+    </div>
+
+    <!-- ================= login ================= -->
+    <div class="kartu" id="login">
+      <h2>🔐 6. Login demo — Rizky Ramadhan</h2>
+      <p><code>nis=65108057</code> + <code>email=rizky.ramadhan23@gmail.com</code> → sesi siswa valid.</p>
+      <button class="tombol" onclick="jalankan('login')">👤 Login Demo</button>
+      <div class="status" id="st-login"></div>
+      <div class="keluar" id="out-login">—</div>
+      <pre id="code-login"><button class="salin" onclick="salin('code-login')">Salin</button><code>fetch("API?action=login&nis=65108057&email=rizky.ramadhan23@gmail.com", { redirect: "follow" })
+  .then(r => r.json()).then(j => console.log(j.data));</code></pre>
+    </div>
+
+    <div class="kartu">
+      <h2>🔄 Cara kirim sebagai user lain — otomatis terkirim</h2>
+      <p>Hasil kuis/aktivitas <em>otomatis terkirim</em> ke backend lewat dua jalur:</p>
+      <ol style="font-size:14px;color:#475569;line-height:1.7;margin:8px 0;">
+        <li>Komponen memancarkan event <code>dasbor-kuis-log</code>; host <code>&lt;dasbor-kuis&gt;</code> menangkapnya,
+          membuat <code>id_log</code> unik (atau memakai yang dikirim komponen), lalu menaruh log ke antrean lokal
+          <code>a3_v5_sync_queue</code>.</li>
+        <li>Antrean di-flush otomatis ke <code>action=logActivity</code> saat online, jendela difokuskan, atau halaman dimuat ulang.
+          Backend menolak <code>id_log</code> duplikat (idempotensi v5.1), jadi tidak ada baris rangkap.</li>
+      </ol>
+      <p><strong>Beda user = beda sesi.</strong> Komponen membaca <code>studentId</code> dari localStorage
+        (<code>quiz_user_session</code>, TTL 24 jam) yang diisi <code>&lt;quiz-user-auth&gt;</code> saat login.
+        Untuk berpindah user: logout (hapus sesi) lalu login dengan NIS/email lain — semua kiriman berikutnya
+        otomatis memakai <code>studentId</code> sesi baru. Bila ingin memaksa, set atribut
+        <code>student-id</code> / <code>student-name</code> dsb. pada <code>&lt;kuis-ledakan&gt;</code>.</p>
+      <div class="catatan ok">
+        <strong>Contoh nyata di sheet db_nilai:</strong> baris
+        <code>Test Cek Kuis | 77 | formatif | LOG-CHECK-584205</code> dan
+        <code>Test Unik | 71 | formatif | LOG-609385</code> adalah hasil kuis yang dikirim lewat jalur di atas —
+        skor ditulis ke <code>db_nilai</code> (kategori <code>formatif</code>) oleh <code>logActivity</code>,
+        lalu tampil di <code>Rangkuman</code> setelah <code>generateReport</code>.
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const API = "https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec";
+
+    const panggil = async (params) => {
+      const qs = new URLSearchParams(params).toString();
+      const res = await fetch(`${API}?${qs}`, { method: "GET", redirect: "follow", mode: "cors" });
+      return res.json();
+    };
+
+    const render = (id, teks) => {
+      const el = document.getElementById(`out-${id}`);
+      el.textContent = typeof teks === "string" ? teks : JSON.stringify(teks, null, 2);
+    };
+
+    const aksi = {
+      report: async () => {
+        const j = await panggil({ action: "generateReport" });
+        render("report", JSON.stringify(j, null, 2));
+        document.getElementById("st-report").textContent = j.status === "ok" ? `✅ ${j.message}` : `❌ ${j.message}`;
+      },
+      leaderboard: async () => {
+        const j = await panggil({ action: "getLeaderboard", kelas: "XI-1" });
+        render("leaderboard", j.leaderboard || j);
+        document.getElementById("st-leaderboard").textContent = `✅ ${(j.leaderboard || []).length} siswa dimuat`;
+      },
+      roster: async () => {
+        const j = await panggil({ action: "getStudentRoster", kelas: "XI-1" });
+        render("roster", j.roster || j);
+        document.getElementById("st-roster").textContent = `✅ ${(j.roster || []).length} siswa dimuat`;
+      },
+      scores: async () => {
+        const j = await panggil({ action: "getScores", studentId: "STD-65108053" });
+        render("scores", j.data || j);
+        document.getElementById("st-scores").textContent = j.data ? `✅ ${j.data.nama} — Nilai Akhir ${j.data.nilaiAkhir} (${j.data.grade})` : `❌ ${j.message}`;
+      },
+      history: async () => {
+        const j = await panggil({ action: "getActivityHistory", studentId: "STD-65108053", days: 28 });
+        render("history", j.history || j);
+        document.getElementById("st-history").textContent = `✅ ${(j.history || []).length} hari aktif`;
+      },
+      login: async () => {
+        const j = await panggil({ action: "login", nis: "65108057", email: "rizky.ramadhan23@gmail.com" });
+        render("login", j.data || j);
+        document.getElementById("st-login").textContent = j.data ? `✅ Login ${j.data.nama} (${j.data.student_id})` : `❌ ${j.message}`;
+      },
+    };
+
+    async function jalankan(id) {
+      const btn = document.getElementById(`btn-${id}`) || (id === "report" ? document.getElementById("btn-report") : null);
+      const st = document.getElementById(`st-${id}`);
+      if (st) st.textContent = "⏳ Memuat…";
+      if (btn) btn.disabled = true;
+      try {
+        await aksi[id]();
+      } catch (e) {
+        if (st) st.textContent = `❌ ${e.message}`;
+        render(id, e.message);
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    function salin(id) {
+      const kode = document.getElementById(id).querySelector("code").innerText;
+      navigator.clipboard.writeText(kode).then(() => {
+        const btn = document.getElementById(id).querySelector("button.salin");
+        const lama = btn.textContent;
+        btn.textContent = "✓ Tersalin";
+        setTimeout(() => (btn.textContent = lama), 1200);
+      });
+    }
+  </script>
+</body>
+
+</html>

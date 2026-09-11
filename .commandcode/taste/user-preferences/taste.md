@@ -1,0 +1,16 @@
+# User Preferences
+- Primary language is Indonesian (Bahasa Indonesia) — project names, code identifiers, comments, and conversation are all in Indonesian. Confidence: 0.95
+- Prefers minimal commands like "continue" — wants the assistant to autonomously keep working without asking for confirmation. Confidence: 0.85
+- Appreciates thorough, structured analysis with code references (file paths, line numbers, code blocks) and clear recommendations. Confidence: 0.8
+- Uses Indonesian-language naming for web components and methods (e.g., `dasbor-kuis`, `latihan-kuis`, `_muatStatusKuis`, `_onWaktuHabis`). Confidence: 0.9
+- Web components follow kebab-case for element names and mixed camelCase/pascalCase for internal methods (prefixed with `_` for private). Confidence: 0.85
+- Works with HAX web components framework using LitElement-style custom elements. Confidence: 0.9
+- Project structure: `elements/{component-name}/` with `lib/` subdirectory for sub-components. Confidence: 0.85
+- Development on Windows (path: `C:\Users\Dragon\Documents\github\`). Confidence: 0.9
+- Uses Google Apps Script for backend data, localStorage for client-side caching. Confidence: 0.8
+- Prefers the assistant to fix issues directly rather than just listing problems — asks "do you want me to implement?" as a closing question. Confidence: 0.75
+- Wants comprehensive multi-level documentation (plan, summary, technical spec) structured specifically for LLM model review before implementation. Confidence: 0.8
+- Favors a structured workflow: analysis → plan creation → documentation → implementation, with plan mode used to gate execution. Confidence: 0.8
+- Expects defensive input validation (clamping/bounding, e.g. `Math.max(0, Math.min(100, value))`) on scores and numeric data before writing to the database — values must be range-checked, not just type-checked. Confidence: 0.85
+- Uses short, direct audit-style questions in Indonesian to verify specific code correctness (e.g. "apa sudah menjaga skor di db assesmen rentang 0-100") — expects the assistant to investigate, answer, and fix if the answer is "no". Confidence: 0.8
+- When a validation gap is found, expects the assistant to proactively fix all related code paths (not just the one asked about), across all affected files. Confidence: 0.8

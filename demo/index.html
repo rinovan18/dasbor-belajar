@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <base href="/">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="Description" content="Peta relasi antar sheet Google Spreadsheet + demo dasbor-kuis" />
+  <title>dasbor-kuis — Hubungan Antar Sheet & Demo</title>
+  <style>
+    :root, html, body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, sans-serif;
+      background: #f1f5f9;
+      color: #0f172a;
+    }
+    .halaman {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 20px 60px;
+    }
+    header.hero {
+      background: linear-gradient(120deg, #312e81, #4f46e5 55%, #6d28d9);
+      color: #fff;
+      border-radius: 20px;
+      padding: 28px 32px;
+      margin-bottom: 24px;
+      box-shadow: 0 12px 28px -12px rgb(79 70 229 / 0.55);
+    }
+    header.hero h1 { margin: 0; font-size: 26px; }
+    header.hero p { margin: 8px 0 0; opacity: 0.85; font-size: 14px; }
+    .nav-links { margin: 12px 0 24px; display: flex; gap: 12px; flex-wrap: wrap; }
+    .nav-links a, .nav-links button {
+      padding: 8px 14px; border-radius: 10px; border: 1px solid #c7d2fe;
+      background: #fff; color: #4338ca; font-weight: 600; font-size: 13px;
+      text-decoration: none; cursor: pointer;
+    }
+    .nav-links a:hover, .nav-links button:hover { background: #eef2ff; }
+    .kartu {
+      background: #fff; border: 1px solid #e2e8f0; border-radius: 16px;
+      padding: 22px; margin-bottom: 20px; box-shadow: 0 2px 8px -2px rgb(15 23 42 / 0.08);
+    }
+    .kartu h2 { margin: 0 0 10px; font-size: 19px; color: #1e293b; }
+    .kartu p { font-size: 14px; color: #475569; line-height: 1.6; margin: 6px 0; }
+    code {
+      background: #eef2ff; color: #4338ca; border-radius: 6px;
+      padding: 2px 7px; font-size: 12.5px; word-break: break-all;
+    }
+    .diagrama { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin: 16px 0; }
+    .sheet-box {
+      border: 2px solid #c7d2fe; border-radius: 14px; padding: 14px; background: #fafaff;
+      position: relative;
+    }
+    .sheet-box .sheet-nama {
+      display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 15px;
+      color: #312e81; margin-bottom: 8px;
+    }
+    .sheet-box.alur-input { border-color: #6ee7b7; }
+    .sheet-box.alur-turunan { border-color: #fcd34d; background: #fffbeb; }
+    .sheet-box.alur-manual { border-color: #93c5fd; background: #eff6ff; }
+    .sheet-box ul { margin: 0; padding-left: 18px; font-size: 12.5px; color: #475569; line-height: 1.7; }
+    .sheet-box li { margin: 2px 0; }
+    .panah { text-align: center; font-size: 18px; color: #6366f1; margin-top: 6px; }
+    table {
+      width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0;
+    }
+    th { background: #f8fafc; text-align: left; padding: 10px 12px; border-bottom: 2px solid #e2e8f0; font-size: 12px; }
+    td { padding: 9px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+    tr:hover td { background: #f8fafc; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 9999px; font-size: 11px; font-weight: 700; }
+    .badge-input { background: #dcfce7; color: #166534; }
+    .badge-turunan { background: #fef3c7; color: #92400e; }
+    .badge-manual { background: #dbeafe; color: #1e40af; }
+    .catatan { background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 0 10px 10px 0; padding: 12px 16px; font-size: 13px; margin-top: 14px; }
+    .catatan.ok { background: #f0fdf4; border-left-color: #22c55e; }
+    .demo-section { margin-top: 8px; }
+  </style>
+</head>
+
+<body>
+  <div class="halaman">
+    <header class="hero">
+      <h1>🗂 dasbor-kuis — Hubungan Antar Sheet & Demo</h1>
+      <p>Peta skema spreadsheet backend <code>lib/codev5.gs</code>, alur data tiap aksi, dan demo langsung komponen Guru/Siswa + autentikasi.</p>
+    </header>
+
+    <div class="nav-links">
+      <a href="/">← Kembali ke demo utama (index.html)</a>
+      <a href="soal-akm-lengkap.html">📝 Soal AKM Lengkap</a>
+      <a href="quiz-user-auth.html">🔐 Login / Daftar</a>
+      <a href="kirim-tugas.html">📤 Kirim Tugas</a>
+      <a href="ruang-diskusi.html">💬 Ruang Diskusi</a>
+      <a href="tutorial-hax.html">🧭 Tutorial Semua Properti HAX</a>
+      <a href="haxcms-page.html">🧩 Halaman HAX/HAXcms</a>
+      <a href="tutor-akm-sheet.html">📝 Tutor AKM → Sheet</a>
+      <a href="contoh-api-langsung.html">🌐 Contoh API Langsung</a>
+      <a href="tutor-rangkuman.html">📚 Tutor Rangkuman</a>
+      <a href="tutor-akumulasi-nilai-rapor.html">📊 Tutor Akumulasi Nilai Rapor</a>
+      <a href="hasil-cek-perubahan.html">🔎 Hasil Cek Perubahan</a>
+      <a href="contoh-perubahan.html">🧪 Contoh HTML Perubahan</a>
+      <button onclick="document.getElementById('hubungan').scrollIntoView()">Hubungan Sheet</button>
+      <button onclick="document.getElementById('aksi').scrollIntoView()">Aksi Backend</button>
+      <button onclick="document.getElementById('demo').scrollIntoView()">Demo Langsung</button>
+    </div>
+
+    <div class="kartu" id="hubungan">
+      <h2>🧩 Peta Relasi Sheet (V5)</h2>
+      <p>
+        Satu spreadsheet menampung <strong>8 sheet</strong> yang saling terhubung. Data mentah ("alur input")
+        ditulis otomatis oleh <code>logActivity</code>, lalu dipadatkan menjadi laporan ("alur turunan")
+        lewat <code>generateReport</code>. Nilai manual & bank soal adalah feed tambahan dari guru.
+      </p>
+      <div class="diagrama">
+        <div class="sheet-box alur-input">
+          <div class="sheet-nama">👤 Users</div>
+          <ul>
+            <li><strong>Master siswa</strong>: StudentID, NIS, Nama, Email, Absen, Kelas, RegisteredAt, LastLogin</li>
+            <li>Dibaca <code>getStudentRoster</code>, <code>login</code>, <code>verify</code></li>
+          </ul>
+        </div>
+        <div class="sheet-box alur-input">
+          <div class="sheet-nama">📜 db_aktivitas</div>
+          <ul>
+            <li><strong>Log semua aktivitas</strong>: reading, quiz, forum, assignment, download</li>
+            <li>Kolom: Timestamp, Tanggal, Hari, Nama, Tipe Aktivitas, Deskripsi, Count, Student ID, NIS, Absen, Kelas, Kode Materi, <strong>ID Log</strong></li>
+            <li>ID Log + LockService = anti double-entry</li>
+          </ul>
+        </div>
+        <div class="sheet-box alur-input">
+          <div class="sheet-nama">🏅 db_nilai</div>
+          <ul>
+            <li><strong>Skor kuis</strong> per siswa per pertemuan</li>
+            <li>Kolom: Skor (%), Total Soal, Status (LULUS &ge; 70), Kategori Kuis (formatif/utS/uas/ulangan_harian), ID Log</li>
+          </ul>
+        </div>
+      </div>
+      <div class="panah">⇩ dihasilkan otomatis oleh <code>generateReport</code> ⇩</div>
+      <div class="diagrama">
+        <div class="sheet-box alur-turunan">
+          <div class="sheet-nama">📊 Rangkuman</div>
+          <ul>
+            <li><strong>Leaderboard kelas</strong> → dibaca <code>getLeaderboard</code></li>
+            <li>Total Kuis, Rata-rata Skor, Skor Tertinggi/Terendah, Total Aktivitas, Reading, Quiz Activity, Assignment, Discussion, Download, Jumlah Pertemuan</li>
+          </ul>
+        </div>
+        <div class="sheet-box alur-turunan">
+          <div class="sheet-nama">📗 Akumulasi Nilai Rapor</div>
+          <ul>
+            <li><strong>Nilai rapor</strong> → dibaca <code>getScores</code> & <code>getStudentRoster</code></li>
+            <li>Kehadiran, Rata-rata UH, Skor UTS, Skor UAS, Sikap, Keterampilan, Nilai Akhir, Grade</li>
+            <li>Bobot saat ini: (Hadir×1 + UH×3 + UTS×2 + UAS×2)/8</li>
+          </ul>
+        </div>
+      </div>
+      <div class="diagrama">
+        <div class="sheet-box alur-manual">
+          <div class="sheet-nama">🎯 Nilai Manual</div>
+          <ul>
+            <li>Override UTS/UAS lewat <code>setManualScore</code></li>
+            <li>Menang atas skor dari db_nilai di <code>getScores</code></li>
+          </ul>
+        </div>
+        <div class="sheet-box alur-manual">
+          <div class="sheet-nama">🧠 Bank Soal</div>
+          <ul>
+            <li>Bank soal (AKM/PG kompleks) → <code>getBankSoal</code></li>
+            <li>Konten di-<em>fetch</em> otomatis oleh <code>&lt;kuis-ledakan&gt;</code> bila atribut <code>questions</code> kosong</li>
+          </ul>
+        </div>
+        <div class="sheet-box alur-manual">
+          <div class="sheet-nama">📋 db_kehadiran</div>
+          <ul>
+            <li>Catatan presensi (opsional) — bahan pelengkap kolom kehadiran rapor</li>
+          </ul>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr><th>Sheet</th><th>Jenis</th><th>Ditulis oleh</th><th>Dibaca oleh</th><th>Kunci relasi</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Users</td><td><span class="badge badge-input">Input</span></td>
+            <td><code>register</code></td>
+            <td><code>getStudentRoster</code>, <code>login</code>, <code>verify</code></td>
+            <td><code>StudentID</code></td>
+          </tr>
+          <tr>
+            <td>db_aktivitas</td><td><span class="badge badge-input">Input</span></td>
+            <td><code>logActivity</code></td>
+            <td><code>getActivityHistory</code>, <code>getStudentRoster</code>, <code>generateReport</code></td>
+            <td><code>Student ID</code> → Users.<code>StudentID</code></td>
+          </tr>
+          <tr>
+            <td>db_nilai</td><td><span class="badge badge-input">Input</span></td>
+            <td><code>logActivity</code> (tipe quiz)</td>
+            <td><code>getScores</code>, <code>generateReport</code></td>
+            <td><code>Student ID</code> → Users.<code>StudentID</code></td>
+          </tr>
+          <tr>
+            <td>Rangkuman</td><td><span class="badge badge-turunan">Turunan</span></td>
+            <td><code>generateReport</code></td>
+            <td><code>getLeaderboard</code></td>
+            <td><code>Student ID</code> → Users.<code>StudentID</code></td>
+          </tr>
+          <tr>
+            <td>Akumulasi Nilai Rapor</td><td><span class="badge badge-turunan">Turunan</span></td>
+            <td><code>generateReport</code></td>
+            <td><code>getScores</code>, <code>getStudentRoster</code></td>
+            <td><code>Student ID</code> → Users.<code>StudentID</code></td>
+          </tr>
+          <tr>
+            <td>Nilai Manual</td><td><span class="badge badge-manual">Manual</span></td>
+            <td><code>setManualScore</code></td>
+            <td><code>getScores</code></td>
+            <td><code>Student ID</code> + <code>Kategori</code></td>
+          </tr>
+          <tr>
+            <td>Bank Soal</td><td><span class="badge badge-manual">Manual</span></td>
+            <td>Diisi guru</td>
+            <td><code>getBankSoal</code> → <code>&lt;kuis-ledakan&gt;</code></td>
+            <td><code>ID</code>, <code>Kategori</code>, <code>Tipe</code></td>
+          </tr>
+          <tr>
+            <td>db_kehadiran</td><td><span class="badge badge-manual">Manual</span></td>
+            <td>Diisi guru</td>
+            <td><code>generateReport</code> (komponen kehadiran)</td>
+            <td><code>Student ID</code> → Users.<code>StudentID</code></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="catatan ok" id="anti">
+        <strong>🛡 Anti double-entry di db_aktivitas (V5.1):</strong> setiap event (kuis/forum/reading) melekat pada
+        <code>id_log</code> unik. Backend men-serial-kan penulisan dengan
+        <code>LockService.getScriptLock() + SpreadsheetApp.flush()</code> dan menolak/melewati
+        <code>id_log</code> yang sudah tercatat, plus memangkas baris rangkap lama lewat
+        <code>action=dedupTransaksi</code>. Sisi klien juga mendeduplikasi antrean per <code>id_log</code>.
+      </div>
+    </div>
+
+    <div class="kartu" id="aksi">
+      <h2>⚙️ Daftar Aksi Backend (GET, ramah CORS)</h2>
+      <p>Semua aksi dipanggil sebagai <code>GET</code> dengan query param; paste di browser untuk debug.</p>
+      <table>
+        <thead>
+          <tr><th>Aksi</th><th>Param</th><th>Menulis</th><th>Membaca</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>logActivity</code></td><td>studentId, type, description, timestamp, kdMateri, id_log, nama, nis, absen, kelas</td><td>db_aktivitas (+ db_nilai bila quiz)</td><td>—</td></tr>
+          <tr><td><code>getStudentRoster</code></td><td>kelas</td><td>—</td><td>Users, db_aktivitas, Rapor</td></tr>
+          <tr><td><code>getScores</code></td><td>studentId</td><td>—</td><td>Rapor, db_nilai, Nilai Manual</td></tr>
+          <tr><td><code>getLeaderboard</code></td><td>kelas</td><td>—</td><td>Rangkuman</td></tr>
+          <tr><td><code>getActivityHistory</code></td><td>studentId, kdMateri, days</td><td>—</td><td>db_aktivitas</td></tr>
+          <tr><td><code>register</code></td><td>nama, email, nis, absen, kelas</td><td>Users</td><td>—</td></tr>
+          <tr><td><code>login</code></td><td>nis, email</td><td>LastLogin</td><td>Users</td></tr>
+          <tr><td><code>verify</code></td><td>studentId | nis</td><td>—</td><td>Users</td></tr>
+          <tr><td><code>generateReport</code></td><td>—</td><td>Rangkuman, Rapor</td><td>db_nilai, db_aktivitas, Users</td></tr>
+          <tr><td><code>setManualScore</code></td><td>studentId, kategori (uts/uas), skor</td><td>Nilai Manual</td><td>—</td></tr>
+          <tr><td><code>getBankSoal</code></td><td>—</td><td>—</td><td>Bank Soal</td></tr>
+          <tr><td><code>dedupTransaksi</code></td><td>—</td><td>db_aktivitas, db_nilai (hapus rangkap)</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="kartu demo-section" id="demo">
+      <h2>🚀 Demo Langsung</h2>
+      <p>Login/daftar lewat <code>quiz-user-auth</code>, lalu jelajahi mode Guru dan Siswa.</p>
+      <quiz-user-auth
+        apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec">
+      </quiz-user-auth>
+      <div class="demo-section">
+        <h2 style="font-size:17px;">👨‍🏫 Mode Guru</h2>
+        <dasbor-kuis mode="guru" kd-materi="Pertemuan 1"
+          apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec">
+        </dasbor-kuis>
+      </div>
+      <div class="demo-section">
+        <h2 style="font-size:17px;">👨‍🏫 Mode Guru Ragam Dua (label lama "dosen") — Peringkat Nilai Bimbingan Kelas di tab Guru</h2>
+        <dasbor-kuis mode="dosen" kd-materi="Pertemuan 1"
+          apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec">
+        </dasbor-kuis>
+      </div>
+      <div class="demo-section">
+        <h2 style="font-size:17px;">🎓 Mode Siswa</h2>
+        <dasbor-kuis mode="siswa" kd-materi="Pertemuan 1"
+          apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec">
+        </dasbor-kuis>
+      </div>
+      <div class="demo-section">
+        <h2 style="font-size:17px;">💥 Kuis Interaktif (confetti + Bank Soal otomatis)</h2>
+        <kuis-ledakan judul="Evaluasi Kuis Interaktif" mode="siswa" kd-materi="Pertemuan 1"
+          apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec">
+        </kuis-ledakan>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="../dasbor-kuis.js"></script>
+  <script type="module" src="../lib/quiz-user-auth.js"></script>
+</body>
+
+</html>

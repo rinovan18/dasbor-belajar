@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <base href="/">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="Description" content="Tutorial semua properti HAX dasbor-kuis (Guru, Siswa) + contoh HTML siap pakai" />
+  <title>dasbor-kuis — Tutorial Semua Properti HAX</title>
+  <style>
+    :root, html, body { margin: 0; padding: 0; font-family: system-ui, sans-serif; background: #f1f5f9; color: #0f172a; }
+    .halaman { max-width: 1100px; margin: 0 auto; padding: 24px 20px 60px; }
+    header.hero {
+      background: linear-gradient(120deg, #312e81, #4f46e5 55%, #6d28d9);
+      color: #fff; border-radius: 20px; padding: 26px 32px; margin-bottom: 22px;
+      box-shadow: 0 12px 28px -12px rgb(79 70 229 / 0.55);
+    }
+    header.hero h1 { margin: 0; font-size: 25px; }
+    header.hero p { margin: 8px 0 0; opacity: 0.85; font-size: 14px; }
+    .nav-links { margin: 12px 0 24px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .nav-links a, .nav-links button {
+      padding: 8px 14px; border-radius: 10px; border: 1px solid #c7d2fe; background: #fff;
+      color: #4338ca; font-weight: 600; font-size: 13px; text-decoration: none; cursor: pointer;
+    }
+    .nav-links a:hover, .nav-links button:hover { background: #eef2ff; }
+    .kartu { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 22px; margin-bottom: 20px; }
+    .kartu h2 { margin: 0 0 10px; font-size: 19px; color: #1e293b; }
+    .kartu h3 { margin: 20px 0 8px; font-size: 15px; color: #312e81; }
+    .kartu p { font-size: 14px; color: #475569; line-height: 1.65; margin: 6px 0; }
+    code {
+      background: #eef2ff; color: #4338ca; border-radius: 6px; padding: 2px 7px;
+      font-size: 12.5px; word-break: break-all;
+    }
+    pre {
+      background: #0f172a; color: #e2e8f0; border-radius: 12px; padding: 16px; overflow-x: auto;
+      font-size: 12.5px; line-height: 1.6;
+    }
+    pre code { background: none; color: inherit; padding: 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+    th { background: #f8fafc; text-align: left; padding: 10px 12px; border-bottom: 2px solid #e2e8f0; font-size: 12px; }
+    td { padding: 9px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+    tr:hover td { background: #f8fafc; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 9999px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+    .tipe-string { background: #dbeafe; color: #1e40af; }
+    .tipe-bool { background: #dcfce7; color: #166534; }
+    .tipe-array { background: #fef3c7; color: #92400e; }
+    .badge-siswa { background: #dcfce7; color: #166534; }
+    .badge-guru { background: #dbeafe; color: #1e40af; }
+    .badge-dosen { background: #ede9fe; color: #5b21b6; }
+    .badge-semua { background: #f1f5f9; color: #334155; }
+    .catatan {
+      background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 0 10px 10px 0;
+      padding: 12px 16px; font-size: 13px; margin: 14px 0;
+    }
+    .catatan.ok { background: #f0fdf4; border-left-color: #22c55e; }
+    .catatan.info { background: #eff6ff; border-left-color: #3b82f6; }
+    .wajib { color: #dc2626; font-weight: 700; }
+  </style>
+</head>
+
+<body>
+  <div class="halaman">
+    <header class="hero">
+      <h1>🧭 Tutorial Semua Properti HAX — dasbor-kuis V5</h1>
+      <p>Referensi lengkap atribut/properti <code>&lt;dasbor-kuis&gt;</code> beserta komponen pendukungnya
+        (<code>kuis-ledakan</code>, <code>quiz-user-auth</code>, <code>ruang-diskusi</code>, <code>kirim-tugas</code>, <code>sistem-kehadiran</code>),
+        plus mode Guru / Siswa dan contoh HTML siap pakai.</p>
+    </header>
+
+    <div class="nav-links">
+      <a href="/">← Demo utama (index.html)</a>
+      <a href="/demo/index.html">🗂 Demo &amp; Hubungan Sheet</a>
+      <a href="soal-akm-lengkap.html">📝 Soal AKM Lengkap</a>
+      <a href="quiz-user-auth.html">🔐 Login / Daftar</a>
+      <button onclick="document.getElementById('mode').scrollIntoView()">Mode</button>
+      <button onclick="document.getElementById('dasbor').scrollIntoView()">dasbor-kuis</button>
+      <button onclick="document.getElementById('kuis').scrollIntoView()">kuis-ledakan</button>
+      <button onclick="document.getElementById('lain').scrollIntoView()">Auth &amp; Lainnya</button>
+      <button onclick="document.getElementById('contoh').scrollIntoView()">Contoh HTML</button>
+    </div>
+
+    <div class="kartu" id="mode">
+      <h2>🎛️ Tiga Mode Tampilan</h2>
+      <p>Properti <code>mode</code> menentukan seluruh tab yang terlihat — siswa tidak akan pernah melihat
+        tab milik guru (dan sebaliknya) kecuali halaman admin sengaja menampilkan tombol pindah mode.</p>
+      <table>
+        <thead>
+          <tr><th>mode</th><th>Pengguna</th><th>Tab yang tampil</th><th>Fungsi utama</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>guru</code></td><td><span class="badge badge-guru">Guru / Wali Kelas</span></td>
+            <td>Pantauan Guru · Leaderboard · Peringkat Nilai Bimbingan Kelas · Dashboard Pembelajaran · Input Nilai · Evaluasi Kuis · Ruang Diskusi · Edit Soal · Atur</td>
+            <td>Monitoring kelas + leaderboard + edit &amp; ekspor nilai + atur konfigurasi</td>
+          </tr>
+          <tr>
+            <td><code>dosen</code></td><td><span class="badge badge-dosen">(alias Guru)</span></td>
+            <td>— diperlakukan sebagai <code>guru</code> —</td>
+            <td>Label lama; kini memakai tab guru (Peringkat Nilai Bimbingan Kelas di tab tersendiri)</td>
+          </tr>
+          <tr>
+            <td><code>siswa</code></td><td><span class="badge badge-siswa">Siswa</span></td>
+            <td>Dashboard Pembelajaran · Hasil &amp; Nilai · Evaluasi Kuis · Ruang Diskusi</td>
+            <td>Hasil nilai pribadi + aktivitas mandiri (baca, kuis, diskusi)</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="catatan">
+        <strong>🔒 Mode tersembunyi secara default.</strong> Tombol pindah mode (Guru/Siswa) di navbar
+        <strong>disembunyikan</strong> kecuali properti <code>allow-mode-switch</code> diaktifkan. Ini mencegah
+        siswa beralih ke tampilan guru (dan sebaliknya). Set mode lewat atribut <code>mode</code> pada tag, bukan lewat tombol.
+      </div>
+    </div>
+
+    <div class="kartu" id="dasbor">
+      <h2>🏫 Properti HAX — &lt;dasbor-kuis&gt;</h2>
+      <table>
+        <thead>
+          <tr><th>Properti (atribut)</th><th>Tipe</th><th>Mode</th><th>Deskripsi</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>apps-script-url</code></td><td><span class="badge tipe-string">String</span></td><td><span class="badge badge-semua">Semua</span></td>
+            <td><span class="wajib">Wajib.</span> URL /exec Google Apps Script (backend <code>codev5.gs</code>).</td></tr>
+          <tr><td><code>mode</code></td><td><span class="badge tipe-string">String</span></td><td><span class="badge badge-semua">Semua</span></td>
+            <td><code>guru</code> | <code>dosen</code> (alias guru) | <code>siswa</code>. Menentukan tab &amp; data yang tampil.</td></tr>
+          <tr><td><code>kd-materi</code></td><td><span class="badge tipe-string">String</span></td><td><span class="badge badge-semua">Semua</span></td>
+            <td><span class="wajib">Wajib.</span> Kode pertemuan/topik, mis. <code>Pertemuan 1</code>.</td></tr>
+          <tr><td><code>kelas</code></td><td><span class="badge tipe-string">String</span></td><td><span class="badge badge-guru">Guru</span></td>
+            <td>Filter roster/leaderboard per kelas, mis. <code>XI-1</code>; kosongkan untuk semua.</td></tr>
+          <tr><td><code>allow-mode-switch</code></td><td><span class="badge tipe-bool">Boolean</span></td><td><span class="badge badge-guru">Guru</span></td>
+            <td>Menampilkan tombol pindah mode di navbar. <strong>Default tersembunyi</strong>.</td></tr>
+          <tr><td><code>student-id</code></td><td><span class="badge tipe-string">String</span></td><td><span class="badge badge-siswa">Siswa</span></td>
+            <td>ID siswa (otomatis terisi event <code>quiz-user-login</code> / profil tersimpan).</td></tr>
+          <tr><td><code>nama-siswa</code></td><td><span class="badge tipe-string">String</span></td><td><span class="badge badge-siswa">Siswa</span></td>
+            <td>Nama siswa untuk identitas &amp; log aktivitas.</td></tr>
+          <tr><td><code>nis</code></td><td><span class="badge tipe-string">String</span></td><td><span class="badge badge-siswa">Siswa</span></td>
+            <td>NIS siswa (sheet Users).</td></tr>
+          <tr><td><code>absen</code></td><td><span class="badge tipe-string">String</span></td><td><span class="badge badge-siswa">Siswa</span></td>
+            <td>Nomor absen siswa.</td></tr>
+          <tr><td><code>judul-kuis</code></td><td><span class="badge tipe-string">String</span></td><td><span class="badge badge-guru">Guru</span></td>
+            <td>Judul kartu kuis pada tab Evaluasi Kuis.</td></tr>
+          <tr><td><code>questions</code></td><td><span class="badge tipe-array">JSON</span></td><td><span class="badge badge-guru">Guru</span></td>
+            <td>Soal kuis (dapat diedit guru di HAX editor maupun tab Edit Soal). Kosongkan agar otomatis dimuat dari sheet Bank Soal.</td></tr>
+          <tr><td><code>shuffle-choices</code></td><td><span class="badge tipe-bool">Boolean</span></td><td><span class="badge badge-guru">Guru</span></td>
+            <td>Mengacak pilihan jawaban tiap mulai kuis.</td></tr>
+          <tr><td><code>hide-answers</code></td><td><span class="badge tipe-bool">Boolean</span></td><td><span class="badge badge-guru">Guru</span></td>
+            <td>Menyembunyikan umpan balik benar/salah (mode ujian).</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="kartu" id="kuis">
+      <h2>📝 Properti HAX — &lt;kuis-ledakan&gt;</h2>
+      <p>Kuis AKM interaktif (PG, PG Kompleks, Benar/Salah, Menjodohkan, Isian Singkat). Hasil dikirim ke
+        <code>action=logActivity</code> baik saat berada di dalam dasbor maupun dipakai standalone.</p>
+      <table>
+        <thead>
+          <tr><th>Properti (atribut)</th><th>Tipe</th><th>Deskripsi</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>judul</code></td><td><span class="badge tipe-string">String</span></td><td>Judul kartu kuis.</td></tr>
+          <tr><td><code>apps-script-url</code></td><td><span class="badge tipe-string">String</span></td><td>URL /exec untuk mengirim hasil + memuat Bank Soal.</td></tr>
+          <tr><td><code>kd-materi</code></td><td><span class="badge tipe-string">String</span></td><td>Kode topik pada log aktivitas.</td></tr>
+          <tr><td><code>mode</code></td><td><span class="badge tipe-string">String</span></td><td><code>guru</code> (bisa ulang) | <code>siswa</code> (terkunci setelah selesai).</td></tr>
+          <tr><td><code>questions</code></td><td><span class="badge tipe-array">JSON</span></td><td>Array soal; format lama <code>[{q,a,b,c,k}]</code> juga didukung.</td></tr>
+          <tr><td><code>shuffle-choices</code></td><td><span class="badge tipe-bool">Boolean</span></td><td>Acak pilihan jawaban.</td></tr>
+          <tr><td><code>hide-answers</code></td><td><span class="badge tipe-bool">Boolean</span></td><td>Sembunyikan umpan balik benar/salah.</td></tr>
+          <tr><td><code>hide-confetti</code></td><td><span class="badge tipe-bool">Boolean</span></td><td>Nonaktifkan animasi confetti.</td></tr>
+          <tr><td><code>student-id</code>, <code>student-name</code>, <code>student-nis</code>, <code>student-absen</code>, <code>student-kelas</code></td><td><span class="badge tipe-string">String</span></td><td>Identitas siswa untuk log (diisi otomatis dari sesi login).</td></tr>
+        </tbody>
+      </table>
+      <pre><code>&lt;kuis-ledakan
+  judul="Evaluasi Kuis Interaktif"
+  mode="siswa"
+  kd-materi="Pertemuan 1"
+  apps-script-url="https://script.google.com/macros/s/XYZ/exec"
+  questions='[{"question":"Apa ibu kota Indonesia?","choices":["Bandung","Jakarta","Surabaya"],"correctIndex":1}]'&gt;
+&lt;/kuis-ledakan&gt;</code></pre>
+    </div>
+
+    <div class="kartu" id="lain">
+      <h2>🔗 Properti Komponen Pendukung</h2>
+      <h3>quiz-user-auth</h3>
+      <table>
+        <thead><tr><th>Properti (atribut)</th><th>Tipe</th><th>Deskripsi</th></tr></thead>
+        <tbody>
+          <tr><td><code>apps-script-url</code></td><td><span class="badge tipe-string">String</span></td><td><span class="wajib">Wajib.</span> URL /exec (action=register|login|verify).</td></tr>
+          <tr><td><code>auto-login</code></td><td><span class="badge tipe-bool">Boolean</span></td><td>Coba login otomatis bila ada sesi tersimpan.</td></tr>
+        </tbody>
+      </table>
+      <h3>ruang-diskusi (Ruang Diskusi)</h3>
+      <table>
+        <thead><tr><th>Properti (atribut)</th><th>Tipe</th><th>Deskripsi</th></tr></thead>
+        <tbody>
+          <tr><td><code>forum-api-url</code></td><td><span class="badge tipe-string">String</span></td><td><span class="wajib">Wajib.</span> URL /exec backend forum/tugas (lib/code-forum-tugas.gs, sheet <code>Forum Log</code>).</td></tr>
+          <tr><td><code>apps-script-url</code></td><td><span class="badge tipe-string">String</span></td><td>URL /exec utama untuk log aktivitas discussion.</td></tr>
+          <tr><td><code>forum-topic</code></td><td><span class="badge tipe-string">String</span></td><td>Topik diskusi.</td></tr>
+          <tr><td><code>sheet-name</code></td><td><span class="badge tipe-string">String</span></td><td>Nama pertemuan / kdMateri filter komentar.</td></tr>
+          <tr><td><code>view-mode</code></td><td><span class="badge tipe-string">String</span></td><td><code>student</code> (default) / <code>lecturer</code> (muncul tombol Hapus).</td></tr>
+          <tr><td><code>hide-delete</code></td><td><span class="badge tipe-bool">Boolean</span></td><td>Sembunyikan tombol Hapus.</td></tr>
+        </tbody>
+      </table>
+      <h3>kirim-tugas (Pengumpulan Tugas)</h3>
+      <table>
+        <thead><tr><th>Properti (atribut)</th><th>Tipe</th><th>Deskripsi</th></tr></thead>
+        <tbody>
+          <tr><td><code>forum-api-url</code></td><td><span class="badge tipe-string">String</span></td><td><span class="wajib">Wajib.</span> URL /exec backend forum/tugas (lib/code-forum-tugas.gs, sheet <code>Tugas Log</code>).</td></tr>
+          <tr><td><code>apps-script-url</code></td><td><span class="badge tipe-string">String</span></td><td>URL /exec utama untuk log aktivitas assignment.</td></tr>
+          <tr><td><code>assignment-title</code></td><td><span class="badge tipe-string">String</span></td><td>Judul tugas.</td></tr>
+          <tr><td><code>assignment-instruction</code></td><td><span class="badge tipe-string">String</span></td><td>Instruksi pengerjaan.</td></tr>
+          <tr><td><code>sheet-name</code></td><td><span class="badge tipe-string">String</span></td><td>Nama pertemuan / kdMateri (kunci localStorage status).</td></tr>
+        </tbody>
+      </table>
+      <h3>sistem-kehadiran (Dashboard Pembelajaran / Ruang Baca)</h3>
+      <table>
+        <thead><tr><th>Properti (atribut)</th><th>Tipe</th><th>Deskripsi</th></tr></thead>
+        <tbody>
+          <tr><td><code>apps-script-url</code></td><td><span class="badge tipe-string">String</span></td><td>URL /exec untuk riwayat aktivitas server.</td></tr>
+          <tr><td><code>kd-materi</code></td><td><span class="badge tipe-string">String</span></td><td>Kode topik pada log.</td></tr>
+          <tr><td><code>student-id</code></td><td><span class="badge tipe-string">String</span></td><td>ID siswa.</td></tr>
+          <tr><td><code>nama-siswa</code></td><td><span class="badge tipe-string">String</span></td><td>Nama siswa.</td></tr>
+          <tr><td><code>mode</code></td><td><span class="badge tipe-string">String</span></td><td>Warisan dari dasbor (<code>guru</code>/<code>siswa</code>).</td></tr>
+          <tr><td><code>questions</code></td><td><span class="badge tipe-array">JSON</span></td><td>Soal mini-kuis internal (opsional).</td></tr>
+        </tbody>
+      </table>
+      <div class="catatan info">
+        <strong>🔄 Sinkronisasi.</strong> Semua aktivitas (reading/quiz/forum) masuk ke antrean lokal
+        <code>a3_v5_sync_queue</code> dengan <code>id_log</code> idempoten, lalu dikirim masal via
+        <code>action=logActivity</code>. Antrean dikirim ulang saat koneksi online, jendela fokus, atau muat ulang.
+      </div>
+    </div>
+
+    <div class="kartu" id="contoh">
+      <h2>🧪 Contoh HTML Siap Pakai</h2>
+      <h3>1 · Halaman Guru (dengan tombol pindah mode untuk admin)</h3>
+      <pre><code>&lt;dasbor-kuis
+  mode="guru"
+  allow-mode-switch
+  kelas="XI-1"
+  kd-materi="Pertemuan 1"
+  apps-script-url="https://script.google.com/macros/s/XYZ/exec"&gt;
+&lt;/dasbor-kuis&gt;</code></pre>
+      <h3>2 · Halaman Guru — Peringkat Nilai Bimbingan Kelas (tab Guru)</h3>
+      <pre><code>&lt;dasbor-kuis
+  mode="guru"
+  kelas="XI-1"
+  kd-materi="Pertemuan 1"
+  apps-script-url="https://script.google.com/macros/s/XYZ/exec"&gt;
+&lt;/dasbor-kuis&gt;</code></pre>
+      <h3>3 · Halaman Siswa (mode terkunci, tanpa tombol pindah)</h3>
+      <pre><code>&lt;dasbor-kuis
+  mode="siswa"
+  student-id="STD-65108053"
+  nama-siswa="Andy Yulianto"
+  nis="65108053"
+  absen="21"
+  kelas="XI-1"
+  kd-materi="Pertemuan 1"
+  apps-script-url="https://script.google.com/macros/s/XYZ/exec"&gt;
+&lt;/dasbor-kuis&gt;</code></pre>
+      <h3>4 · Guru mengedit soal lewat HAX (properti questions)</h3>
+      <pre><code>&lt;dasbor-kuis mode="guru" apps-script-url="https://script.google.com/macros/s/XYZ/exec"
+  questions='[
+    {"question":"Apa kegunaan connectedCallback pada LitElement?","choices":["Inisialisasi","Deteksi saat elemen masuk DOM","Hapus listener"],"correctIndex":1},
+    {"question":"PG Kompleks — pilih semua pernyataan benar","type":"pgk","statements":[{"text":"id_log mencegah duplikat","answer":true},{"text":"flushQueue mengosongkan antrean lokal","answer":true}],"points":2}
+  ]' /&gt;</code></pre>
+      <div class="catatan ok">
+        <strong>💡 Alur cepat:</strong> ubah <code>mode</code> untuk peran berbeda &rarr; isi
+        <code>apps-script-url</code> + <code>kd-materi</code> &rarr; untuk guru, edit soal lewat
+        <code>questions</code> di HAX editor &rarr; arahkan siswa ke halaman <code>mode="siswa"</code> (tanpa
+        <code>allow-mode-switch</code>) sehingga tampilan guru tersembunyi.
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <base href="/">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="Description" content="Hasil cek perubahan dasbor-kuis: URL backend baru (v5.1), perbaikan kuis → db_nilai, dan verifikasi live" />
+  <title>dasbor-kuis — Hasil Cek Perubahan</title>
+  <style>
+    :root, html, body { margin: 0; padding: 0; font-family: system-ui, sans-serif; background: #f1f5f9; color: #0f172a; }
+    .halaman { max-width: 1100px; margin: 0 auto; padding: 24px 20px 60px; }
+    header.hero {
+      background: linear-gradient(120deg, #14532d, #16a34a 55%, #0d9488);
+      color: #fff; border-radius: 20px; padding: 26px 32px; margin-bottom: 22px;
+      box-shadow: 0 12px 28px -12px rgb(22 163 74 / 0.55);
+    }
+    header.hero h1 { margin: 0; font-size: 25px; }
+    header.hero p { margin: 8px 0 0; opacity: 0.85; font-size: 14px; }
+    .nav-links { margin: 12px 0 24px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .nav-links a, .nav-links button {
+      padding: 8px 14px; border-radius: 10px; border: 1px solid #c7d2fe; background: #fff;
+      color: #4338ca; font-weight: 600; font-size: 13px; text-decoration: none; cursor: pointer;
+    }
+    .nav-links a:hover, .nav-links button:hover { background: #eef2ff; }
+    .kartu { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 22px; margin-bottom: 20px; }
+    .kartu h2 { margin: 0 0 10px; font-size: 19px; color: #1e293b; }
+    .kartu h3 { margin: 20px 0 8px; font-size: 15px; color: #14532d; }
+    .kartu p { font-size: 14px; color: #475569; line-height: 1.65; margin: 6px 0; }
+    code { background: #eef2ff; color: #4338ca; border-radius: 6px; padding: 2px 7px; font-size: 12.5px; word-break: break-all; }
+    pre { background: #0f172a; color: #e2e8f0; border-radius: 12px; padding: 16px; overflow-x: auto; font-size: 12.5px; line-height: 1.6; }
+    pre code { background: none; color: inherit; padding: 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+    th { background: #f8fafc; text-align: left; padding: 10px 12px; border-bottom: 2px solid #e2e8f0; font-size: 12px; }
+    td { padding: 9px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
+    tr:hover td { background: #f8fafc; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 9999px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+    .badge-ok { background: #dcfce7; color: #166534; }
+    .badge-lama { background: #fee2e2; color: #991b1b; }
+    .badge-baru { background: #dbeafe; color: #1e40af; }
+    .catatan { background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 0 10px 10px 0; padding: 12px 16px; font-size: 13px; margin: 14px 0; }
+    .catatan.ok { background: #f0fdf4; border-left-color: #22c55e; }
+    .catatan.info { background: #eff6ff; border-left-color: #3b82f6; }
+    .catatan.error { background: #fef2f2; border-left-color: #ef4444; }
+    .alur { display: flex; flex-direction: column; gap: 8px; margin: 16px 0; }
+    .alur .step { display: flex; gap: 12px; align-items: flex-start; }
+    .alur .step .no { background: #16a34a; color: #fff; border-radius: 9999px; min-width: 26px; height: 26px; display: grid; place-items: center; font-weight: 800; font-size: 13px; flex: 0 0 auto; }
+    .alur .step .isi { font-size: 14px; color: #334155; line-height: 1.6; }
+  </style>
+</head>
+
+<body>
+  <div class="halaman">
+    <header class="hero">
+      <h1>🔎 Hasil Cek Perubahan</h1>
+      <p>Verifikasi backend baru (URL v5.1), temuan kuis hanya masuk <code>db_aktivitas</code>, tindakan perbaikan, dan bukti live.</p>
+    </header>
+
+    <div class="nav-links">
+      <a href="/">← Demo utama (index.html)</a>
+      <a href="index.html">🗂 Hubungan Sheet</a>
+      <a href="tutor-rangkuman.html">📚 Tutor Rangkuman</a>
+      <a href="tutor-akumulasi-nilai-rapor.html">📊 Tutor Akumulasi Nilai Rapor</a>
+      <a href="contoh-perubahan.html">🧪 Contoh HTML Perubahan</a>
+    </div>
+
+    <div class="kartu" id="temuan">
+      <h2>📌 Ringkasan Temuan</h2>
+      <table>
+        <thead><tr><th>#</th><th>Temuan</th><th>Penyebab</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Hasil kuis hanya masuk <code>db_aktivitas</code>, tidak masuk <code>db_nilai</code></td>
+            <td>Demo &amp; komponen masih menunjuk ke deployment <strong>lama (v5 idempoten)</strong> lewat URL
+              <code>AKfycbzJYZTooej…ywe</code>. Deployment itu tidak menulis skor kuis ke <code>db_nilai</code> secara konsisten.</td>
+            <td><span class="badge badge-ok">DIPERBAIKI</span></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Fitur forum/tugas tidak tersedia di URL lama</td>
+            <td>Deployment v5 tidak mengenali aksi <code>saveForumComment</code>, <code>saveAssignment</code>, <code>getForumComments</code>, dst.</td>
+            <td><span class="badge badge-ok">DIPERBAIKI</span></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Batas total aktivitas memangkas baris kuis</td>
+            <td>Kode lama menghitung kuis sebagai bagian kuota 50× dan menghapus baris terakhir bila melebihi batas.</td>
+            <td><span class="badge badge-ok">DIPERBAIKI</span> di v5.1 (kuis bebas kuota)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="kartu" id="url">
+      <h2>🔗 URL Backend yang Diubah</h2>
+      <table>
+        <thead><tr><th>Keterangan</th><th>Sebelum (v5)</th><th>Sesudah (v5.1)</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Form API</strong> <code>apps-script-url</code><br><small>(logActivity, register, generateReport, getBankSoal, forum/tugas, kehadiran)</small></td>
+            <td><code style="word-break:break-all;">…/AKfycbzJYZTooejJ1q4hTDsPHbapS5fu_Od1jd1G-X_Na3bA3UZvdYdlg2bbX4P93NEo_ywe/exec</code></td>
+            <td><code style="word-break:break-all;">…/AKfycbznjk2O8H27iL1YW2a-ve5LzVLN2kkgJRA0zIZSM_-SPv8FRpN4V-jqIkKTE0VfmN5H/exec</code></td>
+          </tr>
+          <tr>
+            <td><strong>Forum API</strong> <code>forum-api-url</code><br><small>(opsional; bila kosong memakai apps-script-url)</small></td>
+            <td><em>belum diatur</em></td>
+            <td><code style="word-break:break-all;">…/AKfycbwNtsEzwwsBeVnkazn9R3x7_Z5NXlYEt5b9MzOISJaK2CRvDMvEjQjzTBoS42pJ1k20Aw/exec</code></td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="catatan ok">
+        <strong>Verifikasi:</strong> GET ke URL baru mengembalikan
+        <code>{"status":"ok","message":"codev5.gs aktif (antidobel-entri v5.1)…"}</code> — membuktikan deployment v5.1
+        sudah aktif dan mengenali aksi <code>saveAssignment</code>, <code>getForumComments</code>, <code>saveAttendanceComplete</code>, dst.
+      </div>
+    </div>
+
+    <div class="kartu" id="langkah">
+      <h2>🔬 Langkah Cek &amp; Bukti Live</h2>
+      <div class="alur">
+        <div class="step"><div class="no">1</div><div class="isi"><strong>Bandingkan respons dua URL.</strong> URL lama
+          → <code>codev5.gs aktif (idempoten v5)</code>; URL baru → <code>codev5.gs aktif (antidobel-entri v5.1)</code>.</div></div>
+        <div class="step"><div class="no">2</div><div class="isi"><strong>Kirim kuis uji ke URL baru.</strong>
+          <code>action=logActivity</code> dengan <code>type=quiz</code>, <code>description={"score":71,…}</code>, <code>id_log</code> unik.
+          Respons: <code>{"status":"ok","message":"Aktivitas 'quiz' tercatat (v5.1)."}</code></div></div>
+        <div class="step"><div class="no">3</div><div class="isi"><strong>Panggil <code>generateReport</code>.</strong>
+          Backend membaca <code>db_nilai</code> + <code>db_aktivitas</code> → menulis ulang <code>Rangkuman</code> &amp; <code>Akumulasi Nilai Rapor</code>.</div></div>
+        <div class="step"><div class="no">4</div><div class="isi"><strong>Cek hasilnya via <code>getLeaderboard</code>.</strong>
+          Siswa uji tampil dengan <code>Total Kuis: 1</code>, <code>Rata-rata Skor: 71</code>, <code>Quiz Activity: 1</code>,
+          <code>Kuis Formatif: 1</code> — membuktikan skor kuis <strong>benar-benar masuk <code>db_nilai</code></strong>, bukan hanya activity.</div></div>
+        <div class="step"><div class="no">5</div><div class="isi"><strong>Uji duplikat.</strong> Kirim ulang <code>id_log</code> yang sama
+          → <code>duplikat:true</code>, tanpa baris rangkap (idempotensi v5.1).</div></div>
+      </div>
+      <h3>Bukti respons live</h3>
+      <pre><code>GET {FORM_API}?action=getLeaderboard
+→ "leaderboard":[{"Student ID":"STD-CEK-98885","Total Kuis":1,"Rata-rata Skor":71,
+   "Quiz Activity":1,"Kuis Formatif":1,"Status Kuis Terakhir":"LULUS"}, …]</code></pre>
+    </div>
+
+    <div class="kartu" id="berkas">
+      <h2>📄 Berkas yang Diubah</h2>
+      <table>
+        <thead><tr><th>Berkas</th><th>Perubahan</th></tr></thead>
+        <tbody>
+          <tr><td><code>index.html</code></td><td>6× URL <code>apps-script-url</code> v5 → v5.1</td></tr>
+          <tr><td><code>demo/index.html</code></td><td>5× URL <code>apps-script-url</code> v5 → v5.1</td></tr>
+          <tr><td><code>demo/soal-akm-lengkap.html</code></td><td>5× URL <code>apps-script-url</code> v5 → v5.1</td></tr>
+          <tr><td><code>demo/quiz-user-auth.html</code></td><td>1× URL <code>apps-script-url</code> v5 → v5.1</td></tr>
+          <tr><td><code>demo/ruang-diskusi.html</code></td><td>placeholder diisi <code>apps-script-url</code> + <code>forum-api-url</code> v5.1</td></tr>
+          <tr><td><code>demo/kirim-tugas.html</code></td><td>placeholder diisi <code>apps-script-url</code> + <code>forum-api-url</code> v5.1</td></tr>
+          <tr><td><code>demo/tutor-rangkuman.html</code></td><td>difokuskan ke sheet <code>Rangkuman</code></td></tr>
+          <tr><td><code>demo/tutor-akumulasi-nilai-rapor.html</code></td><td>halaman baru — sheet <code>Akumulasi Nilai Rapor</code></td></tr>
+          <tr><td><code>demo/contoh-perubahan.html</code></td><td>halaman baru — contoh HTML perubahan + demo langsung</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="kartu" id="catatan">
+      <h2>⚠️ Catatan Operasional</h2>
+      <div class="catatan">
+        <strong>Data uji di backend.</strong> Pengujian live membuat satu baris aktivitas + skor kuis untuk siswa uji
+        <code>STD-CEK-98885</code> (dan <code>STD-CHECK-KUIS</code>) di <code>db_aktivitas</code>/<code>db_nilai</code>.
+        Hapus baris tersebut bila tidak diinginkan, lalu jalankan <code>dedupTransaksi</code> dan <code>generateReport</code>.
+      </div>
+      <div class="catatan info">
+        <strong>Kapan generateReport dipanggil?</strong> Tidak wajib setelah tiap kuis — <code>getScores</code>/<code>getStudentRoster</code>
+        membaca <code>db_nilai</code> &amp; sheet rapor yang sudah ada. Namun guru disarankan memanggil
+        <code>?action=generateReport</code> secara berkala agar <code>Rangkuman</code> &amp; <code>Akumulasi Nilai Rapor</code> selalu sinkron.
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

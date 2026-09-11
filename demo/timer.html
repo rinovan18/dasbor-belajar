@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo Timer Kuis &amp; Timer Materi-Kuis</title>
+  <style>
+    :root, html, body { margin: 0; padding: 0; font-family: system-ui, sans-serif; }
+    body { padding: 24px; background: #f5f3fb; }
+    section { margin-bottom: 32px; }
+    h1 { color: #6750a4; }
+    h2 { color: #6750a4; margin-bottom: 8px; }
+  </style>
+  <script type="module" src="../dasbor-kuis.js"></script>
+</head>
+<body>
+  <h1>⏱️ Demo Timer</h1>
+
+  <section>
+    <h2>1. Timer Kuis (countdown + auto-submit)</h2>
+    <timer-kuis duration="10"></timer-kuis>
+    <p style="color:#666;font-size:14px;">
+      Saat waktu habis, komponen memancarkan event <code>timer-kuis-expired</code>
+      yang bisa dipasang ke &lt;kuis-ledakan&gt; untuk auto-submit.
+    </p>
+    <pre id="log-kuis" style="background:#fff;padding:8px;border-radius:8px;"></pre>
+    <script type="module">
+      const tk = document.querySelector('timer-kuis');
+      tk.addEventListener('timer-kuis-expired', (e) => {
+        document.getElementById('log-kuis').textContent = 'Event diterima: ' + JSON.stringify(e.detail);
+      });
+    </script>
+  </section>
+
+  <section>
+    <h2>2. Timer Materi &amp; Kuis (dua timer terpisah)</h2>
+    <timer-materi-kuis durasi-materi="15" durasi-kuis="10"></timer-materi-kuis>
+    <p style="color:#666;font-size:14px;">
+      Timer materi dan kuis berjalan independen. Masing-masing memancarkan
+      <code>timer-materi-expired</code> / <code>timer-kuis-expired</code>.
+    </p>
+    <pre id="log-mk" style="background:#fff;padding:8px;border-radius:8px;"></pre>
+    <script type="module">
+      const mk = document.querySelector('timer-materi-kuis');
+      mk.addEventListener('timer-materi-expired', (e) => {
+        document.getElementById('log-mk').textContent += 'Materi habis: ' + JSON.stringify(e.detail) + '\n';
+      });
+      mk.addEventListener('timer-kuis-expired', (e) => {
+        document.getElementById('log-mk').textContent += 'Kuis habis: ' + JSON.stringify(e.detail) + '\n';
+      });
+    </script>
+  </section>
+</body>
+</html>

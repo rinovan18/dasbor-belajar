@@ -1,0 +1,202 @@
+{
+    "api": "1",
+    "canScale": true,
+    "canPosition": false,
+    "canEditSource": true,
+    "type": "element",
+    "designSystem": {
+        "accent": true,
+        "primary": true,
+        "card": true,
+        "text": true,
+        "designTreatment": false
+    },
+    "gizmo": {
+        "title": "Kuis Ledakan (Evaluasi Mandiri)",
+        "description": "Kuis interaktif evaluasi mandiri yang mengunci skor dan mengirim aktivitas ke dasbor Apps Script.",
+        "icon": "icons:question-answer",
+        "color": "cyan",
+        "tags": [
+            "Kuis",
+            "Evaluasi",
+            "Interaktif"
+        ],
+        "meta": {
+            "author": "andyinformatika23-hash"
+        }
+    },
+    "settings": {
+        "configure": [
+            {
+                "property": "judul",
+                "title": "Judul Kuis",
+                "description": "Judul yang tampil di kartu kuis.",
+                "inputMethod": "textfield",
+                "required": true
+            },
+            {
+                "property": "appsScriptUrl",
+                "title": "URL Web App Google Apps Script",
+                "description": "URL /exec Apps Script untuk mengirim hasil kuis (action=logActivity).",
+                "inputMethod": "textfield"
+            },
+            {
+                "property": "kdMateri",
+                "title": "Kode Topik / Pertemuan",
+                "description": "Kode materi yang tercatat pada log aktivitas.",
+                "inputMethod": "textfield"
+            },
+            {
+                "property": "kategori",
+                "title": "Kategori Kuis",
+                "description": "sumatif_lm → skor masuk rapor (db_asesmen); formatif → progres saja, tidak masuk rapor (db_aktivitas).",
+                "inputMethod": "select",
+                "options": {
+                    "sumatif_lm": "Sumatif (Rapor LM)",
+                    "formatif": "Formatif (Progres)"
+                },
+                "default": "sumatif_lm"
+            },
+            {
+                "property": "mode",
+                "title": "Mode Tampilan",
+                "description": "Mode guru menampilkan tombol ulang; mode siswa fokus mengerjakan.",
+                "inputMethod": "select",
+                "options": {
+                    "guru": "Guru - Pantauan",
+                    "dosen": "Dosen - Bimbingan",
+                    "siswa": "Siswa - Evaluasi Mandiri"
+                }
+            },
+            {
+                "property": "questions",
+                "title": "Soal (JSON)",
+                "description": "Array soal AKM: PG {question, choices, correctIndex}, PG kompleks {correctAnswers:[0,2]}, PGK {type:'pgk', statements:[{text,answer}]}, menjodohkan {type:'matching', leftItems, rightItems, correctPairs}, isian {type:'shortAnswer', acceptedAnswers}, gambar soal {image}, pilihan bergambar {text,image}. Skor: PGK 1 poin per pernyataan benar, menjodohkan 1 poin per pasangan benar. Format lama {q,a,b,c,k} tetap didukung.",
+                "inputMethod": "code-editor"
+            },
+            {
+                "property": "shuffleChoices",
+                "title": "Acak Pilihan Jawaban",
+                "description": "Mengacak urutan pilihan jawaban setiap kali kuis dimulai",
+                "inputMethod": "boolean"
+            },
+            {
+                "property": "shuffleQuestions",
+                "title": "Acak Urutan Soal",
+                "description": "Mengacak urutan soal setiap kali kuis dimulai.",
+                "inputMethod": "boolean"
+            },
+            {
+                "property": "lockAfterComplete",
+                "title": "Kunci Otomatis Setelah Selesai",
+                "description": "Siswa tidak bisa mengulang setelah submit pertama; guru membuka via mode guru.",
+                "inputMethod": "boolean",
+                "default": true
+            },
+            {
+                "property": "hideAnswers",
+                "title": "Sembunyikan Jawaban",
+                "description": "Tidak menampilkan jawaban benar/salah setelah menjawab",
+                "inputMethod": "boolean"
+            },
+            {
+                "property": "hideScore",
+                "title": "Sembunyikan Nilai",
+                "description": "Menyembunyikan angka skor berjalan di layar soal dan lingkaran nilai akhir (pesan selesai tetap tampil)",
+                "inputMethod": "boolean"
+            },
+            {
+                "property": "hideConfetti",
+                "title": "Nonaktifkan Konfeti",
+                "description": "Tidak menampilkan efek konfeti saat jawaban benar",
+                "inputMethod": "boolean"
+            },
+            {
+                "property": "timerDuration",
+                "title": "Durasi Timer (detik)",
+                "description": "0 = tanpa timer. >0 menampilkan <timer-kuis> & auto-submit saat habis.",
+                "inputMethod": "number",
+                "default": 0
+            },
+            {
+                "property": "timerAutostart",
+                "title": "Timer Mulai Otomatis",
+                "inputMethod": "boolean",
+                "default": true
+            },
+            {
+                "property": "timerMinutes",
+                "title": "Durasi Menit",
+                "description": "Menit untuk timer kuis (digabung dengan Detik → timer-duration).",
+                "inputMethod": "number",
+                "default": 0
+            },
+            {
+                "property": "timerSeconds",
+                "title": "Durasi Detik",
+                "description": "Detik untuk timer kuis (ditambah Menit → timer-duration).",
+                "inputMethod": "number",
+                "default": 0
+            },
+            {
+                "property": "hidePauseRestart",
+                "title": "Sembunyikan Tombol Kontrol Timer (Jeda, Mulai, Ulang)",
+                "description": "Menyembunyikan tombol Jeda, Mulai, dan Ulang di timer serta tombol Ulangi Kuis di layar hasil. Default ON agar siswa tidak bisa mengulur waktu ujian.",
+                "inputMethod": "boolean",
+                "default": true
+            }
+        ],
+        "advanced": [],
+        "developer": []
+    },
+    "saveOptions": {
+        "wipeSlot": false,
+        "unsetAttributes": [
+            "_screen",
+            "_currentIdx",
+            "_selected",
+            "_answered",
+            "_score",
+            "_advanceTimer",
+            "_editing",
+            "_tempQuestions",
+            "_editingIndex",
+            "_tempQuestionText",
+            "_tempQuestionImage",
+            "_tempQuestionType",
+            "_tempQuestionPoints",
+            "_tempChoice0",
+            "_tempChoice1",
+            "_tempChoice2",
+            "_tempChoice3",
+            "_tempChoice4",
+            "_tempChoiceImage0",
+            "_tempChoiceImage1",
+            "_tempChoiceImage2",
+            "_tempChoiceImage3",
+            "_tempChoiceImage4",
+            "_tempCorrectIndex",
+            "_tempCorrectAnswers",
+            "_tempLeftItems",
+            "_tempRightItems",
+            "_tempCorrectPairs",
+            "_tempAcceptedAnswers",
+            "_tempAcceptedStatements",
+            "_tempStatements",
+            "_editorOrigin",
+            "_importText",
+            "_importStatus"
+        ]
+    },
+    "demoSchema": [
+        {
+            "tag": "kuis-ledakan",
+            "properties": {
+                "judul": "Evaluasi Kuis Interaktif",
+                "mode": "siswa",
+                "kdMateri": "Pertemuan 1"
+            },
+            "content": ""
+        }
+    ]
+}
