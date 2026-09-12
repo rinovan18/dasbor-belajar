@@ -1,0 +1,207 @@
+{
+  ".commandcode/settings.json": {
+    "mtime": 1789137746.739226,
+    "ast_hash": "e71307efe85118dda41e9aade3b1f8a2",
+    "semantic_hash": "e71307efe85118dda41e9aade3b1f8a2"
+  },
+  "dasbor-kuis.js": {
+    "mtime": 1789083200.113716,
+    "ast_hash": "f88961d7f9754cb3aa60d07a094eb8f7",
+    "semantic_hash": "f88961d7f9754cb3aa60d07a094eb8f7"
+  },
+  "demo/soal-contoh.json": {
+    "mtime": 1787724068.575191,
+    "ast_hash": "b046561f2f163572af2927ea2d57525b",
+    "semantic_hash": "b046561f2f163572af2927ea2d57525b"
+  },
+  "demo/soal-latihan-hint.json": {
+    "mtime": 1788575178.4248426,
+    "ast_hash": "2c57741512cfcb0cc7301129110d296f",
+    "semantic_hash": "2c57741512cfcb0cc7301129110d296f"
+  },
+  "lib/dasbor-kuis.haxProperties.json": {
+    "mtime": 1787036233.5073822,
+    "ast_hash": "f92c1d29ef0a9bd41fadfcecd070d2f9",
+    "semantic_hash": "f92c1d29ef0a9bd41fadfcecd070d2f9"
+  },
+  "lib/diskusi-tugas.js": {
+    "mtime": 1788410192.880283,
+    "ast_hash": "b3ea84c6fbd0ddcb3cf1f8669a3edba5",
+    "semantic_hash": "b3ea84c6fbd0ddcb3cf1f8669a3edba5"
+  },
+  "lib/kirim-tugas.js": {
+    "mtime": 1788410169.5870445,
+    "ast_hash": "ddaa869d9f76696b05a096da0cb88444",
+    "semantic_hash": "ddaa869d9f76696b05a096da0cb88444"
+  },
+  "lib/kuis-ledakan.haxProperties.json": {
+    "mtime": 1787725323.6256468,
+    "ast_hash": "66ed1e5966df8ac072a740fd78e18ff9",
+    "semantic_hash": "66ed1e5966df8ac072a740fd78e18ff9"
+  },
+  "lib/kuis-ledakan.js": {
+    "mtime": 1789083074.2850728,
+    "ast_hash": "171a83b389210a13a008f4258f98163f",
+    "semantic_hash": "171a83b389210a13a008f4258f98163f"
+  },
+  "lib/latihan-kuis.js": {
+    "mtime": 1789053839.0188982,
+    "ast_hash": "ac7efccad45f79da3bbbea1f99918829",
+    "semantic_hash": "ac7efccad45f79da3bbbea1f99918829"
+  },
+  "lib/quiz-user-auth.js": {
+    "mtime": 1788410183.3000934,
+    "ast_hash": "6223a11da5709c56e4434fc71e47d0f2",
+    "semantic_hash": "6223a11da5709c56e4434fc71e47d0f2"
+  },
+  "lib/ruang-diskusi.js": {
+    "mtime": 1788410154.6504107,
+    "ast_hash": "c5d8fa76d226253007f5093205291f97",
+    "semantic_hash": "c5d8fa76d226253007f5093205291f97"
+  },
+  "lib/sistem-kehadiran.js": {
+    "mtime": 1788409993.1082656,
+    "ast_hash": "b746e24c91a6c209bff8905798365851",
+    "semantic_hash": "b746e24c91a6c209bff8905798365851"
+  },
+  "lib/timer-kuis.js": {
+    "mtime": 1789053645.9172218,
+    "ast_hash": "453f9085ab6857786fb85947eb4f1a4c",
+    "semantic_hash": "453f9085ab6857786fb85947eb4f1a4c"
+  },
+  "lib/timer-materi-kuis.js": {
+    "mtime": 1788410209.677168,
+    "ast_hash": "0f6f3f55e3d26b2e56e4a955fd03be31",
+    "semantic_hash": "0f6f3f55e3d26b2e56e4a955fd03be31"
+  },
+  "locales/dasbor-kuis.ar.haxProperties.json": {
+    "mtime": 1786472588.355858,
+    "ast_hash": "0f8bd35830bd18870e18dbdf61906db8",
+    "semantic_hash": "0f8bd35830bd18870e18dbdf61906db8"
+  },
+  "locales/dasbor-kuis.ar.json": {
+    "mtime": 1786472588.3598702,
+    "ast_hash": "ee8b2a1e1dd95580a76388863244ca49",
+    "semantic_hash": "ee8b2a1e1dd95580a76388863244ca49"
+  },
+  "locales/dasbor-kuis.bn.haxProperties.json": {
+    "mtime": 1786472588.3628578,
+    "ast_hash": "afebea2f2374c9f432145bc31d6dd610",
+    "semantic_hash": "afebea2f2374c9f432145bc31d6dd610"
+  },
+  "locales/dasbor-kuis.bn.json": {
+    "mtime": 1786472588.364868,
+    "ast_hash": "d581827bddca2dcb06428590f6378686",
+    "semantic_hash": "d581827bddca2dcb06428590f6378686"
+  },
+  "locales/dasbor-kuis.es.haxProperties.json": {
+    "mtime": 1786472588.372856,
+    "ast_hash": "5fdf5a818b2b7152dba67256ccad4134",
+    "semantic_hash": "5fdf5a818b2b7152dba67256ccad4134"
+  },
+  "locales/dasbor-kuis.es.json": {
+    "mtime": 1786472588.3748574,
+    "ast_hash": "d67a8b20cdcd10af6fe40a6e00ddd3ea",
+    "semantic_hash": "d67a8b20cdcd10af6fe40a6e00ddd3ea"
+  },
+  "locales/dasbor-kuis.fr.haxProperties.json": {
+    "mtime": 1786472588.3768568,
+    "ast_hash": "5f1778cee546c4b67b9f0eb023ad30a3",
+    "semantic_hash": "5f1778cee546c4b67b9f0eb023ad30a3"
+  },
+  "locales/dasbor-kuis.fr.json": {
+    "mtime": 1786472588.3798616,
+    "ast_hash": "9e3f13422d283b730430b9bcb7681d39",
+    "semantic_hash": "9e3f13422d283b730430b9bcb7681d39"
+  },
+  "locales/dasbor-kuis.hi.haxProperties.json": {
+    "mtime": 1786472588.3818557,
+    "ast_hash": "046ad335f606829ec97c4d10e857e1a9",
+    "semantic_hash": "046ad335f606829ec97c4d10e857e1a9"
+  },
+  "locales/dasbor-kuis.hi.json": {
+    "mtime": 1786472588.3878565,
+    "ast_hash": "2088fac540f27dc84b4bb92996f5cedb",
+    "semantic_hash": "2088fac540f27dc84b4bb92996f5cedb"
+  },
+  "locales/dasbor-kuis.ja.haxProperties.json": {
+    "mtime": 1786472588.389856,
+    "ast_hash": "03f0286eb1bef280a526fdfa4ffde8d0",
+    "semantic_hash": "03f0286eb1bef280a526fdfa4ffde8d0"
+  },
+  "locales/dasbor-kuis.ja.json": {
+    "mtime": 1786472588.4318573,
+    "ast_hash": "6c5289b581ff27183c5548858a1a69f3",
+    "semantic_hash": "6c5289b581ff27183c5548858a1a69f3"
+  },
+  "locales/dasbor-kuis.pt.haxProperties.json": {
+    "mtime": 1786472588.4638608,
+    "ast_hash": "5fdf5a818b2b7152dba67256ccad4134",
+    "semantic_hash": "5fdf5a818b2b7152dba67256ccad4134"
+  },
+  "locales/dasbor-kuis.pt.json": {
+    "mtime": 1786472588.4698539,
+    "ast_hash": "d67a8b20cdcd10af6fe40a6e00ddd3ea",
+    "semantic_hash": "d67a8b20cdcd10af6fe40a6e00ddd3ea"
+  },
+  "locales/dasbor-kuis.ru.haxProperties.json": {
+    "mtime": 1786472588.4758563,
+    "ast_hash": "19166274c383fcd57b9a8943008e5b21",
+    "semantic_hash": "19166274c383fcd57b9a8943008e5b21"
+  },
+  "locales/dasbor-kuis.ru.json": {
+    "mtime": 1786472588.47886,
+    "ast_hash": "ab19884599af29668292ce7e86d39e1b",
+    "semantic_hash": "ab19884599af29668292ce7e86d39e1b"
+  },
+  "locales/dasbor-kuis.zh.haxProperties.json": {
+    "mtime": 1786472588.480859,
+    "ast_hash": "62a9e8359e2bba06ff0498c47a7bca63",
+    "semantic_hash": "62a9e8359e2bba06ff0498c47a7bca63"
+  },
+  "locales/dasbor-kuis.zh.json": {
+    "mtime": 1786472588.498869,
+    "ast_hash": "d23e2432dbdcc83859fe0416d5cd7ce3",
+    "semantic_hash": "d23e2432dbdcc83859fe0416d5cd7ce3"
+  },
+  "package.json": {
+    "mtime": 1787462407.5783727,
+    "ast_hash": "e200f2f606002b4919ca14a4e6514974",
+    "semantic_hash": "e200f2f606002b4919ca14a4e6514974"
+  },
+  "rollup.config.js": {
+    "mtime": 1786472588.5238535,
+    "ast_hash": "a7c1b16b35a221e2df28430c8e9168d3",
+    "semantic_hash": "a7c1b16b35a221e2df28430c8e9168d3"
+  },
+  "test/dasbor-kuis.test.js": {
+    "mtime": 1787466018.0096583,
+    "ast_hash": "02a484a4a51253017e428988c280d652",
+    "semantic_hash": "02a484a4a51253017e428988c280d652"
+  },
+  "test/kuis-ledakan.test.js": {
+    "mtime": 1787725712.4385357,
+    "ast_hash": "6cbdc9085cb255ac67b1c34d3e6e5091",
+    "semantic_hash": "6cbdc9085cb255ac67b1c34d3e6e5091"
+  },
+  "test/latihan-kuis.test.js": {
+    "mtime": 1787912434.2181983,
+    "ast_hash": "dd4cf27da21bde60aeaa0806fd349415",
+    "semantic_hash": "dd4cf27da21bde60aeaa0806fd349415"
+  },
+  "test/timer-kuis.test.js": {
+    "mtime": 1787036162.2982087,
+    "ast_hash": "ecabc17034e99c60eab8524b739d597d",
+    "semantic_hash": "ecabc17034e99c60eab8524b739d597d"
+  },
+  "test/timer-materi-kuis.test.js": {
+    "mtime": 1787036173.3826263,
+    "ast_hash": "33eb16bae19f08863c713f447527c005",
+    "semantic_hash": "33eb16bae19f08863c713f447527c005"
+  },
+  "web-dev-server.config.mjs": {
+    "mtime": 1786472588.5528557,
+    "ast_hash": "060b7a4fbe708b334048d31ff2b22b98",
+    "semantic_hash": "060b7a4fbe708b334048d31ff2b22b98"
+  }
+}

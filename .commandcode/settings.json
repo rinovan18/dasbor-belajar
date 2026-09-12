@@ -6,7 +6,8 @@
       "Shell(node -c lib/timer-kuis.js)",
       "Shell(node -c lib/latihan-kuis.js)",
       "Shell(node -c lib/kuis-ledakan.js)",
-      "Shell(node -c dasbor-kuis.js)"
+      "Shell(node -c dasbor-kuis.js)",
+      "Shell(graphify:*)"
     ],
     "deny": [],
     "defaultMode": "default"

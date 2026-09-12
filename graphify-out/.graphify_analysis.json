@@ -1,6 +1,91 @@
 {
   "communities": {
     "0": [
+      "lib_kuis_ledakan_modularquiz",
+      "lib_kuis_ledakan_modularquiz_addquestion",
+      "lib_kuis_ledakan_modularquiz_attemptkey",
+      "lib_kuis_ledakan_modularquiz_authhandler",
+      "lib_kuis_ledakan_modularquiz_autoadvance",
+      "lib_kuis_ledakan_modularquiz_buatidlog",
+      "lib_kuis_ledakan_modularquiz_bukakunci",
+      "lib_kuis_ledakan_modularquiz_cancelall",
+      "lib_kuis_ledakan_modularquiz_canceleditquestion",
+      "lib_kuis_ledakan_modularquiz_cancelmegaconfetti",
+      "lib_kuis_ledakan_modularquiz_cannavigateto",
+      "lib_kuis_ledakan_modularquiz_cekkunci",
+      "lib_kuis_ledakan_modularquiz_connectedcallback",
+      "lib_kuis_ledakan_modularquiz_constructor",
+      "lib_kuis_ledakan_modularquiz_deletequestion",
+      "lib_kuis_ledakan_modularquiz_disconnectedcallback",
+      "lib_kuis_ledakan_modularquiz_fireconfetti",
+      "lib_kuis_ledakan_modularquiz_firemegaconfetti",
+      "lib_kuis_ledakan_modularquiz_forcefinish",
+      "lib_kuis_ledakan_modularquiz_getactivequestions",
+      "lib_kuis_ledakan_modularquiz_getchoiceimage",
+      "lib_kuis_ledakan_modularquiz_getchoicetext",
+      "lib_kuis_ledakan_modularquiz_gotonextquestion",
+      "lib_kuis_ledakan_modularquiz_gotoprevquestion",
+      "lib_kuis_ledakan_modularquiz_gotoquestion",
+      "lib_kuis_ledakan_modularquiz_handleimportfile",
+      "lib_kuis_ledakan_modularquiz_haxproperties",
+      "lib_kuis_ledakan_modularquiz_importfromtext",
+      "lib_kuis_ledakan_modularquiz_inhaxeditor",
+      "lib_kuis_ledakan_modularquiz_kirimhasillangsung",
+      "lib_kuis_ledakan_modularquiz_loadquestionslocal",
+      "lib_kuis_ledakan_modularquiz_loadsession",
+      "lib_kuis_ledakan_modularquiz_maxpoinsoal",
+      "lib_kuis_ledakan_modularquiz_muatbanksoal",
+      "lib_kuis_ledakan_modularquiz_normalisasisoal",
+      "lib_kuis_ledakan_modularquiz_normalisasiuntukeditor",
+      "lib_kuis_ledakan_modularquiz_onstartclick",
+      "lib_kuis_ledakan_modularquiz_ontimerexpired",
+      "lib_kuis_ledakan_modularquiz_openeditor",
+      "lib_kuis_ledakan_modularquiz_parseimported",
+      "lib_kuis_ledakan_modularquiz_pilihjawaban",
+      "lib_kuis_ledakan_modularquiz_properties",
+      "lib_kuis_ledakan_modularquiz_redirecttologin",
+      "lib_kuis_ledakan_modularquiz_render",
+      "lib_kuis_ledakan_modularquiz_rendereditormatching",
+      "lib_kuis_ledakan_modularquiz_rendereditormc",
+      "lib_kuis_ledakan_modularquiz_rendereditorpgk",
+      "lib_kuis_ledakan_modularquiz_rendereditorscreen",
+      "lib_kuis_ledakan_modularquiz_rendereditorshortanswer",
+      "lib_kuis_ledakan_modularquiz_rendermatching",
+      "lib_kuis_ledakan_modularquiz_rendermc",
+      "lib_kuis_ledakan_modularquiz_renderpgk",
+      "lib_kuis_ledakan_modularquiz_renderquestionscreen",
+      "lib_kuis_ledakan_modularquiz_renderreviewquestion",
+      "lib_kuis_ledakan_modularquiz_renderreviewscreen",
+      "lib_kuis_ledakan_modularquiz_rendershortanswer",
+      "lib_kuis_ledakan_modularquiz_reseteditorform",
+      "lib_kuis_ledakan_modularquiz_resetfornavigation",
+      "lib_kuis_ledakan_modularquiz_resetstate",
+      "lib_kuis_ledakan_modularquiz_restoreanswerstate",
+      "lib_kuis_ledakan_modularquiz_resumeattemptifany",
+      "lib_kuis_ledakan_modularquiz_saveall",
+      "lib_kuis_ledakan_modularquiz_saveattempt",
+      "lib_kuis_ledakan_modularquiz_saveeditquestion",
+      "lib_kuis_ledakan_modularquiz_savequestionslocal",
+      "lib_kuis_ledakan_modularquiz_selesaikuis",
+      "lib_kuis_ledakan_modularquiz_setpgk",
+      "lib_kuis_ledakan_modularquiz_shufflearray",
+      "lib_kuis_ledakan_modularquiz_siapkansoal",
+      "lib_kuis_ledakan_modularquiz_slug",
+      "lib_kuis_ledakan_modularquiz_starteditquestion",
+      "lib_kuis_ledakan_modularquiz_startquiz",
+      "lib_kuis_ledakan_modularquiz_startreviewmode",
+      "lib_kuis_ledakan_modularquiz_storagekey",
+      "lib_kuis_ledakan_modularquiz_styles",
+      "lib_kuis_ledakan_modularquiz_submitmatching",
+      "lib_kuis_ledakan_modularquiz_submitmultianswers",
+      "lib_kuis_ledakan_modularquiz_submitpgk",
+      "lib_kuis_ledakan_modularquiz_submitshortanswer",
+      "lib_kuis_ledakan_modularquiz_synccorrectpairs",
+      "lib_kuis_ledakan_modularquiz_tag",
+      "lib_kuis_ledakan_modularquiz_togglemultianswer",
+      "lib_kuis_ledakan_modularquiz_updated"
+    ],
+    "1": [
       "dasbor_kuis_quizdashboard",
       "dasbor_kuis_quizdashboard_ambilidlogstabil",
       "dasbor_kuis_quizdashboard_apiget",
@@ -24,9 +109,11 @@
       "dasbor_kuis_quizdashboard_haxproperties",
       "dasbor_kuis_quizdashboard_hs",
       "dasbor_kuis_quizdashboard_kirimmanualskor",
+      "dasbor_kuis_quizdashboard_kirimnilaisiswa",
       "dasbor_kuis_quizdashboard_kirimsemuanilai",
       "dasbor_kuis_quizdashboard_loadprofile",
       "dasbor_kuis_quizdashboard_logactivity",
+      "dasbor_kuis_quizdashboard_muatbanksoal",
       "dasbor_kuis_quizdashboard_num",
       "dasbor_kuis_quizdashboard_onfocusbound",
       "dasbor_kuis_quizdashboard_onlogevent",
@@ -41,12 +128,15 @@
       "dasbor_kuis_quizdashboard_rendercopas",
       "dasbor_kuis_quizdashboard_renderdashboardpembelajaran",
       "dasbor_kuis_quizdashboard_renderdetailsiswa",
+      "dasbor_kuis_quizdashboard_rendereditsoal",
       "dasbor_kuis_quizdashboard_renderhasilsiswa",
       "dasbor_kuis_quizdashboard_renderheatmapsiswa",
+      "dasbor_kuis_quizdashboard_renderinputnilai",
       "dasbor_kuis_quizdashboard_renderkuiswadah",
       "dasbor_kuis_quizdashboard_renderleaderboard",
       "dasbor_kuis_quizdashboard_renderlogaktivitasterbaru",
       "dasbor_kuis_quizdashboard_renderpantauanguru",
+      "dasbor_kuis_quizdashboard_renderpengaturan",
       "dasbor_kuis_quizdashboard_renderperingkatbimbingan",
       "dasbor_kuis_quizdashboard_rowperingkatkecsv",
       "dasbor_kuis_quizdashboard_rowvalue",
@@ -55,10 +145,12 @@
       "dasbor_kuis_quizdashboard_simpannilailokal",
       "dasbor_kuis_quizdashboard_styles",
       "dasbor_kuis_quizdashboard_tag",
+      "dasbor_kuis_quizdashboard_terapkansoal",
       "dasbor_kuis_quizdashboard_ubahfilterkelas",
+      "dasbor_kuis_quizdashboard_ubahnilai",
       "dasbor_kuis_quizdashboard_updated"
     ],
-    "1": [
+    "2": [
       "elements_dasbor_kuis_dasbor_kuis_js_dasbor_kuis",
       "elements_dasbor_kuis_data_contoh_akumulasi_nilai_rapor_sheet",
       "elements_dasbor_kuis_data_contoh_bank_soal_sheet",
@@ -107,7 +199,7 @@
       "elements_dasbor_kuis_promptlengkap_dasbor_txt_state_lock_sync",
       "elements_dasbor_kuis_promptlengkap_dasbor_txt_three_sheet_schema"
     ],
-    "2": [
+    "3": [
       "lib_sistem_kehadiran_attendancesystem",
       "lib_sistem_kehadiran_attendancesystem_buatidlog",
       "lib_sistem_kehadiran_attendancesystem_clearlogs",
@@ -151,86 +243,7 @@
       "lib_sistem_kehadiran_attendancesystem_updthreshold",
       "lib_sistem_kehadiran_attendancesystem_weekly"
     ],
-    "3": [
-      "lib_kuis_ledakan_modularquiz",
-      "lib_kuis_ledakan_modularquiz_authhandler",
-      "lib_kuis_ledakan_modularquiz_autoadvance",
-      "lib_kuis_ledakan_modularquiz_buatidlog",
-      "lib_kuis_ledakan_modularquiz_cancelmegaconfetti",
-      "lib_kuis_ledakan_modularquiz_connectedcallback",
-      "lib_kuis_ledakan_modularquiz_constructor",
-      "lib_kuis_ledakan_modularquiz_disconnectedcallback",
-      "lib_kuis_ledakan_modularquiz_fireconfetti",
-      "lib_kuis_ledakan_modularquiz_firemegaconfetti",
-      "lib_kuis_ledakan_modularquiz_getactivequestions",
-      "lib_kuis_ledakan_modularquiz_getchoicetext",
-      "lib_kuis_ledakan_modularquiz_haxproperties",
-      "lib_kuis_ledakan_modularquiz_kirimhasillangsung",
-      "lib_kuis_ledakan_modularquiz_loadsession",
-      "lib_kuis_ledakan_modularquiz_muatbanksoal",
-      "lib_kuis_ledakan_modularquiz_normalisasisoal",
-      "lib_kuis_ledakan_modularquiz_pilihjawaban",
-      "lib_kuis_ledakan_modularquiz_properties",
-      "lib_kuis_ledakan_modularquiz_render",
-      "lib_kuis_ledakan_modularquiz_rendermatching",
-      "lib_kuis_ledakan_modularquiz_rendermc",
-      "lib_kuis_ledakan_modularquiz_renderpgk",
-      "lib_kuis_ledakan_modularquiz_renderquestionscreen",
-      "lib_kuis_ledakan_modularquiz_rendershortanswer",
-      "lib_kuis_ledakan_modularquiz_resetstate",
-      "lib_kuis_ledakan_modularquiz_selesaikuis",
-      "lib_kuis_ledakan_modularquiz_setpgk",
-      "lib_kuis_ledakan_modularquiz_shufflearray",
-      "lib_kuis_ledakan_modularquiz_siapkansoal",
-      "lib_kuis_ledakan_modularquiz_startquiz",
-      "lib_kuis_ledakan_modularquiz_styles",
-      "lib_kuis_ledakan_modularquiz_submitmatching",
-      "lib_kuis_ledakan_modularquiz_submitmultianswers",
-      "lib_kuis_ledakan_modularquiz_submitpgk",
-      "lib_kuis_ledakan_modularquiz_submitshortanswer",
-      "lib_kuis_ledakan_modularquiz_tag",
-      "lib_kuis_ledakan_modularquiz_togglemultianswer",
-      "lib_kuis_ledakan_modularquiz_updated"
-    ],
     "4": [
-      "canvas_confetti",
-      "haxtheweb_d_d_d",
-      "haxtheweb_i18n_manager",
-      "lit",
-      "package",
-      "package_author",
-      "package_author_name",
-      "package_customelements",
-      "package_dependencies",
-      "package_dependencies_canvas_confetti",
-      "package_dependencies_haxtheweb_d_d_d",
-      "package_dependencies_haxtheweb_i18n_manager",
-      "package_dependencies_lit",
-      "package_description",
-      "package_hax",
-      "package_hax_cli",
-      "package_license",
-      "package_main",
-      "package_module",
-      "package_name",
-      "package_private",
-      "package_publishconfig",
-      "package_publishconfig_access",
-      "package_repository",
-      "package_repository_type",
-      "package_repository_url",
-      "package_scripts",
-      "package_scripts_analyze",
-      "package_scripts_build",
-      "package_scripts_dddaudit",
-      "package_scripts_release",
-      "package_scripts_start",
-      "package_scripts_test",
-      "package_scripts_test_watch",
-      "package_type",
-      "package_version"
-    ],
-    "5": [
       "babel_plugin_template_html_minifier",
       "babel_plugin_transform_dynamic_import",
       "babel_preset_env",
@@ -265,7 +278,7 @@
       "web_rollup_plugin_import_meta_assets",
       "web_test_runner"
     ],
-    "6": [
+    "5": [
       "lib_ruang_diskusi_ruangdiskusi",
       "lib_ruang_diskusi_ruangdiskusi_buatidlog",
       "lib_ruang_diskusi_ruangdiskusi_buildthread",
@@ -298,32 +311,98 @@
       "lib_ruang_diskusi_ruangdiskusi_timeago",
       "lib_ruang_diskusi_ruangdiskusi_togglereply"
     ],
+    "6": [
+      "package",
+      "package_author",
+      "package_author_name",
+      "package_customelements",
+      "package_description",
+      "package_hax",
+      "package_hax_cli",
+      "package_keywords",
+      "package_license",
+      "package_main",
+      "package_module",
+      "package_name",
+      "package_private",
+      "package_publishconfig",
+      "package_publishconfig_access",
+      "package_repository",
+      "package_repository_type",
+      "package_repository_url",
+      "package_scripts",
+      "package_scripts_analyze",
+      "package_scripts_build",
+      "package_scripts_dddaudit",
+      "package_scripts_release",
+      "package_scripts_start",
+      "package_scripts_sync",
+      "package_scripts_test",
+      "package_scripts_test_watch",
+      "package_type",
+      "package_version",
+      "ref_haxtheweb",
+      "ref_webcomponents"
+    ],
     "7": [
+      "lib_latihan_kuis_latihankuis",
+      "lib_latihan_kuis_latihankuis_attemptkey",
+      "lib_latihan_kuis_latihankuis_bacasisawaktu",
+      "lib_latihan_kuis_latihankuis_cobaresumetimer",
+      "lib_latihan_kuis_latihankuis_connectedcallback",
+      "lib_latihan_kuis_latihankuis_constructor",
+      "lib_latihan_kuis_latihankuis_disconnectedcallback",
+      "lib_latihan_kuis_latihankuis_hapuswaktumulai",
+      "lib_latihan_kuis_latihankuis_haxproperties",
+      "lib_latihan_kuis_latihankuis_loadattemptcounter",
+      "lib_latihan_kuis_latihankuis_loadsession",
+      "lib_latihan_kuis_latihankuis_logmulaikuis",
+      "lib_latihan_kuis_latihankuis_logselesaikuis",
+      "lib_latihan_kuis_latihankuis_muatsoaldarifile",
+      "lib_latihan_kuis_latihankuis_muatstatuskuis",
+      "lib_latihan_kuis_latihankuis_mulailatihan",
+      "lib_latihan_kuis_latihankuis_onauthlogin",
+      "lib_latihan_kuis_latihankuis_onauthlogout",
+      "lib_latihan_kuis_latihankuis_onkuislog",
+      "lib_latihan_kuis_latihankuis_onvisibilitychange",
+      "lib_latihan_kuis_latihankuis_onwaktuhabis",
+      "lib_latihan_kuis_latihankuis_properties",
+      "lib_latihan_kuis_latihankuis_render",
+      "lib_latihan_kuis_latihankuis_saveattemptcounter",
+      "lib_latihan_kuis_latihankuis_simpanwaktumulai",
+      "lib_latihan_kuis_latihankuis_styles",
+      "lib_latihan_kuis_latihankuis_tag",
+      "lib_latihan_kuis_latihankuis_timerkey",
+      "lib_latihan_kuis_latihankuis_ulangikuis",
+      "lib_latihan_kuis_latihankuis_updated"
+    ],
+    "8": [
+      "canvas_confetti",
       "dasbor_kuis",
-      "lib_diskusi_tugas",
-      "lib_diskusi_tugas_integratedforum",
-      "lib_diskusi_tugas_integratedforum_buatidlog",
-      "lib_diskusi_tugas_integratedforum_constructor",
-      "lib_diskusi_tugas_integratedforum_kirimdiskusiatautugas",
-      "lib_diskusi_tugas_integratedforum_muatkomentarsesi",
-      "lib_diskusi_tugas_integratedforum_properties",
-      "lib_diskusi_tugas_integratedforum_render",
-      "lib_diskusi_tugas_integratedforum_styles",
-      "lib_diskusi_tugas_integratedforum_tag",
+      "haxtheweb_d_d_d",
+      "haxtheweb_i18n_manager",
       "lib_kirim_tugas",
       "lib_kuis_ledakan",
       "lib_kuis_ledakan_default_questions",
+      "lib_latihan_kuis",
       "lib_quiz_user_auth",
       "lib_ruang_diskusi",
       "lib_sistem_kehadiran",
-      "package_keywords",
-      "ref_haxtheweb",
-      "ref_lit",
-      "ref_webcomponents",
+      "lib_timer_kuis",
+      "lib_timer_materi_kuis",
+      "lit",
+      "package_dependencies",
+      "package_dependencies_canvas_confetti",
+      "package_dependencies_haxtheweb_d_d_d",
+      "package_dependencies_haxtheweb_i18n_manager",
+      "package_dependencies_lit",
       "test_dasbor_kuis_test",
-      "test_kuis_ledakan_test"
+      "test_kuis_ledakan_test",
+      "test_latihan_kuis_test",
+      "test_timer_kuis_test",
+      "test_timer_materi_kuis_test"
     ],
-    "8": [
+    "9": [
       "lib_kirim_tugas_kirimtugas",
       "lib_kirim_tugas_kirimtugas_buatidlog",
       "lib_kirim_tugas_kirimtugas_connectedcallback",
@@ -348,7 +427,7 @@
       "lib_kirim_tugas_kirimtugas_submitassignment",
       "lib_kirim_tugas_kirimtugas_tag"
     ],
-    "9": [
+    "10": [
       "lib_quiz_user_auth_quizuserauth",
       "lib_quiz_user_auth_quizuserauth_api",
       "lib_quiz_user_auth_quizuserauth_clear",
@@ -372,39 +451,99 @@
       "lib_quiz_user_auth_quizuserauth_tag",
       "lib_quiz_user_auth_quizuserauth_verifysession"
     ],
-    "10": [
+    "11": [
+      "lib_timer_materi_kuis_timermaterikuis",
+      "lib_timer_materi_kuis_timermaterikuis_clearinterval",
+      "lib_timer_materi_kuis_timermaterikuis_connectedcallback",
+      "lib_timer_materi_kuis_timermaterikuis_constructor",
+      "lib_timer_materi_kuis_timermaterikuis_disconnectedcallback",
+      "lib_timer_materi_kuis_timermaterikuis_format",
+      "lib_timer_materi_kuis_timermaterikuis_haxproperties",
+      "lib_timer_materi_kuis_timermaterikuis_meta",
+      "lib_timer_materi_kuis_timermaterikuis_pause",
+      "lib_timer_materi_kuis_timermaterikuis_properties",
+      "lib_timer_materi_kuis_timermaterikuis_render",
+      "lib_timer_materi_kuis_timermaterikuis_rendertimer",
+      "lib_timer_materi_kuis_timermaterikuis_reset",
+      "lib_timer_materi_kuis_timermaterikuis_start",
+      "lib_timer_materi_kuis_timermaterikuis_styles",
+      "lib_timer_materi_kuis_timermaterikuis_tag",
+      "lib_timer_materi_kuis_timermaterikuis_tick",
+      "lib_timer_materi_kuis_timermaterikuis_updated"
+    ],
+    "12": [
+      "lib_timer_kuis_timerkuis",
+      "lib_timer_kuis_timerkuis_clearinterval",
+      "lib_timer_kuis_timerkuis_connectedcallback",
+      "lib_timer_kuis_timerkuis_constructor",
+      "lib_timer_kuis_timerkuis_disconnectedcallback",
+      "lib_timer_kuis_timerkuis_format",
+      "lib_timer_kuis_timerkuis_haxproperties",
+      "lib_timer_kuis_timerkuis_onexpire",
+      "lib_timer_kuis_timerkuis_pause",
+      "lib_timer_kuis_timerkuis_properties",
+      "lib_timer_kuis_timerkuis_render",
+      "lib_timer_kuis_timerkuis_reset",
+      "lib_timer_kuis_timerkuis_start",
+      "lib_timer_kuis_timerkuis_styles",
+      "lib_timer_kuis_timerkuis_tag",
+      "lib_timer_kuis_timerkuis_tick",
+      "lib_timer_kuis_timerkuis_updated"
+    ],
+    "13": [
+      "lib_diskusi_tugas",
+      "lib_diskusi_tugas_integratedforum",
+      "lib_diskusi_tugas_integratedforum_buatidlog",
+      "lib_diskusi_tugas_integratedforum_constructor",
+      "lib_diskusi_tugas_integratedforum_kirimdiskusiatautugas",
+      "lib_diskusi_tugas_integratedforum_muatkomentarsesi",
+      "lib_diskusi_tugas_integratedforum_properties",
+      "lib_diskusi_tugas_integratedforum_render",
+      "lib_diskusi_tugas_integratedforum_styles",
+      "lib_diskusi_tugas_integratedforum_tag"
+    ],
+    "14": [
       "elements_dasbor_kuis__github_workflows_main_build_and_deploy",
       "elements_dasbor_kuis__travis_ci_pipeline",
       "elements_dasbor_kuis_readme_dasbor_kuis_package"
     ],
-    "11": [
+    "15": [
       "web_dev_server_config",
       "web_dev_server_config_hmr"
     ],
-    "12": [
+    "16": [
       "rollup_config"
     ]
   },
   "cohesion": {
-    "0": 0.07922077922077922,
-    "1": 0.09528214616096208,
-    "2": 0.10104529616724739,
-    "3": 0.11605937921727395,
-    "4": 0.05555555555555555,
-    "5": 0.06060606060606061,
-    "6": 0.10752688172043011,
-    "7": 0.11462450592885376,
-    "8": 0.1383399209486166,
-    "9": 0.20346320346320346,
-    "10": 1.0,
-    "11": 1.0,
-    "12": 1.0
+    "0": 0.05642080517190714,
+    "1": 0.07168458781362007,
+    "2": 0.09528214616096208,
+    "3": 0.10104529616724739,
+    "4": 0.06060606060606061,
+    "5": 0.10967741935483871,
+    "6": 0.06451612903225806,
+    "7": 0.1310344827586207,
+    "8": 0.12318840579710146,
+    "9": 0.1383399209486166,
+    "10": 0.19047619047619047,
+    "11": 0.2222222222222222,
+    "12": 0.19852941176470587,
+    "13": 0.26666666666666666,
+    "14": 1.0,
+    "15": 1.0,
+    "16": 1.0
   },
   "gods": [
     {
+      "id": "lib_kuis_ledakan_modularquiz",
+      "label": "ModularQuiz",
+      "degree": 83
+    },
+    {
       "id": "dasbor_kuis_quizdashboard",
       "label": "QuizDashboard",
-      "degree": 56
+      "degree": 63
     },
     {
       "id": "lib_sistem_kehadiran_attendancesystem",
@@ -412,14 +551,14 @@
       "degree": 42
     },
     {
-      "id": "lib_kuis_ledakan_modularquiz",
-      "label": "ModularQuiz",
-      "degree": 39
-    },
-    {
       "id": "lib_ruang_diskusi_ruangdiskusi",
       "label": "RuangDiskusi",
       "degree": 31
+    },
+    {
+      "id": "lib_latihan_kuis_latihankuis",
+      "label": "LatihanKuis",
+      "degree": 30
     },
     {
       "id": "lib_kirim_tugas_kirimtugas",
@@ -432,24 +571,19 @@
       "degree": 22
     },
     {
-      "id": "elements_dasbor_kuis_lib_kuis_ledakan_js_kuis_ledakan",
-      "label": "<kuis-ledakan> AKM Quiz Engine",
-      "degree": 11
+      "id": "lib_timer_materi_kuis_timermaterikuis",
+      "label": "TimerMateriKuis",
+      "degree": 18
     },
     {
-      "id": "elements_dasbor_kuis_data_contoh_guide",
-      "label": "DATA-CONTOH.md â€” Setup & Sample Data Guide",
-      "degree": 11
+      "id": "lib_timer_kuis_timerkuis",
+      "label": "TimerKuis",
+      "degree": 17
     },
     {
-      "id": "elements_dasbor_kuis_demo_tutorial_hax_demo_page",
-      "label": "Tutorial Semua Properti HAX",
-      "degree": 10
-    },
-    {
-      "id": "elements_dasbor_kuis_dasbor_kuis_js_dasbor_kuis",
-      "label": "<dasbor-kuis> Orchestrator (Guru/Dosen/Siswa)",
-      "degree": 10
+      "id": "lit",
+      "label": "lit",
+      "degree": 12
     }
   ],
   "surprises": [
@@ -512,38 +646,38 @@
   "questions": [
     {
       "type": "bridge_node",
-      "question": "Why does `keywords` connect `Community 7` to `Community 4`?",
-      "why": "High betweenness centrality (0.263) - this node is a cross-community bridge."
+      "question": "Why does `lit` connect `lit` to `IntegratedForum`, `package.json`?",
+      "why": "High betweenness centrality (0.387) - this node is a cross-community bridge."
     },
     {
       "type": "bridge_node",
-      "question": "Why does `QuizDashboard` connect `Community 0` to `Community 7`?",
-      "why": "High betweenness centrality (0.236) - this node is a cross-community bridge."
+      "question": "Why does `ModularQuiz` connect `ModularQuiz` to `lit`?",
+      "why": "High betweenness centrality (0.273) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `QuizDashboard` connect `QuizDashboard` to `lit`?",
+      "why": "High betweenness centrality (0.212) - this node is a cross-community bridge."
     },
     {
       "type": "isolated_nodes",
-      "question": "What connects `DEFAULT_QUESTIONS`, `name`, `version` to the rest of the system?",
+      "question": "What connects `Backend action=getLeaderboard (baca Rangkuman)`, `Backend action=setManualScore (Nilai Manual)`, `Auth actions (register|login|verify)` to the rest of the system?",
       "why": "48 weakly-connected nodes found - possible documentation gaps or missing edges."
     },
     {
       "type": "low_cohesion",
-      "question": "Should `Community 0` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.07922077922077922 - nodes in this community are weakly interconnected."
+      "question": "Should `ModularQuiz` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.05642080517190714 - nodes in this community are weakly interconnected."
     },
     {
       "type": "low_cohesion",
-      "question": "Should `Community 1` be split into smaller, more focused modules?",
+      "question": "Should `QuizDashboard` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.07168458781362007 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `DATA-CONTOH.md â€” Setup & Sample Data Guide` be split into smaller, more focused modules?",
       "why": "Cohesion score 0.09528214616096208 - nodes in this community are weakly interconnected."
-    },
-    {
-      "type": "low_cohesion",
-      "question": "Should `Community 2` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.10104529616724739 - nodes in this community are weakly interconnected."
-    },
-    {
-      "type": "low_cohesion",
-      "question": "Should `Community 3` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.11605937921727395 - nodes in this community are weakly interconnected."
     }
   ]
 }

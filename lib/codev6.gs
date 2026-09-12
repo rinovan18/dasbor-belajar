@@ -49,6 +49,7 @@ const SHEET_MANUAL = "Nilai Manual";
 const SHEET_FORUM = "Forum Log";
 const SHEET_TUGAS = "Tugas Log";
 const SHEET_RANGKUMAN = "Rangkuman";         // sheet lama (hanya toleransi baca)
+const SHEET_KUIS_SESSION = "db_kuis_session"; // Log sesi kuis (waktu, status)
 
 /** Spesifikasi nama sheet -> baris header (single source of truth untuk auto-create). */
 const SHEET_SPECS = {
@@ -64,6 +65,7 @@ const SHEET_SPECS = {
   [SHEET_KEHADIRAN]: ["Timestamp", "Tanggal", "Nama", "Student ID", "NIS", "Absen", "Kelas", "Kode Materi", "Kehadiran (%)", "Status", "Kriteria"],
   [SHEET_FORUM]: ["Timestamp", "CommentID", "ParentID", "UserName", "StudentID", "Text", "Sheet", "Action", "Likes", "kdMateri", "NIS", "Absen", "Kelas"],
   [SHEET_TUGAS]: ["Timestamp", "StudentID", "Nama", "Sheet", "Title", "Content", "Link", "kdMateri", "NIS", "Absen", "Kelas"],
+  [SHEET_KUIS_SESSION]: ["Timestamp", "StudentID", "Nama", "NIS", "Absen", "Kelas", "Kode Materi", "Waktu Mulai", "Waktu Selesai", "Durasi (detik)", "Durasi Ulangan (detik)", "Sisa Waktu (detik)", "Tab Switch Count", "Status", "Catatan"],
 };
 
 const BATAS_READING = 15;
@@ -857,6 +859,82 @@ function resetQuizLock(p) {
   return { status: "ok", deleted };
 }
 
+/**
+ * logQuizSession: catat waktu mulai, selesai, durasi, dan status jujur/mencurigakan.
+ * Memungkinkan guru membedakan siswa yang jujur vs yang terdeteksi curang.
+ */
+function logQuizSession(p) {
+  const studentId = _teks(p.studentId || p.student_id || "");
+  const nama = _teks(p.nama || "");
+  const nis = _teks(p.nis || "");
+  const absen = _teks(p.absen || "");
+  const kelas = _teks(p.kelas || "");
+  const kdMateri = _teks(p.kdMateri || p.kodeMateri || "");
+  const waktuMulai = _teks(p.waktuMulai || p.waktu_mulai || "");
+  const waktuSelesai = _teks(p.waktuSelesai || p.waktu_selesai || "");
+  const durasiPengerjaan = _num(p.durasiPengerjaan || p.durasi, 0);
+  const durasiUlangan = _num(p.durasiUlangan || p.duration, 300);
+  const sisaWaktu = _num(p.sisaWaktu || p.sisa_waktu, 0);
+  const tabSwitchCount = _num(p.tabSwitchCount || p.tab_switch_count, 0);
+  const skor = _num(p.skor || p.score, -1);
+
+  if (!studentId || !kdMateri) {
+    return { status: "error", message: "studentId & kdMateri wajib diisi." };
+  }
+
+  // Tentukan status berdasarkan sisa waktu
+  // sisaWaktu > 60 detik = mencurigakan (kemungkinan manipulasi waktu)
+  // sisaWaktu <= 60 detik = jujur (browser throttling normal)
+  const status = sisaWaktu > 60 ? "mencurigakan" : "jujur";
+
+  // Buat catatan untuk guru
+  let catatan = "";
+  if (status === "mencurigakan") {
+    catatan = "Timer habis tetapi sisa waktu " + sisaWaktu + " detik (>60s). ";
+    catatan += "Kemungkinan: (1) Browser throttling saat buka tab lain (normal), ";
+    catatan += "atau (2) Manipulasi waktu sistem. ";
+    catatan += "Tab switch: " + tabSwitchCount + "x. ";
+    if (skor >= 0) catatan += "Skor: " + skor + "%.";
+  } else {
+    catatan = "Pengerjaan normal. Durasi " + durasiPengerjaan + " detik dari " + durasiUlangan + " detik. ";
+    catatan += "Tab switch: " + tabSwitchCount + "x. ";
+    if (skor >= 0) catatan += "Skor: " + skor + "%.";
+  }
+
+  const sheet = _jaminSheet(SHEET_KUIS_SESSION, SHEET_SPECS[SHEET_KUIS_SESSION]);
+  const now = new Date();
+  sheet.appendRow([
+    now.toISOString(),
+    studentId,
+    nama,
+    nis,
+    absen,
+    kelas,
+    kdMateri,
+    waktuMulai,
+    waktuSelesai,
+    durasiPengerjaan,
+    durasiUlangan,
+    sisaWaktu,
+    tabSwitchCount,
+    status,
+    catatan,
+  ]);
+  SpreadsheetApp.flush();
+
+  return {
+    status: "ok",
+    message: "Log sesi kuis tercatat.",
+    data: {
+      studentId,
+      kdMateri,
+      status,
+      sisaWaktu,
+      catatan,
+    },
+  };
+}
+
 
 /**
  * generateReport V6: untuk tiap siswa, baca db_asesmen (group by Kategori),
@@ -1055,6 +1133,9 @@ function doGet(e) {
         return createJsonResponse(_denganLock(() => generateReport(), "generateReport"));
       case "logactivity":
         return createJsonResponse(_denganLock(() => logActivity(params), "logActivity"));
+      case "logquissession":
+      case "logquissession":
+        return createJsonResponse(_denganLock(() => logQuizSession(params), "logQuizSession"));
       case "getquizlock":
         return createJsonResponse(getQuizLock(params));
       case "resetquizlock":
@@ -1105,6 +1186,9 @@ function doPost(e) {
         return createJsonResponse(_denganLock(() => generateReport(), "generateReport"));
       case "logactivity":
         return createJsonResponse(_denganLock(() => logActivity(payload), "logActivity"));
+      case "logquissession":
+      case "logquissession":
+        return createJsonResponse(_denganLock(() => logQuizSession(payload), "logQuizSession"));
       case "getquizlock":
         return createJsonResponse(getQuizLock(payload));
       case "resetquizlock":
