@@ -65,11 +65,11 @@ const DEFAULT_BOBOT = {
   sas: 2,
 };
 
-/** Build headers dynamic untuk sheet Akumulasi_Nilai_Rapor. */
+/** Build headers dynamic untuk sheet Akumulasi_Nilai_Rapor. Absen+NIS fisik setelah Kelas (auto-migrasi via _jaminSheet). */
 function _buildRaporHeaders() {
-  const headers = ["Timestamp", "StudentID", "Nama", "Kelas"];
+  const headers = ["Timestamp", "StudentID", "Nama", "Kelas", "Absen", "NIS"];
   for (let i = 1; i <= MAX_LM; i++) headers.push("LM" + i);
-  headers.push("Rerata_LM", "STS", "SAS", "Nilai_Rapor", "Interval_Capaian");
+  headers.push("Rerata_LM", "STS", "SAS", "Nilai_Rapor", "Interval_Capaian", "Deskripsi_Capaian");
   return headers;
 }
 
@@ -82,7 +82,8 @@ const SHEET_SPECS = {
   [SHEET_RAPOR]: _buildRaporHeaders(),
   [SHEET_ANEKDOT]: ["Timestamp", "StudentID", "Nama", "Tanggal_Observasi", "Dimensi_Pancasila", "Catatan_Perilaku"],
   [SHEET_PRESENSI]: ["StudentID", "Nama", "Kelas", "Sakit", "Izin", "Tanpa_Keterangan"],
-  [SHEET_BANK]: ["ID", "Kategori", "Tipe", "Detail", "Soal", "Poin"],
+  [SHEET_BANK]: ["ID", "Kategori", "Tipe", "Detail", "Soal", "Poin", "Kode Materi"],
+  // alias: Kategori == Kode Materi/LM (LM1..LMn). Per sel: Kolom Soal = 1 JSON soal (bukan array)
   [SHEET_MANUAL]: ["Student ID", "Kategori", "Skor"],
   [SHEET_KEHADIRAN]: ["Timestamp", "Tanggal", "Nama", "Student ID", "NIS", "Absen", "Kelas", "Kode Materi", "Kehadiran (%)", "Status", "Kriteria"],
   [SHEET_FORUM]: ["Timestamp", "CommentID", "ParentID", "UserName", "StudentID", "Text", "Sheet", "Action", "Likes", "kdMateri", "NIS", "Absen", "Kelas"],
@@ -539,11 +540,23 @@ function getScores(studentId) {
   if (!baris) {
     return { data: null, message: "Belum ada data rapor untuk " + (sid || "siswa ini") + "." };
   }
+  const lmArr = [];
+  for (let i = 1; i <= MAX_LM; i++) {
+    const col = "LM" + i;
+    if (rapor.header[col] !== undefined) lmArr.push(_num(_val(baris, rapor.header, col)));
+  }
+  // buang trailing kosong agar tidak tampil 10 kolom kosong
+  while (lmArr.length > 0 && !lmArr[lmArr.length - 1]) lmArr.pop();
+  if (lmArr.length === 0) {
+    // fallback legacy 5 kolom
+    for (let i = 1; i <= 5; i++) lmArr.push(_num(_val(baris, rapor.header, "LM" + i)) || 0);
+    while (lmArr.length > 0 && !lmArr[lmArr.length - 1]) lmArr.pop();
+  }
   const data = {
     studentId: sid,
     nama: _teks(_val(baris, rapor.header, "Nama")),
     kelas: _teks(_val(baris, rapor.header, "Kelas")),
-    lm: [1, 2, 3, 4, 5].map((i) => _num(_val(baris, rapor.header, "LM" + i))),
+    lm: lmArr,
     rerataLM: _num(_val(baris, rapor.header, "Rerata_LM")),
     sts: _num(_val(baris, rapor.header, "STS")),
     sas: _num(_val(baris, rapor.header, "SAS")),
@@ -609,6 +622,91 @@ function getActivityHistory(studentId, kdMateri, days) {
 
   const history = Object.values(peta).sort((a, b) => (a.date < b.date ? -1 : 1));
   return { history };
+}
+
+/* Opsi B: Kalender gabung 4 sheet — 15 hari/LM, hadir/tugas meski db_aktivitas hanya kuis */
+function getCalendar(params) {
+  const sid = _teks(params.studentId || params.student_id || "");
+  const kelasTarget = _teks(params.kelas || "");
+  const kdFilter = _teks(params.kdMateri || params.kodeMateri || "");
+  // 15 hari per LM: LM1=1-15, LM2=16-30, dst. Untuk tanggal, LM = floor((day-1)/15)+1
+  const lmForDay = (day) => `LM${Math.floor((day - 1) / 15) + 1}`;
+  const akt = _sheet(SHEET_AKTIVITAS);
+  const hadirSheet = _sheet(SHEET_KEHADIRAN);
+  const tugasSheet = _sheet(SHEET_TUGAS);
+  const asesmenSheet = _sheet(SHEET_ASESMEN);
+  const peta = {}; // date -> {date, LM, kuis, hadir, tugas, count}
+  const ensure = (tglStr) => {
+    if (!peta[tglStr]) {
+      const d = new Date(tglStr); const day = isNaN(d.getTime()) ? 1 : d.getDate();
+      peta[tglStr] = { date: tglStr, LM: lmForDay(day), kuis: 0, hadir: 0, tugas: 0, count: 0, items: [] };
+    }
+    return peta[tglStr];
+  };
+  const matchKelas = (kelasRow) => !kelasTarget || _teks(kelasRow).toLowerCase() === kelasTarget.toLowerCase();
+  const matchLM = (lm) => !kdFilter || _teks(lm).toLowerCase() === kdFilter.toLowerCase() || _teks(lm).toLowerCase() === _teks(kdFilter).toLowerCase().replace("pertemuan","lm").trim();
+  if (akt) akt.rows.forEach((r)=>{
+    if (sid && _teks(_val(r, akt.header, "Student ID")) !== sid) return;
+    if (!matchKelas(_val(r, akt.header, "Kelas"))) return;
+    const tgl = _teks(_val(r, akt.header, "Tanggal")); if (!tgl) return;
+    const lm = _teks(_val(r, akt.header, "Kode Materi")) || lmForDay(new Date(tgl).getDate());
+    if (!matchLM(lm)) return;
+    const e = ensure(tgl); e.kuis += _num(_val(r, akt.header, "Count"),1); e.count += _num(_val(r, akt.header, "Count"),1);
+    e.items.push({ tipe: "kuis", deskripsi: _teks(_val(r, akt.header, "Deskripsi")) });
+  });
+  if (hadirSheet) hadirSheet.rows.forEach((r)=>{
+    if (sid && _teks(_val(r, hadirSheet.header, "Student ID")) !== sid) return;
+    if (!matchKelas(_val(r, hadirSheet.header, "Kelas"))) return;
+    const tgl = _teks(_val(r, hadirSheet.header, "Tanggal")); if (!tgl) return;
+    const lm = _teks(_val(r, hadirSheet.header, "Kode Materi")) || lmForDay(new Date(tgl).getDate());
+    if (!matchLM(lm)) return;
+    const e = ensure(tgl); e.hadir += _num(_val(r, hadirSheet.header, "Kehadiran (%)"),0) > 0 ? 1 : 1; e.count += 1;
+    e.items.push({ tipe: "hadir", deskripsi: _teks(_val(r, hadirSheet.header, "Status")) || "Hadir" });
+  });
+  if (tugasSheet) tugasSheet.rows.forEach((r)=>{
+    if (sid && _teks(_val(r, tugasSheet.header, "StudentID")) !== sid) return;
+    if (!matchKelas(_val(r, tugasSheet.header, "Kelas"))) return;
+    let tgl = _teks(_val(r, tugasSheet.header, "Timestamp")).slice(0,10);
+    if (r[tugasSheet.header["Timestamp"]] instanceof Date) tgl = _tglStr(r[tugasSheet.header["Timestamp"]]);
+    if (!tgl || tgl.length < 8) tgl = _tglStr(new Date());
+    const lm = _teks(_val(r, tugasSheet.header, "kdMateri")) || lmForDay(new Date(tgl).getDate());
+    if (!matchLM(lm)) return;
+    const e = ensure(tgl); e.tugas += 1; e.count += 1;
+    e.items.push({ tipe: "tugas", deskripsi: _teks(_val(r, tugasSheet.header, "Title")) || "Tugas" });
+  });
+  if (asesmenSheet) asesmenSheet.rows.forEach((r)=>{
+    if (sid && _teks(_val(r, asesmenSheet.header, "Student ID")) !== sid) return;
+    if (!matchKelas(_val(r, asesmenSheet.header, "Kelas"))) return;
+    const tgl = _teks(_val(r, asesmenSheet.header, "Date")); if (!tgl) return;
+    const lm = _teks(_val(r, asesmenSheet.header, "Kode LM")); if (!matchLM(lm)) return;
+    const e = ensure(tgl); e.kuis += 0; // asesmen sudah dihitung via kuis, tapi tambah marker LM
+    if (!e.LM || e.LM === lmForDay(new Date(tgl).getDate())) e.LM = lm;
+  });
+  const history = Object.values(peta).sort((a,b)=> a.date < b.date ? -1 : 1);
+  return { history, calendar: history };
+}
+
+function getBankSoal(params) {
+  const kategori = _teks(params.kategori || params.kodeMateri || params.kdMateri || "");
+  const sheet = _sheet(SHEET_BANK);
+  if (!sheet) return { status: "ok", soal: [], message: "Sheet Bank Soal kosong" };
+  const rows = sheet.rows.filter((r)=>{
+    if (!kategori) return true;
+    const k = _teks(_val(r, sheet.header, "Kategori")) || _teks(_val(r, sheet.header, "Kode Materi"));
+    return k.toLowerCase() === kategori.toLowerCase() || k.toLowerCase() === kategori.toLowerCase().replace("pertemuan","lm").trim();
+  }).map((r)=>{
+    const rawSoal = _val(r, sheet.header, "Soal");
+    let soalObj = null;
+    try { soalObj = typeof rawSoal === "string" ? JSON.parse(rawSoal) : rawSoal; } catch(_){ soalObj = { question: String(rawSoal), choices: [] }; }
+    return {
+      id: _teks(_val(r, sheet.header, "ID")),
+      kategori: _teks(_val(r, sheet.header, "Kategori")),
+      tipe: _teks(_val(r, sheet.header, "Tipe")),
+      soal: soalObj,
+      poin: _num(_val(r, sheet.header, "Poin"),1),
+    };
+  });
+  return { status: "ok", soal: rows, total: rows.length };
 }
 
 /* ================================================================== */
@@ -1066,10 +1164,13 @@ function generateReport() {
         };
       } else {
         const u = perSiswa[sid];
-        u.nis = u.nis || _teks(_val(r, users.header, "NIS"));
-        u.nama = u.nama || _teks(_val(r, users.header, "Nama"));
-        u.absen = u.absen || _teks(_val(r, users.header, "Absen"));
-        u.kelas = u.kelas || _teks(_val(r, users.header, "Kelas"));
+        u.nis = _teks(_val(r, users.header, "NIS")) || u.nis;
+        u.nama = _teks(_val(r, users.header, "Nama")) || u.nama;
+        u.absen = _teks(_val(r, users.header, "Absen")) || u.absen;
+        // Users adalah sumber kebenaran kelas — timpa kelas dari db_asesmen jika Users sudah dikoreksi
+        const kelasUser = _teks(_val(r, users.header, "Kelas"));
+        if (kelasUser) u.kelas = kelasUser;
+        else u.kelas = u.kelas || "";
       }
     });
   }
@@ -1148,23 +1249,28 @@ function generateReport() {
       rekap_presensi: pres,
     });
 
-    // Build row with dynamic columns
+    // Build row dengan Absen+NIS fisik (kolom E,F) + LM dinamis
     const row = [
       _tglStr(new Date()),
       sid,
       a.nama,
       a.kelas,
+      a.absen || "",
+      a.nis || "",
       ...lmCols,
       rapor.rerata_lm,
       nilaiSTS,
       nilaiSAS,
       rapor.nilai_akhir_rapor,
       interval,
+      rapor.deskripsi_capaian || "",
     ];
     barisRapor.push(row);
   });
 
-  barisRapor.sort((x, y) => _num(y[12]) - _num(x[12]));
+  // index Nilai_Rapor geser setelah tambah Absen,NIS = 6 + MAX_LM + 3 (Rerata,STS,SAS) = 9+MAX_LM
+  const idxNilai = 6 + MAX_LM + 3;
+  barisRapor.sort((x, y) => _num(y[idxNilai]) - _num(x[idxNilai]));
 
   _jaminSheet(SHEET_RAPOR, _buildRaporHeaders());
   const sheet = ss.getSheetByName(SHEET_RAPOR);
@@ -1230,6 +1336,12 @@ function doGet(e) {
         return createJsonResponse(getLeaderboard(params.kelas || ""));
       case "getactivityhistory":
         return createJsonResponse(getActivityHistory(params.studentId || "", params.kdMateri || "", _num(params.days, HARI_RIWAYAT)));
+      case "getbanksoal":
+      case "banksoal":
+        return createJsonResponse(getBankSoal(params));
+      case "getcalendar":
+      case "calendar":
+        return createJsonResponse(getCalendar(params));
       case "register":
         return createJsonResponse(register(params));
       case "login":

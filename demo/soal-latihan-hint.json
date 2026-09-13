@@ -48,7 +48,7 @@
     "points": 3
   },
   {
-    "question": "Urutkan log langkah deployment HAX web component dari yang paling dulu ke akhir.",
+    "question": "Urutkan logger langkah deployment HAX web component dari yang paling dulu ke akhir.",
     "hint": "Pikirkan urutan: bangun → uji → publikasi.",
     "choices": [
       "npm publish",

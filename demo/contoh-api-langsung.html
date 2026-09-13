@@ -72,7 +72,7 @@
         <code>target</code>, atau tool yang tidak mengikuti redirect) hanya menunjukkan halaman kosong atau URL redirect panjang.</div></div>
       <p><strong>Solusi andal:</strong> panggil lewat <code>fetch(..., {redirect: "follow"})</code> dari JavaScript.
         CORS sudah dibuka (<code>Access-Control-Allow-Origin: *</code>), jadi halaman mana pun bisa memanggilnya:</p>
-      <pre id="pola-fetch"><button class="salin" onclick="salin('pola-fetch')">Salin</button><code>const API = "https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec";
+      <pre id="pola-fetch"><button class="salin" onclick="salin('pola-fetch')">Salin</button><code>const API = "https://script.google.com/macros/s/AKfycby-OxYKdVWKCtyHdvHiR7EITE2YXC7FCbgzIkdm8yj3fTXlOQ9kgjCEDQh2XcktUoWb/exec";
 
 async function panggil(params) {
   const qs = new URLSearchParams(params).toString();
@@ -93,7 +93,7 @@ async function panggil(params) {
 &lt;button onclick="generateReport()"&gt;Perbarui Rangkuman &amp; Rapor&lt;/button&gt;
 &lt;script&gt;
 async function generateReport() {
-  const API = "https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec";
+  const API = "https://script.google.com/macros/s/AKfycby-OxYKdVWKCtyHdvHiR7EITE2YXC7FCbgzIkdm8yj3fTXlOQ9kgjCEDQh2XcktUoWb/exec";
   const res = await fetch(`${API}?action=generateReport`, { redirect: "follow" });
   const j = await res.json();
   alert(j.message); // "Rangkuman &amp; Akumulasi Nilai Rapor diperbarui untuk N siswa."
@@ -183,7 +183,7 @@ async function generateReport() {
   </div>
 
   <script>
-    const API = "https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec";
+    const API = "https://script.google.com/macros/s/AKfycby-OxYKdVWKCtyHdvHiR7EITE2YXC7FCbgzIkdm8yj3fTXlOQ9kgjCEDQh2XcktUoWb/exec";
 
     const panggil = async (params) => {
       const qs = new URLSearchParams(params).toString();

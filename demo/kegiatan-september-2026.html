@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kegiatan September 2026 — Felix Siauw — dasbor-kuis</title>
+  <script type="module" src="../lib/kuis-ledakan.js"></script>
+  <script type="module" src="../lib/quiz-user-auth.js"></script>
+  <style>
+    :root, html, body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, sans-serif;
+      background: #f1f5f9;
+      color: #0f172a;
+    }
+    .halaman { max-width: 1100px; margin: 0 auto; padding: 24px 20px 60px; }
+    header.hero {
+      background: linear-gradient(135deg, #059669, #10b981 50%, #34d399);
+      color: #fff; border-radius: 20px; padding: 28px 32px; margin-bottom: 24px;
+      box-shadow: 0 12px 32px -12px rgb(16 185 129 / 0.5);
+    }
+    header.hero h1 { margin: 0; font-size: 26px; }
+    header.hero .subtitle { margin: 8px 0 0; opacity: 0.9; font-size: 15px; }
+    header.hero .meta { margin-top: 12px; font-size: 13px; opacity: 0.85; }
+    .nav-links { margin: 0 0 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+    .nav-links a {
+      padding: 8px 14px; border-radius: 10px; border: 1px solid #a7f3d0;
+      background: #fff; color: #047857; font-weight: 600; font-size: 13px; text-decoration: none;
+    }
+    .nav-links a:hover { background: #ecfdf5; }
+    .info {
+      background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+      border: 1px solid #6ee7b7;
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 24px;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    .info h3 { margin: 0 0 8px; color: #047857; font-size: 16px; }
+    .info ul { margin: 8px 0 0; padding-left: 20px; }
+    .info li { margin: 4px 0; }
+    .section {
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px;
+      margin: 20px 0;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 12px -4px rgb(15 23 42 / 0.1);
+    }
+    .section-title {
+      font-size: 18px; color: #065f46; margin: 0 0 16px;
+      border-left: 4px solid #10b981; padding-left: 12px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .section-title .icon { font-size: 24px; }
+
+    /* Flash Card Styles */
+    .flashcard-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .flashcard {
+      perspective: 1000px;
+      height: 180px;
+      cursor: pointer;
+    }
+    .flashcard-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+    .flashcard.flipped .flashcard-inner {
+      transform: rotateY(180deg);
+    }
+    .flashcard-front, .flashcard-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      text-align: center;
+      font-size: 15px;
+      line-height: 1.6;
+      box-sizing: border-box;
+    }
+    .flashcard-front {
+      background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+      border: 2px solid #3b82f6;
+      color: #1e40af;
+    }
+    .flashcard-back {
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      border: 2px solid #f59e0b;
+      color: #92400e;
+      transform: rotateY(180deg);
+    }
+    .flashcard-hint {
+      font-size: 11px;
+      color: #6b7280;
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    /* Quote Card Styles */
+    .quote-container {
+      display: grid;
+      gap: 16px;
+      margin-top: 16px;
+    }
+    .quote-card {
+      background: linear-gradient(135deg, #fefce8, #fef9c3);
+      border-left: 4px solid #eab308;
+      border-radius: 0 12px 12px 0;
+      padding: 20px 24px;
+      position: relative;
+    }
+    .quote-card::before {
+      content: '"';
+      position: absolute;
+      top: 8px;
+      left: 12px;
+      font-size: 48px;
+      color: #fbbf24;
+      opacity: 0.4;
+      font-family: Georgia, serif;
+    }
+    .quote-text {
+      font-size: 16px;
+      line-height: 1.7;
+      color: #78350f;
+      font-style: italic;
+      margin: 0;
+      padding-left: 20px;
+    }
+    .quote-source {
+      margin-top: 12px;
+      font-size: 13px;
+      color: #a16207;
+      text-align: right;
+    }
+    .quote-tags {
+      margin-top: 10px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .quote-tag {
+      background: #fef08a;
+      color: #854d0e;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 12px; font-weight: bold; margin-right: 6px; }
+    .badge-mc { background: #dbeafe; color: #1e40af; }
+    .badge-flash { background: #e0e7ff; color: #3730a3; }
+    .badge-quote { background: #fef3c7; color: #92400e; }
+
+    .demo-auth { max-width: 500px; margin: 0 auto 16px; }
+
+    .activity-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .activity-stat {
+      background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+      border: 1px solid #86efac;
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+    }
+    .activity-stat .number {
+      font-size: 28px;
+      font-weight: bold;
+      color: #047857;
+    }
+    .activity-stat .label {
+      font-size: 12px;
+      color: #065f46;
+      margin-top: 4px;
+    }
+
+    .footer-info {
+      margin-top: 32px;
+      padding: 16px;
+      background: #f8fafc;
+      border-radius: 12px;
+      font-size: 13px;
+      color: #64748b;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="halaman">
+    <header class="hero">
+      <h1>🗓️ Kegiatan Terbaru — September 2026</h1>
+      <p class="subtitle">Materi & Evaluasi: Felix Siauw</p>
+      <p class="meta">📍 Multiple Choice • Flash Cards • Kutipan Inspiratif • Evaluasi Interaktif</p>
+    </header>
+
+    <div class="nav-links">
+      <a href="/">← Kembali ke Demo Utama</a>
+      <a href="soal-akm-lengkap.html">📝 Soal AKM Lengkap</a>
+      <a href="quiz-user-auth.html">🔐 Login / Daftar</a>
+      <a href="index.html">🏠 Hubungan Sheet</a>
+    </div>
+
+    <div class="info">
+      <h3>📚 Tentang Kegiatan Ini</h3>
+      <p>Kegiatan pembelajaran bulan September 2026 dengan materi dari <strong>Felix Siauw</strong>. Mencakup:</p>
+      <ul>
+        <li><span class="badge badge-mc">Multiple Choice</span> Kuis interaktif dengan berbagai tipe soal</li>
+        <li><span class="badge badge-flash">Flash Cards</span> Kartu belajar interaktif (klik untuk membalik)</li>
+        <li><span class="badge badge-quote">Kutipan</span> Quotes inspiratif dengan tagging kategori</li>
+      </ul>
+    </div>
+
+    <div class="activity-summary">
+      <div class="activity-stat">
+        <div class="number">10</div>
+        <div class="label">Soal Multiple Choice</div>
+      </div>
+      <div class="activity-stat">
+        <div class="number">8</div>
+        <div class="label">Flash Cards</div>
+      </div>
+      <div class="activity-stat">
+        <div class="number">5</div>
+        <div class="label">Kutipan Inspiratif</div>
+      </div>
+    </div>
+
+    <!-- ==================== AUTH ==================== -->
+    <div class="demo-auth">
+      <quiz-user-auth apps-script-url="https://script.google.com/macros/s/AKfycbygtdGu11t_lZck8rPX8cjhoFUI1TMlYb0BMJHHjro5-2m4UvnTzwz0jGh-x5n68ck/exec"></quiz-user-auth>
+    </div>
+
+    <!-- ==================== SECTION 1: KUTIPAN ==================== -->
+    <div class="section">
+      <h2 class="section-title"><span class="icon">💬</span> Kutipan Inspiratif — Felix Siauw</h2>
+      <div class="quote-container">
+        <div class="quote-card">
+          <p class="quote-text">Jangan tunggu kesempurnaan untuk mulai bergerak. Mulailah bergerak, maka kesempurnaan akan mengikutinya.</p>
+          <p class="quote-source">— Felix Siauw</p>
+          <div class="quote-tags">
+            <span class="quote-tag">motivasi</span>
+            <span class="quote-tag">aksi</span>
+          </div>
+        </div>
+        <div class="quote-card">
+          <p class="quote-text">Setiap langkah kecil yang kamu ambil hari ini, adalah investasi untuk masa depan yang lebih besar.</p>
+          <p class="quote-source">— Felix Siauw</p>
+          <div class="quote-tags">
+            <span class="quote-tag">ketekunan</span>
+            <span class="quote-tag">investasi diri</span>
+          </div>
+        </div>
+        <div class="quote-card">
+          <p class="quote-text">Belajar bukan tentang menjadi orang lain, tapi menjadi versi terbaik dari dirimu sendiri.</p>
+          <p class="quote-source">— Felix Siauw</p>
+          <div class="quote-tags">
+            <span class="quote-tag">belajar</span>
+            <span class="quote-tag">pengembangan diri</span>
+          </div>
+        </div>
+        <div class="quote-card">
+          <p class="quote-text">Keberhasilan adalah hasil dari kegagalan yang tidak pernah menyerah untuk mencoba lagi.</p>
+          <p class="quote-source">— Felix Siauw</p>
+          <div class="quote-tags">
+            <span class="quote-tag">keberhasilan</span>
+            <span class="quote-tag">kegagalan</span>
+            <span class="quote-tag">ketahanan</span>
+          </div>
+        </div>
+        <div class="quote-card">
+          <p class="quote-text">Ilmu yang bermanfaat adalah ilmu yang diamalkan, bukan ilmu yang hanya dihafal.</p>
+          <p class="quote-source">— Felix Siauw</p>
+          <div class="quote-tags">
+            <span class="quote-tag">ilmu</span>
+            <span class="quote-tag">amal</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SECTION 2: FLASH CARDS ==================== -->
+    <div class="section">
+      <h2 class="section-title"><span class="icon">🃏</span> Flash Cards — Klik untuk Membalik</h2>
+      <p class="flashcard-hint">💡 Klik kartu untuk melihat jawaban di sisi belakang</p>
+      <div class="flashcard-container">
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <strong>Apa itu Web Component?</strong>
+            </div>
+            <div class="flashcard-back">
+              Standar browser untuk membuat elemen HTML kustom yang dapat digunakan ulang dengan enkapsulasi DOM dan styling.
+            </div>
+          </div>
+        </div>
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <strong>Apa fungsi Shadow DOM?</strong>
+            </div>
+            <div class="flashcard-back">
+              Mengisolasi DOM dan CSS komponen dari elemen lain di halaman, mencegah konflik styling.
+            </div>
+          </div>
+        </div>
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <strong>Apa itu Custom Elements?</strong>
+            </div>
+            <div class="flashcard-back">
+              API JavaScript untuk mendefinisikan elemen HTML baru dengan behavior dan properti sendiri.
+            </div>
+          </div>
+        </div>
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <strong>Apa itu LitElement?</strong>
+            </div>
+            <div class="flashcard-back">
+              Base class ringan untuk membuat Web Components dengan reactive properties dan templating deklaratif.
+            </div>
+          </div>
+        </div>
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <strong>Apa kepanjangan HTML?</strong>
+            </div>
+            <div class="flashcard-back">
+              HyperText Markup Language — bahasa markup untuk struktur halaman web.
+            </div>
+          </div>
+        </div>
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <strong>Apa kepanjangan CSS?</strong>
+            </div>
+            <div class="flashcard-back">
+              Cascading Style Sheets — bahasa styling untuk mendesain tampilan halaman web.
+            </div>
+          </div>
+        </div>
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <strong>HAX adalah singkatan dari?</strong>
+            </div>
+            <div class="flashcard-back">
+              Hybrid Authoring eXperience — platform authoring konten web modern.
+            </div>
+          </div>
+        </div>
+        <div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="flashcard-inner">
+            <div class="flashcard-front">
+              <strong>Apa kegunaan Google Apps Script?</strong>
+            </div>
+            <div class="flashcard-back">
+              Platform scripting berbasis cloud untuk mengotomasi dan memperluas produk Google seperti Sheets, Docs, dan Forms.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SECTION 3: MULTIPLE CHOICE ==================== -->
+    <h2 class="section-title" style="margin-top: 32px;"><span class="icon">📝</span> Evaluasi Multiple Choice</h2>
+
+    <!-- MCQ 1: Web Components -->
+    <div class="section">
+      <kuis-ledakan
+        judul="Kuis 1: Web Components & JavaScript"
+        apps-script-url="https://script.google.com/macros/s/AKfycbygtdGu11t_lZck8rPX8cjhoFUI1TMlYb0BMJHHjro5-2m4UvnTzwz0jGh-x5n68ck/exec"
+        kd-materi="September 2026 - Felix Siauw"
+        mode="siswa"
+        shuffle-choices
+        questions='[
+          {
+            "question": "Manakah yang BUKAN merupakan bagian dari Web Components API?",
+            "choices": ["Shadow DOM", "Custom Elements", "React JSX", "HTML Templates"],
+            "correctIndex": 2
+          },
+          {
+            "question": "Apa fungsi utama Shadow DOM?",
+            "choices": ["Menambah animasi", "Mengisolasi styling dan DOM", "Mempercepat loading", "Menyimpan data"],
+            "correctIndex": 1
+          },
+          {
+            "question": "Bahasa pemrograman apa yang berjalan native di browser?",
+            "choices": ["Python", "Java", "JavaScript", "C++"],
+            "correctIndex": 2
+          }
+        ]'>
+      </kuis-ledakan>
+    </div>
+
+    <!-- MCQ 2: CSS & Styling -->
+    <div class="section">
+      <kuis-ledakan
+        judul="Kuis 2: CSS & Styling"
+        apps-script-url="https://script.google.com/macros/s/AKfycbygtdGu11t_lZck8rPX8cjhoFUI1TMlYb0BMJHHjro5-2m4UvnTzwz0jGh-x5n68ck/exec"
+        kd-materi="September 2026 - Felix Siauw"
+        mode="siswa"
+        shuffle-choices
+        questions='[
+          {
+            "question": "Properti CSS untuk membuat sudut membulat?",
+            "choices": ["border-style", "border-radius", "border-width", "border-color"],
+            "correctIndex": 1
+          },
+          {
+            "question": "Unit CSS yang relatif terhadap ukuran font elemen induk?",
+            "choices": ["px", "rem", "em", "vh"],
+            "correctIndex": 2
+          },
+          {
+            "question": "Manakah yang merupakan CSS Grid property?",
+            "choices": ["flex-direction", "grid-template-columns", "justify-content", "align-items"],
+            "correctIndex": 1
+          },
+          {
+            "question": "Flexbox direction default adalah?",
+            "choices": ["column", "row", "row-reverse", "column-reverse"],
+            "correctIndex": 1
+          }
+        ]'>
+      </kuis-ledakan>
+    </div>
+
+    <!-- MCQ 3: PG Kompleks -->
+    <div class="section">
+      <kuis-ledakan
+        judul="Kuis 3: Pilihan Ganda Kompleks"
+        apps-script-url="https://script.google.com/macros/s/AKfycbygtdGu11t_lZck8rPX8cjhoFUI1TMlYb0BMJHHjro5-2m4UvnTzwz0jGh-x5n68ck/exec"
+        kd-materi="September 2026 - Felix Siauw"
+        mode="siswa"
+        questions='[
+          {
+            "question": "Manakah yang termasuk dalam teknologi front-end web? (Pilih lebih dari satu)",
+            "choices": ["HTML", "CSS", "JavaScript", "MySQL"],
+            "correctAnswers": [0, 1, 2]
+          },
+          {
+            "question": "Framework JavaScript yang menggunakan Virtual DOM:",
+            "choices": ["React", "Vue.js", "Angular", "Svelte"],
+            "correctAnswers": [0, 1]
+          }
+        ]'>
+      </kuis-ledakan>
+    </div>
+
+    <!-- MCQ 4: Isian Singkat -->
+    <div class="section">
+      <kuis-ledakan
+        judul="Kuis 4: Isian Singkat"
+        apps-script-url="https://script.google.com/macros/s/AKfycbygtdGu11t_lZck8rPX8cjhoFUI1TMlYb0BMJHHjro5-2m4UvnTzwz0jGh-x5n68ck/exec"
+        kd-materi="September 2026 - Felix Siauw"
+        mode="siswa"
+        questions='[
+          {
+            "question": "Apa kepanjangan dari API?",
+            "type": "shortAnswer",
+            "acceptedAnswers": ["application programming interface", "application program interface"]
+          },
+          {
+            "question": "Tag HTML untuk membuat paragraf?",
+            "type": "shortAnswer",
+            "acceptedAnswers": ["p", "<p>", "p tag"]
+          },
+          {
+            "question": "Protokol standar untuk web?",
+            "type": "shortAnswer",
+            "acceptedAnswers": ["http", "https", "hypertext transfer protocol"]
+          }
+        ]'>
+      </kuis-ledakan>
+    </div>
+
+    <div class="footer-info">
+      <p>📅 Kegiatan September 2026 • 👨‍🏫 Materi: Felix Siauw</p>
+      <p>Powered by <strong>dasbor-kuis</strong> & <strong>HAXtheweb</strong></p>
+    </div>
+
+    <script type="module">
+      // Auto-sync session dari quiz-user-auth ke kuis-ledakan
+      document.querySelectorAll("kuis-ledakan").forEach((quiz) => {
+        window.addEventListener("quiz-user-login", (e) => {
+          const d = e.detail || {};
+          quiz.studentId = d.studentId;
+          quiz.studentName = d.nama;
+          quiz.studentNis = d.nis;
+          quiz.studentAbsen = d.absen;
+          quiz.studentKelas = d.kelas;
+        });
+      });
+    </script>
+  </div>
+</body>
+</html>

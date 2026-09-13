@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tema Ceria — Dasbor Terintegrasi (dasbor-kuis)</title>
+  <style>
+    :root, html, body { margin: 0; padding: 0; background: #EEF2FF; }
+  </style>
+</head>
+<body>
+  <tema-ceria-dasbor
+    mode="guru"
+    kelas=""
+    kd-materi="Pertemuan 1"
+    apps-script-url="https://script.google.com/macros/s/AKfycbygtdGu11t_lZck8rPX8cjhoFUI1TMlYb0BMJHHjro5-2m4UvnTzwz0jGh-x5n68ck/exec"
+  ></tema-ceria-dasbor>
+
+  <div style="max-width:1280px; margin: 24px auto; background:#fff; border:1px solid #E0E7FF; border-radius:20px; padding:20px; font-family:var(--ddd-font-primary);">
+    <h3 style="margin:0; color:#312E81;">Cara pakai</h3>
+    <p style="color:#64748B; font-size:13px;">&lt;tema-ceria-dasbor&gt; membungkus &lt;dasbor-kuis tema="ceria"&gt; — teruskan props apps-script-url/mode/kelas/kd-materi/student-id. Atau pakai langsung: <code>&lt;dasbor-kuis tema="ceria" mode="guru" kelas=""&gt;</code></p>
+    <p style="color:#64748B; font-size:13px;">Shell menampilkan hero Human structure + calendar May 2024 + New course cards (Drawing practice / Learning to count) sebagai referensi Image 1+2, lalu di bawahnya dasbor-kuis lengkap (Pantauan Kelas, Leaderboard, Peringkat, Ruang Pertemuan, Input Nilai, Evaluasi, Diskusi, Bank Soal, Pengaturan) dengan tema pastel 24px radius.</p>
+  </div>
+
+  <script type="module" src="../lib/tema-ceria-dasbor.js"></script>
+</body>
+</html>

@@ -11,70 +11,111 @@
     :root, html, body {
       margin: 0;
       padding: 0;
-      font-family: system-ui, sans-serif;
-      background: #f1f5f9;
-      color: #0f172a;
+      font-family: var(--ddd-font-primary);
+      background: var(--ddd-theme-default-shrineLight);
+      color: var(--ddd-theme-default-coalyGray);
     }
     .halaman {
-      max-width: 1200px;
+      max-width: var(--ddd-spacing-10);
       margin: 0 auto;
-      padding: 24px 20px 60px;
+      padding: var(--ddd-spacing-6) var(--ddd-spacing-5) var(--ddd-spacing-12);
     }
     header.hero {
-      background: linear-gradient(120deg, #312e81, #4f46e5 55%, #6d28d9);
-      color: #fff;
-      border-radius: 20px;
-      padding: 28px 32px;
-      margin-bottom: 24px;
-      box-shadow: 0 12px 28px -12px rgb(79 70 229 / 0.55);
+      background: linear-gradient(120deg, var(--ddd-primary-13), var(--ddd-primary-8) 55%, var(--ddd-primary-0));
+      color: var(--ddd-theme-default-white);
+      border-radius: var(--ddd-radius-m);
+      padding: var(--ddd-spacing-6) var(--ddd-spacing-8);
+      margin-bottom: var(--ddd-spacing-6);
+      box-shadow: 0 var(--ddd-spacing-5) var(--ddd-spacing-12) calc(var(--ddd-spacing-5) * -1) rgba(79, 70, 229, 0.55);
     }
-    header.hero h1 { margin: 0; font-size: 26px; }
-    header.hero p { margin: 8px 0 0; opacity: 0.85; font-size: 14px; }
-    .nav-links { margin: 12px 0 24px; display: flex; gap: 12px; flex-wrap: wrap; }
+    header.hero h1 { margin: 0; font-size: var(--ddd-font-size-xl); font-family: var(--ddd-font-display); }
+    header.hero p { margin: var(--ddd-spacing-2) 0 0; opacity: 0.85; font-size: var(--ddd-font-size-s); }
+    .nav-links {
+      margin: 0 0 var(--ddd-spacing-6);
+      display: flex;
+      gap: var(--ddd-spacing-3);
+      flex-wrap: wrap;
+    }
     .nav-links a, .nav-links button {
-      padding: 8px 14px; border-radius: 10px; border: 1px solid #c7d2fe;
-      background: #fff; color: #4338ca; font-weight: 600; font-size: 13px;
-      text-decoration: none; cursor: pointer;
+      padding: var(--ddd-spacing-2) var(--ddd-spacing-4);
+      border-radius: var(--ddd-radius-s);
+      border: 1px solid var(--ddd-theme-default-shrineLight);
+      background: var(--ddd-theme-default-white);
+      color: var(--ddd-primary-13);
+      font-weight: var(--ddd-font-weight-bold);
+      font-size: var(--ddd-font-size-3xs);
+      text-decoration: none;
+      cursor: pointer;
     }
-    .nav-links a:hover, .nav-links button:hover { background: #eef2ff; }
+    .nav-links a:hover, .nav-links button:hover { background: var(--ddd-theme-default-shrineMaxLight); }
     .kartu {
-      background: #fff; border: 1px solid #e2e8f0; border-radius: 16px;
-      padding: 22px; margin-bottom: 20px; box-shadow: 0 2px 8px -2px rgb(15 23 42 / 0.08);
+      background: var(--ddd-theme-default-white);
+      border: 1px solid var(--ddd-theme-default-shrineLight);
+      border-radius: var(--ddd-radius-m);
+      padding: var(--ddd-spacing-6);
+      margin-bottom: var(--ddd-spacing-6);
+      box-shadow: 0 var(--ddd-spacing-1) var(--ddd-spacing-4) calc(var(--ddd-spacing-1) * -1) rgba(15, 23, 42, 0.08);
     }
-    .kartu h2 { margin: 0 0 10px; font-size: 19px; color: #1e293b; }
-    .kartu p { font-size: 14px; color: #475569; line-height: 1.6; margin: 6px 0; }
-    code {
-      background: #eef2ff; color: #4338ca; border-radius: 6px;
-      padding: 2px 7px; font-size: 12.5px; word-break: break-all;
+    .info {
+      background: var(--ddd-theme-default-shrineLight);
+      border: 1px solid var(--ddd-theme-default-shrineLight);
+      border-radius: var(--ddd-radius-s);
+      padding: var(--ddd-spacing-4);
+      margin-bottom: var(--ddd-spacing-6);
+      font-size: var(--ddd-font-size-s);
+      line-height: 1.7;
     }
-    .diagrama { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; margin: 16px 0; }
+    .info code {
+      background: var(--ddd-theme-default-shrineMaxLight);
+      padding: 1px 6px;
+      border-radius: var(--ddd-radius-xs);
+      font-size: var(--ddd-font-size-3xs);
+    }
+    .event-log {
+      background: var(--ddd-theme-default-shrineMaxLight);
+      border: 1px dashed var(--ddd-theme-default-slateLight);
+      border-radius: var(--ddd-radius-s);
+      padding: var(--ddd-spacing-4);
+      margin-top: var(--ddd-spacing-6);
+      font-family: monospace;
+      font-size: var(--ddd-font-size-3xs);
+      min-height: var(--ddd-spacing-8);
+      line-height: 1.6;
+    }
+    .event-log .e { margin: var(--ddd-spacing-1) 0; }
+    .event-log .e.ok { color: var(--ddd-theme-default-success); }
+    .event-log .e.off { color: var(--ddd-theme-default-error); }
+    .diagrama { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: var(--ddd-spacing-3); margin: var(--ddd-spacing-4) 0; }
     .sheet-box {
-      border: 2px solid #c7d2fe; border-radius: 14px; padding: 14px; background: #fafaff;
+      border: 2px solid var(--ddd-theme-default-shrineLight);
+      border-radius: var(--ddd-radius-l);
+      padding: var(--ddd-spacing-4);
+      background: var(--ddd-theme-default-shrineMaxLight);
       position: relative;
     }
     .sheet-box .sheet-nama {
-      display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 15px;
-      color: #312e81; margin-bottom: 8px;
+      display: flex; align-items: center; gap: var(--ddd-spacing-2); font-weight: var(--ddd-font-weight-bold); font-size: var(--ddd-font-size-s);
+      color: var(--ddd-primary-13); margin-bottom: var(--ddd-spacing-2);
     }
-    .sheet-box.alur-input { border-color: #6ee7b7; }
-    .sheet-box.alur-turunan { border-color: #fcd34d; background: #fffbeb; }
-    .sheet-box.alur-manual { border-color: #93c5fd; background: #eff6ff; }
-    .sheet-box ul { margin: 0; padding-left: 18px; font-size: 12.5px; color: #475569; line-height: 1.7; }
-    .sheet-box li { margin: 2px 0; }
-    .panah { text-align: center; font-size: 18px; color: #6366f1; margin-top: 6px; }
+    .sheet-box.alur-input { border-color: var(--ddd-primary-8); }
+    .sheet-box.alur-turunan { border-color: var(--ddd-primary-10); background: var(--ddd-theme-default-shrineMaxLight); }
+    .sheet-box.alur-manual { border-color: var(--ddd-primary-13); background: var(--ddd-theme-default-shrineMaxLight); }
+    .sheet-box ul { margin: 0; padding-left: var(--ddd-spacing-4); font-size: var(--ddd-font-size-3xs); color: var(--ddd-theme-default-slateLight); line-height: 1.7; }
+    .sheet-box li { margin: var(--ddd-spacing-0.5) 0; }
+    .panah { text-align: center; font-size: var(--ddd-font-size-l); color: var(--ddd-primary-8); margin-top: var(--ddd-spacing-2); }
     table {
-      width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0;
+      width: 100%; border-collapse: collapse; font-size: var(--ddd-font-size-s); margin: var(--ddd-spacing-3) 0;
     }
-    th { background: #f8fafc; text-align: left; padding: 10px 12px; border-bottom: 2px solid #e2e8f0; font-size: 12px; }
-    td { padding: 9px 12px; border-bottom: 1px solid #f1f5f9; vertical-align: top; }
-    tr:hover td { background: #f8fafc; }
-    .badge { display: inline-block; padding: 3px 10px; border-radius: 9999px; font-size: 11px; font-weight: 700; }
-    .badge-input { background: #dcfce7; color: #166534; }
-    .badge-turunan { background: #fef3c7; color: #92400e; }
-    .badge-manual { background: #dbeafe; color: #1e40af; }
-    .catatan { background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 0 10px 10px 0; padding: 12px 16px; font-size: 13px; margin-top: 14px; }
-    .catatan.ok { background: #f0fdf4; border-left-color: #22c55e; }
-    .demo-section { margin-top: 8px; }
+    th { background: var(--ddd-theme-default-shrineMaxLight); text-align: left; padding: var(--ddd-spacing-2) var(--ddd-spacing-3); border-bottom: 2px solid var(--ddd-theme-default-shrineLight); font-size: var(--ddd-font-size-xs); }
+    td { padding: var(--ddd-spacing-2) var(--ddd-spacing-3); border-bottom: 1px solid var(--ddd-theme-default-shrineLight); vertical-align: top; }
+    tr:hover td { background: var(--ddd-theme-default-shrineMaxLight); }
+    .badge { display: inline-block; padding: var(--ddd-spacing-xxs) var(--ddd-spacing-s); border-radius: calc(var(--ddd-radius-l) / 2); font-size: var(--ddd-font-size-xxs); font-weight: var(--ddd-font-weight-bold); }
+    .badge-input { background: var(--ddd-theme-default-success); color: var(--ddd-theme-default-white); }
+    .badge-turunan { background: var(--ddd-theme-default-warning); color: var(--ddd-theme-default-coalyGray); }
+    .badge-manual { background: var(--ddd-theme-default-info); color: var(--ddd-theme-default-primary); }
+    .catatan { background: var(--ddd-theme-default-shrineMaxLight); border-left: 4px solid var(--ddd-theme-default-warning); border-radius: 0 var(--ddd-radius-l) var(--ddd-radius-l) 0; padding: var(--ddd-spacing-3) var(--ddd-spacing-4); font-size: var(--ddd-font-size-s); margin-top: var(--ddd-spacing-3); }
+    .catatan.ok { background: var(--ddd-theme-default-success); border-left-color: var(--ddd-theme-default-success); color: var(--ddd-theme-default-white); }
+    .demo-section { margin-top: var(--ddd-spacing-4); }
   </style>
 </head>
 
@@ -95,11 +136,9 @@
       <a href="tutorial-hax.html">🧭 Tutorial Semua Properti HAX</a>
       <a href="haxcms-page.html">🧩 Halaman HAX/HAXcms</a>
       <a href="tutor-akm-sheet.html">📝 Tutor AKM → Sheet</a>
-      <a href="contoh-api-langsung.html">🌐 Contoh API Langsung</a>
       <a href="tutor-rangkuman.html">📚 Tutor Rangkuman</a>
       <a href="tutor-akumulasi-nilai-rapor.html">📊 Tutor Akumulasi Nilai Rapor</a>
-      <a href="hasil-cek-perubahan.html">🔎 Hasil Cek Perubahan</a>
-      <a href="contoh-perubahan.html">🧪 Contoh HTML Perubahan</a>
+      <a href="kegiatan-september-2026.html">🗓️ Kegiatan September 2026 — Felix Siauw</a>
       <button onclick="document.getElementById('hubungan').scrollIntoView()">Hubungan Sheet</button>
       <button onclick="document.getElementById('aksi').scrollIntoView()">Aksi Backend</button>
       <button onclick="document.getElementById('demo').scrollIntoView()">Demo Langsung</button>
@@ -132,7 +171,7 @@
           <div class="sheet-nama">🏅 db_nilai</div>
           <ul>
             <li><strong>Skor kuis</strong> per siswa per pertemuan</li>
-            <li>Kolom: Skor (%), Total Soal, Status (LULUS &ge; 70), Kategori Kuis (formatif/utS/uas/ulangan_harian), ID Log</li>
+            <li>Kolom: Skor (%), Total Soal, Status (LULUS ≥ 70), Kategori Kuis (formatif/UTS/UAS/ulangan_harian), ID Log</li>
           </ul>
         </div>
       </div>
@@ -166,7 +205,7 @@
           <div class="sheet-nama">🧠 Bank Soal</div>
           <ul>
             <li>Bank soal (AKM/PG kompleks) → <code>getBankSoal</code></li>
-            <li>Konten di-<em>fetch</em> otomatis oleh <code>&lt;kuis-ledakan&gt;</code> bila atribut <code>questions</code> kosong</li>
+            <li>Konten di-fetch otomatis oleh <code><kuis-ledakan></code> bila atribut <code>questions</code> kosong</li>
           </ul>
         </div>
         <div class="sheet-box alur-manual">
@@ -220,7 +259,7 @@
           <tr>
             <td>Bank Soal</td><td><span class="badge badge-manual">Manual</span></td>
             <td>Diisi guru</td>
-            <td><code>getBankSoal</code> → <code>&lt;kuis-ledakan&gt;</code></td>
+            <td><code>getBankSoal</code> → <code><kuis-ledakan></code></td>
             <td><code>ID</code>, <code>Kategori</code>, <code>Tipe</code></td>
           </tr>
           <tr>
@@ -268,30 +307,30 @@
       <h2>🚀 Demo Langsung</h2>
       <p>Login/daftar lewat <code>quiz-user-auth</code>, lalu jelajahi mode Guru dan Siswa.</p>
       <quiz-user-auth
-        apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec">
+        apps-script-url="https://script.google.com/macros/s/AKfycbygtdGu11t_lZck8rPX8cjhoFUI1TMlYb0BMJHHjro5-2m4UvnTzwz0jGh-x5n68ck/exec">
       </quiz-user-auth>
       <div class="demo-section">
-        <h2 style="font-size:17px;">👨‍🏫 Mode Guru</h2>
+        <h2 style="font-size:var(--ddd-font-size-l);">👨‍🏫 Mode Guru</h2>
         <dasbor-kuis mode="guru" kd-materi="Pertemuan 1"
-          apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec">
+          apps-script-url="https://script.google.com/macros/s/AKfycbygtdGu11t_lZck8rPX8cjhoFUI1TMlYb0BMJHHjro5-2m4UvnTzwz0jGh-x5n68ck/exec">
         </dasbor-kuis>
       </div>
       <div class="demo-section">
-        <h2 style="font-size:17px;">👨‍🏫 Mode Guru Ragam Dua (label lama "dosen") — Peringkat Nilai Bimbingan Kelas di tab Guru</h2>
+        <h2 style="font-size:var(--ddd-font-size-l);">👨‍🏫 Mode Guru Ragam Dua (label lama "dosen") — Peringkat Nilai Bimbingan Kelas di tab Guru</h2>
         <dasbor-kuis mode="dosen" kd-materi="Pertemuan 1"
-          apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec">
+          apps-script-url="https://script.google.com/macros/s/AKfycbygtdGu11t_lZck8rPX8cjhoFUI1TMlYb0BMJHHjro5-2m4UvnTzwz0jGh-x5n68ck/exec">
         </dasbor-kuis>
       </div>
       <div class="demo-section">
-        <h2 style="font-size:17px;">🎓 Mode Siswa</h2>
+        <h2 style="font-size:var(--ddd-font-size-l);">🎓 Mode Siswa</h2>
         <dasbor-kuis mode="siswa" kd-materi="Pertemuan 1"
-          apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec">
+          apps-script-url="https://script.google.com/macros/s/AKfycbygtdGu11t_lZck8rPX8cjhoFUI1TMlYb0BMJHHjro5-2m4UvnTzwz0jGh-x5n68ck/exec">
         </dasbor-kuis>
       </div>
       <div class="demo-section">
-        <h2 style="font-size:17px;">💥 Kuis Interaktif (confetti + Bank Soal otomatis)</h2>
+        <h2 style="font-size:var(--ddd-font-size-l);">💥 Kuis Interaktif (confetti + Bank Soal otomatis)</h2>
         <kuis-ledakan judul="Evaluasi Kuis Interaktif" mode="siswa" kd-materi="Pertemuan 1"
-          apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec">
+          apps-script-url="https://script.google.com/macros/s/AKfycbygtdGu11t_lZck8rPX8cjhoFUI1TMlYb0BMJHHjro5-2m4UvnTzwz0jGh-x5n68ck/exec">
         </kuis-ledakan>
       </div>
     </div>

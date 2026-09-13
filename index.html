@@ -44,7 +44,7 @@
     <div class="demo-section">
       <h2>🔐 Autentikasi & Daftar (quiz-user-auth)</h2>
       <quiz-user-auth
-        apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec">
+        apps-script-url="https://script.google.com/macros/s/AKfycby-OxYKdVWKCtyHdvHiR7EITE2YXC7FCbgzIkdm8yj3fTXlOQ9kgjCEDQh2XcktUoWb/exec">
       </quiz-user-auth>
     </div>
 
@@ -80,25 +80,23 @@
       <h2>👨‍🏫 Mode Guru</h2>
       <dasbor-kuis
         mode="guru"
-        kd-materi="Pertemuan 1"
-        apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec">
+        kd-materi="LM1"
+        apps-script-url="https://script.google.com/macros/s/AKfycby-OxYKdVWKCtyHdvHiR7EITE2YXC7FCbgzIkdm8yj3fTXlOQ9kgjCEDQh2XcktUoWb/exec">
       </dasbor-kuis>
     </div>
 
-    <div class="demo-section">
-      <h2>👨‍🏫 Mode Guru (label lama "dosen") — Peringkat Nilai Bimbingan di tab Guru</h2>
-      <dasbor-kuis
-        mode="dosen"
-        kd-materi="Pertemuan 1"
-        apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec">
-      </dasbor-kuis>
-    </div>
 
     <div class="demo-section">
-      <h2>🎓 Mode Siswa</h2>
+      <h2>🎓 Mode Siswa — per LM (LM1) + Ruang Pertemuan terintegrasi latihan-kuis</h2>
+      <p style="color:#64748B; font-size:13px; margin: 0 8px 8px;">Login via <code>quiz-user-auth</code> di atas atau isi <code>student-id / nama-siswa / kelas</code>. <code>kd-materi="LM1"</code> highlight LM1 pada kartu per-LM di tab <b>Rapor Saya</b>. <code>latihan-kuis</code> otomatis muncul di tab <b>Ruang Pertemuan</b> (siswa).</p>
       <dasbor-kuis
         mode="siswa"
-        apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec">
+        tema="ceria"
+        kd-materi="LM1"
+        kelas="XI-1"
+        student-id="STD-65108053"
+        nama-siswa="Andy Yulianto"
+        apps-script-url="https://script.google.com/macros/s/AKfycby-OxYKdVWKCtyHdvHiR7EITE2YXC7FCbgzIkdm8yj3fTXlOQ9kgjCEDQh2XcktUoWb/exec">
       </dasbor-kuis>
     </div>
 
@@ -108,14 +106,14 @@
         judul="Evaluasi Kuis Interaktif"
         mode="siswa"
         kd-materi="Pertemuan 1"
-        apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec">
+        apps-script-url="https://script.google.com/macros/s/AKfycby-OxYKdVWKCtyHdvHiR7EITE2YXC7FCbgzIkdm8yj3fTXlOQ9kgjCEDQh2XcktUoWb/exec">
       </kuis-ledakan>
     </div>
     <div class="demo-section">
       <h2>💥 Halaman Ledakan Kuis (kuis-ledakan)</h2>
 
       <quiz-user-auth
-       apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec"
+       apps-script-url="https://script.google.com/macros/s/AKfycby-OxYKdVWKCtyHdvHiR7EITE2YXC7FCbgzIkdm8yj3fTXlOQ9kgjCEDQh2XcktUoWb/exec"
       ></quiz-user-auth>
 
     </div>

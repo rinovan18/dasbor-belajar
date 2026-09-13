@@ -1,0 +1,21 @@
+[
+  {
+    "question": "LM1 — Apa tujuan utama pembelajaran pada LM1?",
+    "choices": ["Memahami konsep dasar", "Hafalan saja", "Menyalin teman", "Tidak ada tujuan"],
+    "correctIndex": 0
+  },
+  {
+    "question": "LM1 — Manakah contoh penerapan TP LM1 dalam kehidupan sehari-hari?",
+    "choices": ["Mengabaikan materi", "Menerapkan konsep pada studi kasus kecil", "Menunda tugas", "Mencontek"],
+    "correctIndex": 1
+  },
+  {
+    "question": "LM1xxxx — Tentukan Benar/Salah untuk pernyataan TP LM1:",
+    "type": "pgk",
+    "statements": [
+      { "text": "LM1 melatih keterampilan berpikir kritis.", "answer": true },
+      { "text": "LM1 hanya hafalan tanpa pemahaman.", "answer": false },
+      { "text": "Nilai LM1 masuk ke Rerata LM rapor.", "answer": true }
+    ]
+  }
+]

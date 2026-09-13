@@ -1,0 +1,14 @@
+[
+  {
+    "question": "LM2 — Jodohkan istilah LM2 dengan definisinya:",
+    "type": "matching",
+    "leftItems": ["Konsep A", "Konsep B", "Konsep C"],
+    "rightItems": ["Definisi 2", "Definisi 1", "Definisi 3"],
+    "correctPairs": { "0": 1, "1": 0, "2": 2 }
+  },
+  {
+    "question": "LM2xxx — Isian singkat: Sebutkan kata kunci utama LM2!",
+    "type": "shortAnswer",
+    "acceptedAnswers": ["kolaborasi", "kerjasama", "gotong royong"]
+  }
+]

@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LM1 Terintegrasi — 1 Halaman Dasbor + Contoh Terpisah</title>
+  <style>
+    :root, html, body { margin:0; padding:0; font-family: var(--ddd-font-primary, system-ui, sans-serif); background:#EEF2FF; }
+    .halaman { max-width:1280px; margin:0 auto; padding:24px 20px 60px; }
+    header.hero { background: linear-gradient(135deg,#312e81,#4f46e5 55%,#7c3aed); color:#fff; border-radius:24px; padding:28px 32px; margin-bottom:20px; }
+    header.hero h1{margin:0; font-size:22px;} header.hero p{margin:8px 0 0; opacity:.9; font-size:13px;}
+    .card { background:#fff; border:1px solid #E0E7FF; border-radius:20px; padding:20px; margin:18px 0; box-shadow: 0 8px 24px rgba(79,70,229,.08); }
+    .card h2{margin:0 0 10px; font-size:16px; color:#312e81;}
+    .card p{margin:0 0 12px; color:#64748B; font-size:13px; line-height:1.6;}
+    .card code{background:#EEF2FF; color:#4338ca; padding:2px 6px; border-radius:6px; font-size:11px;}
+    .badge{display:inline-block; padding:4px 10px; border-radius:999px; font-size:11px; font-weight:700; background:#EEF2FF; color:#4338ca; border:1px solid #C7D2FE;}
+    .grid { display:grid; gap:18px; }
+    hr.sep{border:none; border-top:2px dashed #C7D2FE; margin:28px 0;}
+  </style>
+</head>
+<body>
+<div class="halaman">
+  <header class="hero">
+    <h1>📚 LM1 — 1 Halaman Dasbor Terintegrasi (Ceria)</h1>
+    <p>Absen 234 No 1 contoh: Andy — <code>dasbor-kuis + latihan-kuis + aktivitas/diskusi/tugas</code> per <code>kd-materi="LM1"</code>. Ulangan 1x (lock) + remidi soal sama shuffle.</p>
+  </header>
+
+  <!-- AUTH — wajib sebelum dasbor agar absen terisi -->
+  <div class="card">
+    <h2>🔐 Login — cek Absen No 1</h2>
+    <p>Jika Absen masih kosong (sesi lama), klik <b>Cek sesi</b> di kartu user atau <code>localStorage.removeItem('quiz_user_session')</code> lalu login ulang. Backend <code>Users.Absen</code> untuk <code>NIS 234</code> harus <code>1</code> (text).</p>
+    <quiz-user-auth apps-script-url="https://script.google.com/macros/s/AKfycbygtdGu11t_lZck8rPX8cjhoFUI1TMlYb0BMJHHjro5-2m4UvnTzwz0jGh-x5n68ck/exec"></quiz-user-auth>
+  </div>
+
+  <!-- 1 HALAMAN PAKAI — Dasbor Guru/Siswa terintegrasi -->
+  <div class="card">
+    <h2>1️⃣ Satu Halaman Pakai — <code>dasbor-kuis</code> LM1 (tema ceria)</h2>
+    <p><span class="badge">Guru</span> Pantauan, Leaderboard (klik Absen ↕), Peringkat, Ruang Pertemuan (sudah ada <code>sistem-kehadiran + latihan-kuis</code>), Diskusi, Tugas. <span class="badge">Siswa</span> Rapor per LM + Ruang Pertemuan. <code>kd-materi="LM1"</code> → filter kalender 15 hari/LM (1–15 LM1).</p>
+    <tema-ceria-dasbor
+      mode="guru"
+      kd-materi="LM1"
+      kelas=""
+      apps-script-url="https://script.google.com/macros/s/AKfycbygtdGu11t_lZck8rPX8cjhoFUI1TMlYb0BMJHHjro5-2m4UvnTzwz0jGh-x5n68ck/exec">
+    </tema-ceria-dasbor>
+    <!-- alternatif tanpa shell ceria:
+    <dasbor-kuis tema="ceria" mode="siswa" kd-materi="LM1" kelas="XI-1" student-id="STD-65108053" nama-siswa="Andy" apps-script-url=".../exec" soal-file-url="./soal-{kdMateri}.json"></dasbor-kuis>
+    -->
+  </div>
+
+  <hr class="sep">
+
+    <!-- CONTOH TERPISAH -->
+    <!-- CONTOH TERPISAH -->
+    <!-- CONTOH TERPISAH -->
+  <!-- CONTOH TERPISAH -->
+  <div class="card">
+    <h2>2️⃣ Contoh Terpisah — <code>latihan-kuis</code> LM1 Ulangan 12xxx× + Remidi (soal sama shuffle)</h2>
+    <p><code>allow-retake</code> tanpa nilai = ulangan 1× (lock). <code>remidi-mode + remidi-soal-url</code> sama file + <code>shuffle-choices</code> → soal sama acak ulang.</p>
+    <!-- Remidi soal SAMA shuffle: file sama LM1, acak pilihan -->
+    <latihan-kuis
+      kd-materi="LM1"
+      kategori="sumatif_lm"
+      soal-file-url="./soal-LM1.json"
+      remidi-soal-url="./soal-LM2.json"
+      remidi-mode
+      shuffle-choices
+      shuffle-questions
+      kkm="75"
+      mode="siswa"
+        allow-retake="true"
+        max-retake="1"
+
+      apps-script-url="https://script.google.com/macros/s/AKfycbygtdGu11t_lZck8rPX8cjhoFUI1TMlYb0BMJHHjro5-2m4UvnTzwz0jGh-x5n68ck/exec"
+      mode="siswa">
+    </latihan-kuis>
+    <p style="font-size:12px; color:#94A3B8; margin-top:8px;">Soal sama shuffle: <code>soal-file-url</code> & <code>remidi-soal-url</code> sama <code>./soal-LM1.json</code> + <code>shuffle-choices</code> & <code>shuffle-questions</code> acak. KKM 75 → skor &lt;75 muncul <b>Mulai Remidi</b> (tidak terkunci meski LM1 terkunci).</p>
+    <p style="font-size:12px; color:#64748B;">Cara buka kunci jika terkunci: guru klik <b>🔓 Buka Kunci (Guru)</b> pada kartu terkunci atau <code>?action=resetQuizLock&studentId=STD-...&kdMateri=LM1</code> di <code>lib/codev6.gs:948</code>.</p>
+  </div>
+
+  <div class="grid" style="grid-template-columns: 1fr 1fr; gap:18px;">
+    <div class="card">
+      <h2>💬 Diskusi LM1</h2>
+      <ruang-diskusi
+        forum-api-url="https://script.google.com/macros/s/AKfycby-OxYKdVWKCtyHdvHiR7EITE2YXC7FCbgzIkdm8yj3fTXlOQ9kgjCEDQh2XcktUoWb/exec"
+        apps-script-url="https://script.google.com/macros/s/AKfycbygtdGu11t_lZck8rPX8cjhoFUI1TMlYb0BMJHHjro5-2m4UvnTzwz0jGh-x5n68ck/exec"
+        sheet-name="LM1"
+        forum-topic="Diskusi LM1 — Pertanyaan & Jawaban"
+      ></ruang-diskusi>
+    </div>
+    <div class="card">
+      <h2>📝 Tugas LM1</h2>
+      <kirim-tugas
+        forum-api-url="https://script.google.com/macros/s/AKfycby-OxYKdVWKCtyHdvHiR7EITE2YXC7FCbgzIkdm8yj3fTXlOQ9kgjCEDQh2XcktUoWb/exec"
+        apps-script-url="https://script.google.com/macros/s/AKfycbygtdGu11t_lZck8rPX8cjhoFUI1TMlYb0BMJHHjro5-2m4UvnTzwz0jGh-x5n68ck/exec"
+        sheet-name="LM1"
+        assignment-title="Tugas LM1"
+      ></kirim-tugas>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📊 Aktivitas Siswaaaa (sistem-kehadiran) — LM1</h2>
+    <p>Heatmap 28 hari + kalender 15 hari/LM. Jika <code>db_aktivitas</code> hanya kuis, kalender gabung 4 sheet diaktifkan via <code>?action=getCalendar</code> (hadir di <code>db_kehadiran</code>, tugas di <code>Tugas Log</code>).</p>
+    <sistem-kehadiran
+      apps-script-url="https://script.google.com/macros/s/AKfycbygtdGu11t_lZck8rPX8cjhoFUI1TMlYb0BMJHHjro5-2m4UvnTzwz0jGh-x5n68ck/exec"
+      kd-materi="LM1"
+      mode="siswa">
+    </sistem-kehadiran>
+  </div>
+
+</div>
+
+<script type="module" src="../lib/quiz-user-auth.js"></script>
+<script type="module" src="../lib/tema-ceria-dasbor.js"></script>
+<script type="module" src="../lib/latihan-kuis.js"></script>
+<script type="module" src="../lib/ruang-diskusi.js"></script>
+<script type="module" src="../lib/kirim-tugas.js"></script>
+<script type="module" src="../lib/sistem-kehadiran.js"></script>
+</body>
+</html>
