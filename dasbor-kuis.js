@@ -125,6 +125,11 @@ export class QuizDashboard extends I18NMixin(DDDSuper(LitElement)) {
       _soalText: { state: true },
       _copasTSV: { state: true },
       _simulabankSoalUrl: { state: true },
+      _bobotTugas: { state: true },
+      _bobotLM: { state: true },
+      _bobotSTS: { state: true },
+      _bobotSAS: { state: true },
+      _raporStatus: { state: true },
     };
   }
 
@@ -308,6 +313,11 @@ export class QuizDashboard extends I18NMixin(DDDSuper(LitElement)) {
     this._note = "";
     this._copasTSV = null;
     this._simulabankSoalUrl = "";
+    this._bobotTugas = 1;
+    this._bobotLM = 3;
+    this._bobotSTS = 2;
+    this._bobotSAS = 2;
+    this._raporStatus = "";
     this._serverData = {
       roster: [],
       leaderboard: [],
@@ -1925,8 +1935,9 @@ if (this.mode === "guru" || this.mode === "dosen") {
     return html`
       <h2 style="margin-top:0; color:#1e293b;">✏️ Input Nilai Manual</h2>
       <p style="color:#64748b; font-size:13px;">
-        Isi Nilai Akhir, UTS, dan/atau UAS per siswa lalu klik
-        <strong>☁️ Kirim</strong> untuk mencatatnya ke sheet Nilai Manual.
+        Isi Nilai Akhir, UTS, UAS, dan/atau <strong>Tugas/Formatit</strong> per siswa lalu klik
+        <strong>☁️ Kirim</strong> untuk mencatatnya ke sheet <code>Nilai Manual</code>.
+        Nilai Tugas/Formatit akan masuk kategori <code>formatif</code> di sheet <code>db_asesmen</code>.
       </p>
       <div class="nilai-table-wrap">
         <table class="nilai-table">
@@ -1938,13 +1949,14 @@ if (this.mode === "guru" || this.mode === "dosen") {
               <th>Nilai Akhir</th>
               <th>UTS</th>
               <th>UAS</th>
+              <th>Tugas/Formatit</th>
               <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
             ${roster.map((r, i) => {
               const d = draft[i] || {};
-              const ada = d.nilaiAkhir != null || d.uts != null || d.uas != null;
+              const ada = d.nilaiAkhir != null || d.uts != null || d.uas != null || d.tugas != null;
               const sid = r.studentId || r._sid;
               return html`
                 <tr>
@@ -1965,6 +1977,10 @@ if (this.mode === "guru" || this.mode === "dosen") {
                   <td>
                     <input class="nilai-input" type="number" min="0" max="100" placeholder="-" .value=${d.uas ?? ""}
                       @input=${(e) => this._ubahNilai(i, "uas", e.target.value)} />
+                  </td>
+                  <td>
+                    <input class="nilai-input" type="number" min="0" max="100" placeholder="-" .value=${d.tugas ?? ""}
+                      @input=${(e) => this._ubahNilai(i, "tugas", e.target.value)} />
                   </td>
                   <td>
                     <button class="retry-btn" ?disabled=${!ada || !sid} @click=${() => this._kirimNilaiSiswa(i)}>☁️ Kirim</button>
@@ -2000,12 +2016,13 @@ if (this.mode === "guru" || this.mode === "dosen") {
       ["nilaiAkhir", "nilaiAkhir"],
       ["uts", "uts"],
       ["uas", "uas"],
+      ["tugas", "formatif"],
     ];
     const panggilan = daftar
       .filter(([k]) => d[k] != null && String(d[k]).trim() !== "")
-      .map(([k]) => ({ kategori: k, skor: Math.max(0, Math.min(100, this._num(d[k]))) }));
+      .map(([k, kategori]) => ({ kategori, skor: Math.max(0, Math.min(100, this._num(d[k]))) }));
     if (!panggilan.length) {
-      this._note = "Isi minimal satu nilai (Nilai Akhir/UTS/UAS) terlebih dahulu.";
+      this._note = "Isi minimal satu nilai (Nilai Akhir/UTS/UAS/Tugas) terlebih dahulu.";
       this.requestUpdate();
       return;
     }
@@ -2032,6 +2049,7 @@ if (this.mode === "guru" || this.mode === "dosen") {
         nilaiAkhir: this._num(d.nilaiAkhir),
         uts: this._num(d.uts),
         uas: this._num(d.uas),
+        tugas: this._num(d.tugas),
       });
       this._note = `✅ ${panggilan.map((p) => p.kategori).join(", ")} untuk ${r.nama || sid} tercatat di sheet Nilai Manual.`;
     } else {
@@ -2184,11 +2202,167 @@ if (this.mode === "guru" || this.mode === "dosen") {
           </label>
         </div>
       </div>
+
+      <!-- Generate Rapor Section -->
+      <div class="card-panel" style="margin-top: var(--ddd-spacing-4);">
+        <h3 style="margin-top:0; color:#1e293b;">📊 Generate Rapor</h3>
+        <p style="color:#64748b; font-size:13px;">
+          Generate laporan akumulasi nilai dari data di sheet <code>db_asesmen</code>.
+          Data akan tertulis di sheet <code>Akumulasi_Nilai_Rapor</code>.
+        </p>
+        <div class="set-row">
+          <button class="retry-btn" @click=${this._generateRapor} ?disabled=${!this.appsScriptUrl}>
+            🔄 Generate Rapor Sekarang
+          </button>
+          ${this._raporStatus ? html`<span style="margin-left:var(--ddd-spacing-3); color:#16a34a;">${this._raporStatus}</span>` : nothing}
+        </div>
+      </div>
+
+      <!-- Bobot Nilai Section -->
+      <div class="card-panel" style="margin-top: var(--ddd-spacing-4);">
+        <h3 style="margin-top:0; color:#1e293b;">⚖️ Pengaturan Bobot Nilai</h3>
+        <p style="color:#64748b; font-size:13px;">
+          Keterampilan melekat di dalam Tujuan Pembelajaran (TP) — tidak dipisah.
+          Nilai akhir LM sudah termasuk skor tulis + skor performa.
+        </p>
+        <p style="color:#64748b; font-size:13px;">
+          <strong>Rumus:</strong> Nilai Rapor = (Σ LM × bobot_LM + STS × bobot_STS + SAS × bobot_SAS) / Σ bobot
+        </p>
+        <div class="set-row">
+          <div>
+            <div class="set-title">Bobot LM per TP (Sumatif)</div>
+            <div class="set-sub">Bobot untuk setiap LM/UH (default: 3)</div>
+          </div>
+          <input class="nilai-input" type="number" min="0" max="10" .value=${this._bobotLM ?? 3}
+            @change=${(e) => (this._bobotLM = parseInt(e.target.value) || 3)} />
+        </div>
+        <div class="set-row">
+          <div>
+            <div class="set-title">Bobot Tugas/Formatif</div>
+            <div class="set-sub">Bobot untuk nilai tugas dan formatif (default: 1)</div>
+          </div>
+          <input class="nilai-input" type="number" min="0" max="10" .value=${this._bobotTugas ?? 1}
+            @change=${(e) => (this._bobotTugas = parseInt(e.target.value) || 1)} />
+        </div>
+        <div class="set-row">
+          <div>
+            <div class="set-title">Bobot STS (UTS)</div>
+            <div class="set-sub">Bobot untuk Sumatif Tengah Semester (default: 2). 0 = tidak masuk rapor.</div>
+          </div>
+          <input class="nilai-input" type="number" min="0" max="10" .value=${this._bobotSTS ?? 2}
+            @change=${(e) => (this._bobotSTS = parseInt(e.target.value) || 0)} />
+        </div>
+        <div class="set-row">
+          <div>
+            <div class="set-title">Bobot UAS (SAS)</div>
+            <div class="set-sub">Bobot untuk Sumatif Akhir Semester (default: 2). 0 = tidak masuk rapor.</div>
+          </div>
+          <input class="nilai-input" type="number" min="0" max="10" .value=${this._bobotSAS ?? 2}
+            @change=${(e) => (this._bobotSAS = parseInt(e.target.value) || 0)} />
+        </div>
+        <div class="set-row" style="margin-top: var(--ddd-spacing-4);">
+          <button class="retry-btn" @click=${this._simpanBobot} ?disabled=${!this.appsScriptUrl}>
+            💾 Simpan Pengaturan Bobot
+          </button>
+          <button class="retry-btn" style="background:#475569;" @click=${this._muatBobot}>
+            🔄 Muat Bobot Tersimpan
+          </button>
+        </div>
+      </div>
+        </div>
+        <div class="set-row" style="margin-top: var(--ddd-spacing-4);">
+          <button class="retry-btn" @click=${this._simpanBobot} ?disabled=${!this.appsScriptUrl}>
+            💾 Simpan Pengaturan Bobot
+          </button>
+          <button class="retry-btn" style="background:#475569;" @click=${this._muatBobot}>
+            🔄 Muat Bobot Tersimpan
+          </button>
+        </div>
+      </div>
+
       <div class="note-chip">
         Perubahan diterapkan langsung pada properti komponen — tersimpan bila halaman
         disimpan melalui editor HAX.
       </div>
     `;
+  }
+
+  // ---------- GENERATE RAPOR & BOBOT ----------
+  async _generateRapor() {
+    if (!this.appsScriptUrl) {
+      this._note = "⚠️ URL Apps Script belum diatur (tab Atur).";
+      this.requestUpdate();
+      return;
+    }
+    this._raporStatus = "⏳ Membuat laporan...";
+    this._note = "";
+    this.requestUpdate();
+    try {
+      const result = await this._apiGet({ action: "generateReport" });
+      if (result && result.status === "ok") {
+        this._raporStatus = `✅ Rapor berhasil dibuat. ${result.students || 0} siswa diproses.`;
+        this._note = "✅ Rapor berhasil di-generate. Lihat sheet Akumulasi_Nilai_Rapor.";
+      } else {
+        this._raporStatus = "";
+        this._note = "⚠️ Gagal: " + (result && result.message ? result.message : "cek konsol.");
+      }
+    } catch (e) {
+      this._raporStatus = "";
+      this._note = "⚠️ Error: " + e.message;
+    }
+    this.requestUpdate();
+  }
+
+  async _simpanBobot() {
+    if (!this.appsScriptUrl) {
+      this._note = "⚠️ URL Apps Script belum diatur (tab Atur).";
+      this.requestUpdate();
+      return;
+    }
+    const bobot = {
+      tugas: this._bobotTugas ?? 1,
+      lm: this._bobotLM ?? 3,
+      sts: this._bobotSTS ?? 2,
+      sas: this._bobotSAS ?? 2,
+    };
+    this._note = "⏳ Menyimpan bobot...";
+    this.requestUpdate();
+    try {
+      const result = await this._apiGet({ action: "saveBobot", ...bobot });
+      if (result && result.status === "ok") {
+        this._note = "✅ Bobot tersimpan. Generate rapor untuk melihat hasil.";
+      } else {
+        this._note = "⚠️ Gagal: " + (result && result.message ? result.message : "cek konsol.");
+      }
+    } catch (e) {
+      this._note = "⚠️ Error: " + e.message;
+    }
+    this.requestUpdate();
+  }
+
+  async _muatBobot() {
+    if (!this.appsScriptUrl) {
+      this._note = "⚠️ URL Apps Script belum diatur (tab Atur).";
+      this.requestUpdate();
+      return;
+    }
+    this._note = "⏳ Memuat bobot...";
+    this.requestUpdate();
+    try {
+      const result = await this._apiGet({ action: "getBobot" });
+      if (result && result.status === "ok" && result.bobot) {
+        this._bobotTugas = result.bobot.tugas ?? 1;
+        this._bobotLM = result.bobot.lm ?? 3;
+        this._bobotSTS = result.bobot.sts ?? 2;
+        this._bobotSAS = result.bobot.sas ?? 2;
+        this._note = "✅ Bobot dimuat.";
+      } else {
+        this._note = "ℹ️ Belum ada bobot tersimpan, menggunakan default.";
+      }
+    } catch (e) {
+      this._note = "⚠️ Error: " + e.message;
+    }
+    this.requestUpdate();
   }
 
   // ---------- GURU: PANTAUAN ----------

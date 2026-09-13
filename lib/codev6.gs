@@ -50,14 +50,36 @@ const SHEET_FORUM = "Forum Log";
 const SHEET_TUGAS = "Tugas Log";
 const SHEET_RANGKUMAN = "Rangkuman";         // sheet lama (hanya toleransi baca)
 const SHEET_KUIS_SESSION = "db_kuis_session"; // Log sesi kuis (waktu, status)
+const SHEET_SETTINGS = "Settings";           // Pengaturan bobot & konfigurasi
 
-/** Spesifikasi nama sheet -> baris header (single source of truth untuk auto-create). */
+/** MAX_LM: Jumlah maksimal kolom LM yang didukung (dynamic column). */
+const MAX_LM = 10;
+
+/** Default bobot nilai (bisa diubah lewat UI Settings).
+ *  Keterampilan melekat di TP — tidak dipisah.
+ *  Rumus: Nilai_Rapor = (Σ LM_i × bobot + STS × bobot_sts + SAS × bobot_sas) / Σ bobot */
+const DEFAULT_BOBOT = {
+  tugas: 1,
+  lm: 3,
+  sts: 2,
+  sas: 2,
+};
+
+/** Build headers dynamic untuk sheet Akumulasi_Nilai_Rapor. */
+function _buildRaporHeaders() {
+  const headers = ["Timestamp", "StudentID", "Nama", "Kelas"];
+  for (let i = 1; i <= MAX_LM; i++) headers.push("LM" + i);
+  headers.push("Rerata_LM", "STS", "SAS", "Nilai_Rapor", "Interval_Capaian");
+  return headers;
+}
+
+/** Spesifikasi nama sheet -> baris header. SHEET_SPECS menggunakan function untuk dynamic column. */
 const SHEET_SPECS = {
   [SHEET_USERS]: ["StudentID", "NIS", "Nama", "Email", "Absen", "Kelas", "RegisteredAt", "LastLogin"],
   [SHEET_AKTIVITAS]: ["Timestamp", "Tanggal", "Hari", "Nama", "Tipe Aktivitas", "Deskripsi", "Count", "Student ID", "NIS", "Absen", "Kelas", "Kode Materi", "ID Log"],
   [SHEET_ASESMEN]: ["Timestamp", "Date", "Kode LM", "Nama TP", "Kategori", "Skor Tulis", "Skor Performa", "Student ID", "NIS", "Absen", "Kelas", "ID Log"],
   [SHEET_RANGKUMAN]: ["Student ID", "NIS", "Nama", "Absen", "Kelas", "Total Kuis", "Rata-rata Skor", "Skor Tertinggi", "Skor Terendah", "Total Aktivitas", "Reading", "Quiz Activity", "Assignment", "Discussion", "Download", "Kuis Formatif", "Kuis Sumatif", "Skor UTS", "Skor UAS", "Jumlah Pertemuan", "Status Kuis Terakhir"],
-  [SHEET_RAPOR]: ["Timestamp", "StudentID", "Nama", "Kelas", "LM1", "LM2", "LM3", "LM4", "LM5", "Rerata_LM", "STS", "SAS", "Nilai_Rapor", "Interval_Capaian", "Deskripsi_Capaian"],
+  [SHEET_RAPOR]: _buildRaporHeaders(),
   [SHEET_ANEKDOT]: ["Timestamp", "StudentID", "Nama", "Tanggal_Observasi", "Dimensi_Pancasila", "Catatan_Perilaku"],
   [SHEET_PRESENSI]: ["StudentID", "Nama", "Kelas", "Sakit", "Izin", "Tanpa_Keterangan"],
   [SHEET_BANK]: ["ID", "Kategori", "Tipe", "Detail", "Soal", "Poin"],
@@ -66,6 +88,7 @@ const SHEET_SPECS = {
   [SHEET_FORUM]: ["Timestamp", "CommentID", "ParentID", "UserName", "StudentID", "Text", "Sheet", "Action", "Likes", "kdMateri", "NIS", "Absen", "Kelas"],
   [SHEET_TUGAS]: ["Timestamp", "StudentID", "Nama", "Sheet", "Title", "Content", "Link", "kdMateri", "NIS", "Absen", "Kelas"],
   [SHEET_KUIS_SESSION]: ["Timestamp", "StudentID", "Nama", "NIS", "Absen", "Kelas", "Kode Materi", "Waktu Mulai", "Waktu Selesai", "Durasi (detik)", "Durasi Ulangan (detik)", "Sisa Waktu (detik)", "Tab Switch Count", "Status", "Catatan"],
+  [SHEET_SETTINGS]: ["Key", "Value", "UpdatedAt"],
 };
 
 const BATAS_READING = 15;
@@ -96,6 +119,61 @@ const _num = (v, def = 0) => {
 };
 const _bulat = (v) => Math.round(_num(v));
 const _teks = (v) => String(v == null ? "" : v).trim();
+
+/* ------------------------------------------------------------------ */
+/* BOBOT NILAI (Configurable via Settings sheet)                      */
+/* ------------------------------------------------------------------ */
+
+/** Bobot keys yang valid untuk disimpan/dibaca dari Settings. */
+const BOBOT_KEYS = ["tugas", "lm", "sts", "sas"];
+
+/** Baca bobot dari sheet Settings, fallback ke DEFAULT_BOBOT. */
+function _bacaBobot() {
+  const sheet = _ss().getSheetByName(SHEET_SETTINGS);
+  const bobot = { ...DEFAULT_BOBOT };
+  if (!sheet || sheet.getLastRow() < 2) return bobot;
+  const data = sheet.getDataRange().getValues();
+  const header = data[0].map((h) => String(h).trim());
+  const idxKey = header.indexOf("Key");
+  const idxVal = header.indexOf("Value");
+  if (idxKey < 0 || idxVal < 0) return bobot;
+  for (let i = 1; i < data.length; i++) {
+    const key = _teks(data[i][idxKey]);
+    const val = _num(data[i][idxVal], -1);
+    if (key && val >= 0 && BOBOT_KEYS.includes(key)) {
+      bobot[key] = val;
+    }
+  }
+  return bobot;
+}
+
+/** Simpan bobot ke sheet Settings (upsert by Key). */
+function _simpanBobot(bobot) {
+  const sheet = _jaminSheet(SHEET_SETTINGS, ["Key", "Value", "UpdatedAt"]);
+  const data = sheet.getDataRange().getValues();
+  const header = data[0].map((h) => String(h).trim());
+  const idxKey = header.indexOf("Key");
+  const idxVal = header.indexOf("Value");
+  const idxUpdated = header.indexOf("UpdatedAt");
+  const now = new Date().toISOString();
+  Object.keys(bobot).forEach((key) => {
+    if (!BOBOT_KEYS.includes(key)) return;
+    let found = false;
+    for (let i = 1; i < data.length; i++) {
+      if (_teks(data[i][idxKey]) === key) {
+        sheet.getRange(i + 1, idxVal + 1).setValue(bobot[key]);
+        if (idxUpdated >= 0) sheet.getRange(i + 1, idxUpdated + 1).setValue(now);
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      sheet.appendRow([key, bobot[key], now]);
+    }
+  });
+  SpreadsheetApp.flush();
+  return { status: "ok", message: "Bobot tersimpan.", bobot };
+}
 
 const _tglStr = (d) => Utilities.formatDate(new Date(d), "GMT+7", "yyyy-MM-dd");
 const _hariNama = (d) =>
@@ -269,21 +347,42 @@ function procesNilaiLingkupMateri(daftarLM) {
   return (daftarLM || []).map((lm) => ({
     id_lm: _teks(lm.id_lm),
     nama_tp: _teks(lm.nama_tp),
+    kategori: _teks(lm.kategori || "sumatif_lm"),
     nilai_akhir_lm: Math.round((_num(lm.skor_tulis) + _num(lm.skor_performa)) / 2),
   }));
 }
 
 /**
- * Hitung rapor Kurikulum Merdeka.
- * Rumus: nilai_akhir_rapor = round(rerata_lm * bobotLM + nilaiSAS * bobotSAS)
+ * Hitung rapor — semua komponen (tulis + keterampilan/performa) sudah di dalam LM.
+ * Rumus: Nilai_Rapor = (Σ LM_i × bobot_i + STS × bobot_sts + SAS × bobot_sas) / Σ bobot
+ * @param {Array} daftarLM - [{id_lm, nama_tp, kategori, nilai_akhir_lm}]
+ * @param {number} nilaiSAS - Nilai Sumatif Akhir Semester
+ * @param {number} nilaiSTS - Nilai Sumatif Tengah Semester
+ * @param {Object} bobot - {lm, sts, sas, tugas}
  */
-function hitungRaporKurikulumMerdeka(daftarLM, nilaiSAS, bobotLM = BOBOT_LM, bobotSAS = BOBOT_SAS) {
+function hitungRaporKurikulumMerdeka(daftarLM, nilaiSAS, nilaiSTS, bobot) {
+  const b = bobot || DEFAULT_BOBOT;
   const list = daftarLM || [];
-  const nilaiPerLM = list.map((d) => _num(d.nilai_akhir_lm));
-  const rerataLM = nilaiPerLM.length
-    ? nilaiPerLM.reduce((a, b) => a + b, 0) / nilaiPerLM.length
-    : 0;
-  const nilaiAkhirRapor = Math.round(rerataLM * bobotLM + _num(nilaiSAS) * bobotSAS);
+  const sas = _num(nilaiSAS);
+  const sts = _num(nilaiSTS);
+
+  let totalBobot = 0;
+  let totalSkor = 0;
+
+  list.forEach((d) => {
+    const kategori = _teks(d.kategori || "sumatif_lm").toLowerCase();
+    let bm = b.lm;
+    if (kategori.includes("formatif") || kategori.includes("tugas")) bm = b.tugas;
+    const skor = _num(d.nilai_akhir_lm);
+    totalSkor += skor * bm;
+    totalBobot += bm;
+  });
+
+  if (sts > 0) { totalSkor += sts * b.sts; totalBobot += b.sts; }
+  if (sas > 0) { totalSkor += sas * b.sas; totalBobot += b.sas; }
+
+  const rerataLM = list.length ? list.reduce((s, d) => s + _num(d.nilai_akhir_lm), 0) / list.length : 0;
+  const nilaiAkhirRapor = totalBobot > 0 ? Math.round(totalSkor / totalBobot) : 0;
 
   let tpHighest = null;
   let tpLowest = null;
@@ -297,7 +396,8 @@ function hitungRaporKurikulumMerdeka(daftarLM, nilaiSAS, bobotLM = BOBOT_LM, bob
 
   return {
     rerata_lm: Math.round(rerataLM),
-    nilai_sas: _num(nilaiSAS),
+    nilai_sas: sas,
+    nilai_sts: sts,
     nilai_akhir_rapor: nilaiAkhirRapor,
     deskripsi_capaian,
     detail_per_lm: list,
@@ -1010,6 +1110,9 @@ function generateReport() {
     return best;
   };
 
+  // Baca bobot dari Settings
+  const bobot = _bacaBobot();
+
   const barisRapor = [];
   Object.keys(perSiswa).forEach((sid) => {
     const a = perSiswa[sid];
@@ -1017,18 +1120,21 @@ function generateReport() {
     const daftarLM = kodeLM.map((kode) => ({
       id_lm: kode,
       nama_tp: a.lm[kode].nama_tp,
+      kategori: a.lm[kode].kategori || "sumatif_lm",
       skor_tulis: _bulat(bestArr(a.lm[kode].tulis)),
       skor_performa: _bulat(bestArr(a.lm[kode].performa)),
     }));
     const hasilLM = procesNilaiLingkupMateri(daftarLM);
     const nilaiSAS = bestRata(a.sas);
     const nilaiSTS = bestRata(a.sts);
-    const rapor = hitungRaporKurikulumMerdeka(hasilLM, nilaiSAS);
+    const rapor = hitungRaporKurikulumMerdeka(hasilLM, nilaiSAS, nilaiSTS, bobot);
     const interval = tentukanIntervalCapaian(rapor.nilai_akhir_rapor);
 
-    const lmCols = [1, 2, 3, 4, 5].map((i) =>
-      hasilLM[i - 1] ? hasilLM[i - 1].nilai_akhir_lm : "",
-    );
+    // Dynamic LM columns (up to MAX_LM)
+    const lmCols = [];
+    for (let i = 1; i <= MAX_LM; i++) {
+      lmCols.push(hasilLM[i - 1] ? hasilLM[i - 1].nilai_akhir_lm : "");
+    }
 
     const pres = presensiMap[sid] || { sakit: 0, izin: 0, tanpa_keterangan: 0 };
     generateLaporanSiswa({
@@ -1042,27 +1148,28 @@ function generateReport() {
       rekap_presensi: pres,
     });
 
-    barisRapor.push([
+    // Build row with dynamic columns
+    const row = [
       _tglStr(new Date()),
       sid,
       a.nama,
       a.kelas,
-      lmCols[0], lmCols[1], lmCols[2], lmCols[3], lmCols[4],
+      ...lmCols,
       rapor.rerata_lm,
       nilaiSTS,
       nilaiSAS,
       rapor.nilai_akhir_rapor,
       interval,
-      rapor.deskripsi_capaian,
-    ]);
+    ];
+    barisRapor.push(row);
   });
 
   barisRapor.sort((x, y) => _num(y[12]) - _num(x[12]));
 
-  _jaminSheet(SHEET_RAPOR, SHEET_SPECS[SHEET_RAPOR]);
+  _jaminSheet(SHEET_RAPOR, _buildRaporHeaders());
   const sheet = ss.getSheetByName(SHEET_RAPOR);
   sheet.clearContents();
-  sheet.appendRow(SHEET_SPECS[SHEET_RAPOR]);
+  sheet.appendRow(_buildRaporHeaders());
   barisRapor.forEach((b) => sheet.appendRow(b));
   SpreadsheetApp.flush();
 
@@ -1136,6 +1243,10 @@ function doGet(e) {
       case "logquissession":
       case "logquissession":
         return createJsonResponse(_denganLock(() => logQuizSession(params), "logQuizSession"));
+      case "getbobot":
+        return createJsonResponse({ status: "ok", bobot: _bacaBobot() });
+      case "savebobot":
+        return createJsonResponse(_denganLock(() => _simpanBobot(params), "saveBobot"));
       case "getquizlock":
         return createJsonResponse(getQuizLock(params));
       case "resetquizlock":
@@ -1189,6 +1300,10 @@ function doPost(e) {
       case "logquissession":
       case "logquissession":
         return createJsonResponse(_denganLock(() => logQuizSession(payload), "logQuizSession"));
+      case "getbobot":
+        return createJsonResponse({ status: "ok", bobot: _bacaBobot() });
+      case "savebobot":
+        return createJsonResponse(_denganLock(() => _simpanBobot(payload), "saveBobot"));
       case "getquizlock":
         return createJsonResponse(getQuizLock(payload));
       case "resetquizlock":

@@ -14,3 +14,4 @@
 - Expects defensive input validation (clamping/bounding, e.g. `Math.max(0, Math.min(100, value))`) on scores and numeric data before writing to the database — values must be range-checked, not just type-checked. Confidence: 0.85
 - Uses short, direct audit-style questions in Indonesian to verify specific code correctness (e.g. "apa sudah menjaga skor di db assesmen rentang 0-100") — expects the assistant to investigate, answer, and fix if the answer is "no". Confidence: 0.8
 - When a validation gap is found, expects the assistant to proactively fix all related code paths (not just the one asked about), across all affected files. Confidence: 0.8
+- Prefers configurable weights/parameters stored in a settings mechanism (e.g., Settings sheet) with hardcoded defaults as fallback, rather than hardcoded constants used directly in business logic. Confidence: 0.8

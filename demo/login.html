@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="Description" content="Login Dasbor Kuis — Portal asesmen untuk guru dan siswa">
+  <title>Dasbor Kuis — Masuk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script type="module" src="../lib/quiz-user-auth.js"></script>
+  <style>
+    /* ── DDD Design System Tokens ── */
+    :root {
+      --ddd-font-primary: 'DM Sans', system-ui, sans-serif;
+      --ddd-font-display: 'Instrument Serif', serif;
+      --ddd-theme-default-white: #ffffff;
+      --ddd-theme-default-shrineLight: #f7f2ee;
+      --ddd-theme-default-shrineMaxLight: #fdfbf5;
+      --ddd-theme-pughBlue: #96bee6;
+      --ddd-theme-default-keystoneYellow: #ffd100;
+      --ddd-theme-default-roarGolden: #bf8226;
+      --ddd-theme-default-nittanyNavy: #001e44;
+      --ddd-theme-default-potentialMidnight: #000321;
+      --ddd-theme-default-coalyGray: #262626;
+      --ddd-theme-default-slateGray: #314d64;
+      --ddd-theme-default-slateLight: #ccdae6;
+      --ddd-theme-default-limestoneGray: #a2aaad;
+      --ddd-theme-default-white85: rgba(255, 255, 255, 0.85);
+      --ddd-theme-default-white65: rgba(255, 255, 255, 0.65);
+      --ddd-theme-default-error: #5f2120;
+      --ddd-theme-default-errorLight: #fdeded;
+      --ddd-theme-default-success: #1e4620;
+      --ddd-theme-default-successLight: #edf7ed;
+      --ddd-theme-default-background: #eff2f5;
+      --ddd-primary-0: #96bee6;
+      --ddd-primary-10: #bf8226;
+      --ddd-primary-8: #009cde;
+      --ddd-spacing-0: 0px;
+      --ddd-spacing-1: 4px;
+      --ddd-spacing-2: 8px;
+      --ddd-spacing-3: 12px;
+      --ddd-spacing-4: 16px;
+      --ddd-spacing-5: 20px;
+      --ddd-spacing-6: 24px;
+      --ddd-spacing-7: 28px;
+      --ddd-spacing-8: 32px;
+      --ddd-spacing-10: 40px;
+      --ddd-spacing-12: 48px;
+      --ddd-spacing-16: 64px;
+      --ddd-font-size-3xs: 10px;
+      --ddd-font-size-4xs: 12px;
+      --ddd-font-size-s: 14px;
+      --ddd-font-size-ms: 15px;
+      --ddd-font-size-m: 18px;
+      --ddd-font-size-l: 22px;
+      --ddd-font-size-xl: 28px;
+      --ddd-font-size-xxl: 34px;
+      --ddd-font-weight-light: 300;
+      --ddd-font-weight-regular: 400;
+      --ddd-font-weight-medium: 500;
+      --ddd-font-weight-bold: 600;
+      --ddd-font-weight-black: 700;
+      --ddd-radius-xs: 4px;
+      --ddd-radius-s: 8px;
+      --ddd-radius-m: 12px;
+      --ddd-radius-l: 16px;
+      --ddd-radius-xl: 24px;
+      --ddd-border-xs: 1px solid rgba(255,255,255,0.12);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--ddd-font-primary);
+      background: var(--ddd-theme-default-shrineLight);
+      color: var(--ddd-theme-default-coalyGray);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--ddd-spacing-8) var(--ddd-spacing-5);
+    }
+
+    /* ── Skip Link ── */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: var(--ddd-spacing-4);
+      background: var(--ddd-theme-default-nittanyNavy);
+      color: var(--ddd-theme-default-keystoneYellow);
+      padding: var(--ddd-spacing-3) var(--ddd-spacing-6);
+      border-radius: 0 0 var(--ddd-radius-xs) var(--ddd-radius-xs);
+      font-weight: var(--ddd-font-weight-bold);
+      z-index: 1000;
+      text-decoration: none;
+      font-size: var(--ddd-font-size-ms);
+    }
+    .skip-link:focus { top: 0; }
+
+    /* ── Full-bleed background ── */
+    .login-wrapper {
+      width: 100%;
+      max-width: 440px;
+      position: relative;
+    }
+
+    /* ── Chalkboard login panel using DDD tokens ── */
+    .login-chalkboard {
+      background: linear-gradient(155deg, var(--ddd-theme-default-nittanyNavy), var(--ddd-theme-default-potentialMidnight));
+      border: var(--ddd-border-xs);
+      border-radius: var(--ddd-radius-m);
+      padding: var(--ddd-spacing-10) var(--ddd-spacing-8);
+      box-shadow: 0 var(--ddd-spacing-8) var(--ddd-spacing-16) calc(var(--ddd-spacing-8) * -1) rgba(26, 35, 50, 0.55), inset 0 1px 0 rgba(240, 192, 64, 0.1);
+      border-color: rgba(240, 192, 64, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .login-chalkboard::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--ddd-primary-10), transparent);
+      opacity: 0.45;
+    }
+    .login-chalkboard::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: var(--ddd-spacing-10);
+      background: linear-gradient(180deg, transparent, rgba(26, 35, 50, 0.4));
+      pointer-events: none;
+    }
+
+    /* ── Chalk label ── */
+    .chalk-label {
+      font-size: var(--ddd-font-size-3xs);
+      font-weight: var(--ddd-font-weight-bold);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(240, 192, 64, 0.7);
+      margin-bottom: var(--ddd-spacing-2);
+      display: flex;
+      align-items: center;
+      gap: var(--ddd-spacing-2);
+    }
+    .chalk-label::before {
+      content: '';
+      display: inline-block;
+      width: var(--ddd-spacing-5);
+      height: 2px;
+      background: var(--ddd-primary-10);
+    }
+
+    /* ── Brand ── */
+    .login-brand {
+      font-family: var(--ddd-font-display);
+      font-size: var(--ddd-font-size-xxl);
+      color: var(--ddd-theme-default-white);
+      margin-bottom: var(--ddd-spacing-1);
+      letter-spacing: -0.02em;
+    }
+    .login-brand span { color: var(--ddd-primary-10); }
+    .login-subtitle {
+      font-size: var(--ddd-font-size-s);
+      color: rgba(255,255,255,0.5);
+      margin-bottom: var(--ddd-spacing-8);
+    }
+
+    /* ── Form fields ── */
+    .field { margin-bottom: var(--ddd-spacing-3); }
+    .field label {
+      display: block;
+      font-size: var(--ddd-font-size-3xs);
+      font-weight: var(--ddd-font-weight-bold);
+      color: rgba(255,255,255,0.75);
+      margin-bottom: var(--ddd-spacing-2);
+    }
+    .field input {
+      width: 100%;
+      padding: var(--ddd-spacing-3) var(--ddd-spacing-4);
+      border-radius: var(--ddd-radius-xs);
+      border: var(--ddd-border-xs);
+      background: rgba(255,255,255,0.06);
+      color: var(--ddd-theme-default-white);
+      font-family: var(--ddd-font-primary);
+      font-size: var(--ddd-font-size-ms);
+      transition: border-color 0.2s, background 0.2s;
+      outline: none;
+      box-sizing: border-box;
+    }
+    .field input::placeholder { color: rgba(255,255,255,0.25); }
+    .field input:focus {
+      border-color: var(--ddd-primary-10);
+      background: rgba(255,255,255,0.09);
+    }
+    .field input:focus-visible {
+      outline: 2px solid var(--ddd-primary-10);
+      outline-offset: var(--ddd-spacing-1);
+    }
+    .field .field-error {
+      font-size: var(--ddd-font-size-4xs);
+      color: #ef4444;
+      margin-top: var(--ddd-spacing-1);
+      display: none;
+    }
+    .field.has-error .field-error { display: block; }
+    .field.has-error input { border-color: #ef4444; }
+
+    /* ── Role selector ── */
+    .role-selector {
+      display: flex;
+      gap: var(--ddd-spacing-3);
+      margin-bottom: var(--ddd-spacing-6);
+    }
+    .role-btn {
+      flex: 1;
+      padding: var(--ddd-spacing-3);
+      border-radius: var(--ddd-radius-xs);
+      border: var(--ddd-border-xs);
+      background: transparent;
+      color: rgba(255,255,255,0.5);
+      font-family: var(--ddd-font-primary);
+      font-size: var(--ddd-font-size-3xs);
+      font-weight: var(--ddd-font-weight-bold);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+    .role-btn:hover { border-color: rgba(240, 192, 64, 0.4); color: rgba(255,255,255,0.7); }
+    .role-btn:focus-visible { outline: 2px solid var(--ddd-primary-10); outline-offset: var(--ddd-spacing-1); }
+    .role-btn.active {
+      background: rgba(240, 192, 64, 0.12);
+      border-color: var(--ddd-primary-10);
+      color: var(--ddd-primary-10);
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--ddd-spacing-2);
+      width: 100%;
+      padding: var(--ddd-spacing-4) var(--ddd-spacing-6);
+      border-radius: var(--ddd-radius-xs);
+      font-family: var(--ddd-font-primary);
+      font-size: var(--ddd-font-size-ms);
+      font-weight: var(--ddd-font-weight-bold);
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+    .btn:focus-visible {
+      outline: 3px solid var(--ddd-primary-10);
+      outline-offset: var(--ddd-spacing-1);
+    }
+    .btn-primary {
+      background: var(--ddd-primary-10);
+      color: var(--ddd-theme-default-nittanyNavy);
+    }
+    .btn-primary:hover {
+      background: #f5d060;
+      transform: translateY(-1px);
+      box-shadow: 0 var(--ddd-spacing-3) var(--ddd-spacing-6) calc(var(--ddd-spacing-3) * -1) rgba(240, 192, 64, 0.35);
+    }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-ghost {
+      background: transparent;
+      color: rgba(255,255,255,0.5);
+      border: var(--ddd-border-xs);
+      margin-top: var(--ddd-spacing-3);
+    }
+    .btn-ghost:hover {
+      color: rgba(255,255,255,0.8);
+      border-color: rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.04);
+    }
+
+    /* ── Divider ── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: var(--ddd-spacing-6);
+      margin: var(--ddd-spacing-6) 0;
+      color: rgba(255,255,255,0.25);
+      font-size: var(--ddd-font-size-4xs);
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* ── Back link ── */
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: var(--ddd-spacing-6);
+      font-size: var(--ddd-font-size-s);
+      color: var(--ddd-theme-default-slateGray);
+      text-decoration: none;
+    }
+    .back-link:hover { color: var(--ddd-primary-10); }
+
+    /* ── Status message ── */
+    .status-msg {
+      margin-top: var(--ddd-spacing-5);
+      padding: var(--ddd-spacing-3) var(--ddd-spacing-4);
+      border-radius: var(--ddd-radius-xs);
+      font-size: var(--ddd-font-size-s);
+      display: none;
+    }
+    .status-msg.visible { display: block; }
+    .status-msg.success {
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.25);
+      color: #22c55e;
+    }
+    .status-msg.error {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      color: #ef4444;
+    }
+
+    /* ── Chalk dust decoration ── */
+    .chalk-dust {
+      position: absolute;
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: rgba(240, 192, 64, 0.3);
+      pointer-events: none;
+    }
+
+    /* ── Override quiz-user-auth DDD tokens to match chalkboard ── */
+    #auth {
+      --ddd-theme-default-white: #fff;
+      --ddd-theme-primary: var(--ddd-primary-10);
+      --ddd-theme-accent: var(--ddd-primary-10);
+      --ddd-theme-background: var(--ddd-theme-default-potentialMidnight);
+      --ddd-theme-color: rgba(255,255,255,0.85);
+      --ddd-theme-surface: transparent;
+      --ddd-theme-default-surface: transparent;
+      --ddd-theme-default-text: rgba(255,255,255,0.85);
+      --ddd-theme-secondary: rgba(255,255,255,0.5);
+      --ddd-theme-error: #ef4444;
+      --ddd-theme-error-text: #ef4444;
+      --ddd-theme-error-light: rgba(239,68,68,0.12);
+      --ddd-theme-success: #22c55e;
+      --ddd-theme-success-text: #22c55e;
+      --ddd-theme-success-light: rgba(34,197,94,0.12);
+      --ddd-border-xs: 1px solid rgba(255,255,255,0.12);
+      --ddd-border-radius-sm: var(--ddd-radius-xs);
+      --ddd-border-radius-md: var(--ddd-radius-xs);
+      --ddd-border-radius-lg: var(--ddd-radius-xs);
+      --ddd-border-radius-circle: 50%;
+      --ddd-spacing-1: 4px;
+      --ddd-spacing-2: 8px;
+      --ddd-spacing-3: 12px;
+      --ddd-spacing-4: 16px;
+      --ddd-spacing-6: 24px;
+      --ddd-spacing-8: 32px;
+      --ddd-font-size-3xs: 10px;
+      --ddd-font-size-4xs: 12px;
+      --ddd-font-size-l: 20px;
+      --ddd-font-weight-bold: 600;
+      --ddd-font-weight-black: 700;
+      --ddd-font-primary: var(--ddd-font-primary);
+      --ddd-boxShadow-sm: none;
+      --ddd-theme-polaris-surface-hover: transparent;
+      --ddd-theme-polaris-border: rgba(255,255,255,0.12);
+      --ddd-theme-warning: #f0c040;
+      --ddd-theme-warning-text: #f0c040;
+    }
+
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {
+      .login-chalkboard { padding: var(--ddd-spacing-7) var(--ddd-spacing-6); }
+      .login-brand { font-size: var(--ddd-font-size-xl); }
+      .role-selector { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <a href="#main" class="skip-link">Skip to content</a>
+
+  <div class="login-wrapper" id="main">
+    <div class="login-chalkboard">
+
+      <!-- Brand -->
+      <div class="login-brand">Das<span>bor</span>Kuis</div>
+      <p class="login-subtitle">Portal asesmen interaktif dalam pembelajaran</p>
+
+      <!-- Role Selector -->
+      <div class="role-selector" role="tablist" aria-label="Pilih peran">
+        <button class="role-btn active" role="tab" aria-selected="true" data-role="siswa" type="button">🎓 Siswa</button>
+        <button class="role-btn" role="tab" aria-selected="false" data-role="guru" type="button">👨🏫 Guru</button>
+      </div>
+
+      <!-- Auth Component -->
+      <quiz-user-auth
+        id="auth"
+        apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec"
+        auto-login
+        style="display:block; max-width:420px; margin:0 auto;"
+      ></quiz-user-auth>
+
+      <!-- Guest link -->
+      <button type="button" class="btn btn-ghost" id="guestBtn" style="margin-top:var(--ddd-spacing-3);">Masuk sebagai Tamu</button>
+
+      <!-- Footer link -->
+      <a href="landing.html" class="back-link">← Kembali ke halaman utama</a>
+
+    </div>
+  </div>
+
+  <script>
+    // ── Guest login ──
+    const guestBtn = document.getElementById("guestBtn");
+    const auth = document.getElementById("auth");
+
+    guestBtn.addEventListener("click", () => {
+      const role = document.querySelector(".role-btn.active").dataset.role;
+      if (role === "siswa") {
+        const dummySession = {
+          studentId: "guest-" + Date.now(),
+          nama: "Tamu",
+          email: "guest@example.com",
+          nis: "00000",
+          absen: "0",
+          kelas: "X",
+        };
+        try { localStorage.setItem("quiz_user_session", JSON.stringify(dummySession)); } catch(e) {}
+        try { localStorage.setItem("a3_v5_student_profile", JSON.stringify({ student_id: dummySession.studentId, nama: "Tamu", kelas: "X", nis: "00000", absen: "0" })); } catch(e) {}
+        globalThis.dispatchEvent(new CustomEvent("quiz-user-login", { detail: dummySession, bubbles: true, composed: true }));
+        globalThis.dispatchEvent(new CustomEvent("quiz-user-session-changed", { detail: dummySession, bubbles: true, composed: true }));
+      }
+    });
+
+    // ── Role selector: update aria ──
+    const roleBtns = document.querySelectorAll('.role-btn');
+    roleBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        roleBtns.forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-selected', 'false');
+        });
+        btn.classList.add('active');
+        btn.setAttribute('aria-selected', 'true');
+      });
+    });
+
+    // ── Listen to auth component events ──
+    window.addEventListener('quiz-user-login', (e) => {
+      const d = e.detail || {};
+      console.log('[Login] Berhasil:', d.nama, d.nis, d.kelas);
+    });
+    window.addEventListener('quiz-user-logout', () => {
+      console.log('[Login] Logout/keluar dari sesi.');
+    });
+
+    // ── Chalk dust particles ──
+    const chalkboard = document.querySelector('.login-chalkboard');
+    function createDust() {
+      const dust = document.createElement('div');
+      dust.classList.add('chalk-dust');
+      dust.style.left = Math.random() * 100 + '%';
+      dust.style.top = Math.random() * 100 + '%';
+      dust.style.opacity = Math.random() * 0.3 + 0.05;
+      dust.style.width = (2 + Math.random() * 3) + 'px';
+      dust.style.height = dust.style.width;
+      chalkboard.appendChild(dust);
+      setTimeout(() => dust.remove(), 4000 + Math.random() * 3000);
+    }
+    for (let i = 0; i < 8; i++) setTimeout(createDust, i * 400);
+    setInterval(createDust, 3000);
+  </script>
+</body>
+</html>

@@ -6,47 +6,156 @@
   <title>Demo: quiz-user-auth — Login & Registrasi Siswa — dasbor-kuis</title>
   <script type="module" src="../lib/quiz-user-auth.js"></script>
   <style>
+    /* ── DDD Design System Tokens ── */
+    :root {
+      --ddd-font-primary: system-ui, sans-serif;
+      --ddd-font-display: 'Instrument Serif', serif;
+      --ddd-theme-default-white: #ffffff;
+      --ddd-theme-default-shrineLight: #f7f2ee;
+      --ddd-theme-default-shrineMaxLight: #fdfbf5;
+      --ddd-theme-pughBlue: #96bee6;
+      --ddd-theme-default-nittanyNavy: #001e44;
+      --ddd-theme-default-potentialMidnight: #000321;
+      --ddd-theme-default-coalyGray: #262626;
+      --ddd-theme-default-slateGray: #314d64;
+      --ddd-theme-default-slateLight: #ccdae6;
+      --ddd-theme-default-limestoneGray: #a2aaad;
+      --ddd-theme-default-white85: rgba(255, 255, 255, 0.85);
+      --ddd-theme-default-white65: rgba(255, 255, 255, 0.65);
+      --ddd-theme-default-error: #5f2120;
+      --ddd-theme-default-errorLight: #fdeded;
+      --ddd-theme-default-success: #1e4620;
+      --ddd-theme-default-successLight: #edf7ed;
+      --ddd-theme-default-background: #eff2f5;
+      --ddd-theme-default-link: #005fa9;
+      --ddd-theme-default-disabled: #f4f4f4;
+      --ddd-primary-0: #96bee6;
+      --ddd-primary-8: #009cde;
+      --ddd-primary-10: #bf8226;
+      --ddd-primary-13: #491d70;
+      --ddd-spacing-0: 0px;
+      --ddd-spacing-1: 4px;
+      --ddd-spacing-2: 8px;
+      --ddd-spacing-3: 12px;
+      --ddd-spacing-4: 16px;
+      --ddd-spacing-5: 20px;
+      --ddd-spacing-6: 24px;
+      --ddd-spacing-8: 32px;
+      --ddd-spacing-10: 40px;
+      --ddd-spacing-12: 48px;
+      --ddd-font-size-3xs: 10px;
+      --ddd-font-size-4xs: 12px;
+      --ddd-font-size-s: 14px;
+      --ddd-font-size-ms: 15px;
+      --ddd-font-size-m: 18px;
+      --ddd-font-size-l: 22px;
+      --ddd-font-size-xl: 28px;
+      --ddd-font-weight-light: 300;
+      --ddd-font-weight-regular: 400;
+      --ddd-font-weight-medium: 500;
+      --ddd-font-weight-bold: 600;
+      --ddd-font-weight-black: 700;
+      --ddd-radius-xs: 4px;
+      --ddd-radius-s: 8px;
+      --ddd-radius-m: 12px;
+      --ddd-radius-l: 16px;
+    }
+
     :root, html, body {
       margin: 0;
       padding: 0;
-      font-family: system-ui, sans-serif;
-      background: #f1f5f9;
-      color: #0f172a;
+      font-family: var(--ddd-font-primary);
+      background: var(--ddd-theme-default-shrineLight);
+      color: var(--ddd-theme-default-coalyGray);
     }
-    .halaman { max-width: 800px; margin: 0 auto; padding: 24px 20px 60px; }
+    .halaman {
+      max-width: var(--ddd-spacing-10);
+      margin: 0 auto;
+      padding: var(--ddd-spacing-6) var(--ddd-spacing-5) var(--ddd-spacing-12);
+    }
     header.hero {
-      background: linear-gradient(120deg, #312e81, #4f46e5 55%, #6d28d9);
-      color: #fff; border-radius: 20px; padding: 26px 30px; margin-bottom: 22px;
-      box-shadow: 0 12px 28px -12px rgb(79 70 229 / 0.55);
+      background: linear-gradient(120deg, var(--ddd-primary-13), var(--ddd-primary-8) 55%, var(--ddd-primary-0));
+      color: var(--ddd-theme-default-white);
+      border-radius: var(--ddd-radius-m);
+      padding: var(--ddd-spacing-6) var(--ddd-spacing-8);
+      margin-bottom: var(--ddd-spacing-6);
+      box-shadow: 0 var(--ddd-spacing-5) var(--ddd-spacing-12) calc(var(--ddd-spacing-5) * -1) rgba(79, 70, 229, 0.55);
     }
-    header.hero h1 { margin: 0; font-size: 23px; }
-    header.hero p { margin: 8px 0 0; opacity: 0.85; font-size: 14px; }
-    .nav-links { margin: 0 0 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+    header.hero h1 {
+      margin: 0;
+      font-family: var(--ddd-font-display);
+      font-size: var(--ddd-font-size-xl);
+    }
+    header.hero p {
+      margin: var(--ddd-spacing-2) 0 0;
+      opacity: 0.85;
+      font-size: var(--ddd-font-size-s);
+    }
+    .nav-links {
+      margin: 0 0 var(--ddd-spacing-6);
+      display: flex;
+      gap: var(--ddd-spacing-3);
+      flex-wrap: wrap;
+    }
     .nav-links a {
-      padding: 8px 14px; border-radius: 10px; border: 1px solid #c7d2fe;
-      background: #fff; color: #4338ca; font-weight: 600; font-size: 13px; text-decoration: none;
+      padding: var(--ddd-spacing-2) var(--ddd-spacing-4);
+      border-radius: var(--ddd-radius-s);
+      border: 1px solid #c7d2fe;
+      background: var(--ddd-theme-default-white);
+      color: var(--ddd-primary-13);
+      font-weight: var(--ddd-font-weight-bold);
+      font-size: var(--ddd-font-size-3xs);
+      text-decoration: none;
     }
     .nav-links a:hover { background: #eef2ff; }
     .kartu {
-      background: #fff; border: 1px solid #e2e8f0; border-radius: 16px;
-      padding: 22px; margin-bottom: 20px; box-shadow: 0 2px 8px -2px rgb(15 23 42 / 0.08);
+      background: var(--ddd-theme-default-white);
+      border: 1px solid #e2e8f0;
+      border-radius: var(--ddd-radius-m);
+      padding: var(--ddd-spacing-6);
+      margin-bottom: var(--ddd-spacing-6);
+      box-shadow: 0 var(--ddd-spacing-1) var(--ddd-spacing-4) calc(var(--ddd-spacing-1) * -1) rgba(15, 23, 42, 0.08);
     }
-    .info { background: #f3f0fa; border: 1px solid #c7b3fc; border-radius: 10px; padding: 14px; margin-bottom: 20px; font-size: 13px; line-height: 1.7; }
-    .info code { background: #e3d9fc; padding: 1px 6px; border-radius: 4px; font-size: 12px; }
-    .event-log { background: #fafafa; border: 1px dashed #cbd5e1; border-radius: 10px; padding: 14px; margin-top: 18px; font-family: monospace; font-size: 12px; min-height: 80px; line-height: 1.6; }
-    .event-log .e { margin: 2px 0; }
-    .event-log .e.ok { color: #166534; }
-    .event-log .e.off { color: #991b1b; }
+    .info {
+      background: var(--ddd-theme-default-shrineLight);
+      border: 1px solid #c7b3fc;
+      border-radius: var(--ddd-radius-s);
+      padding: var(--ddd-spacing-4);
+      margin-bottom: var(--ddd-spacing-6);
+      font-size: var(--ddd-font-size-s);
+      line-height: 1.7;
+    }
+    .info code {
+      background: #e3d9fc;
+      padding: 1px 6px;
+      border-radius: var(--ddd-radius-xs);
+      font-size: var(--ddd-font-size-3xs);
+    }
+    .event-log {
+      background: var(--ddd-theme-default-shrineMaxLight);
+      border: 1px dashed #cbd5e1;
+      border-radius: var(--ddd-radius-s);
+      padding: var(--ddd-spacing-4);
+      margin-top: var(--ddd-spacing-6);
+      font-family: monospace;
+      font-size: var(--ddd-font-size-3xs);
+      min-height: var(--ddd-spacing-8);
+      line-height: 1.6;
+    }
+    .event-log .e { margin: var(--ddd-spacing-1) 0; }
+    .event-log .e.ok { color: var(--ddd-theme-default-success); }
+    .event-log .e.off { color: var(--ddd-theme-default-error); }
   </style>
 </head>
 <body>
   <div class="halaman">
     <header class="hero">
       <h1>🔐 Demo: &lt;quiz-user-auth&gt;</h1>
-      <p>Login / registrasi / verifikasi sesi siswa terhubung ke backend <code>lib/codev5.gs</code>.</p>
+      <p>Login / registrasi / verifikasi sesi siswa terhubung ke backend <code>lib/codev6.gs</code>.</p>
     </header>
 
     <div class="nav-links">
+      <a href="login.html">🔐 Halaman Login Modern</a>
       <a href="/">← Kembali ke demo utama (index.html)</a>
       <a href="soal-akm-lengkap.html">📝 Soal AKM Lengkap</a>
     </div>
@@ -65,8 +174,8 @@
         apps-script-url="https://script.google.com/macros/s/AKfycbzZtRJ8dDEj6y3VyQgbYRap1-BBkOrOb-5vapHI7ck2ki751kqwudADvm8YSfEkzkRB/exec">
       </quiz-user-auth>
 
-      <h3 style="margin:20px 0 8px; color:#1e293b;">Log Event</h3>
-      <div id="events" class="event-log"><em>Login atau daftar untuk melihat event…</em></div>
+      <h3 style="margin:var(--ddd-spacing-6) 0 var(--ddd-spacing-3); color:var(--ddd-theme-default-coalyGray);">Log Event</h3>
+      <div id="events" class="event-log"><em>Login atau daftar untuk melihat event...</em></div>
     </div>
   </div>
 
