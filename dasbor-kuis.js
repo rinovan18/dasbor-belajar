@@ -55,6 +55,7 @@ export class QuizDashboard extends I18NMixin(DDDSuper(LitElement)) {
         attribute: "allow-mode-switch",
         reflect: true,
       },
+      role: { type: String, attribute: "role", reflect: true },
       judulKuis: { type: String, attribute: "judul-kuis", reflect: true },
       questions: {
         type: Array,
@@ -644,6 +645,21 @@ export class QuizDashboard extends I18NMixin(DDDSuper(LitElement)) {
         }
       })
       .catch((e) => ({ status: "error", message: `Jaringan: ${e.message}` }));
+  }
+
+  // Role-based access: explicit role property takes precedence over mode
+  _resolveRole() {
+    if (this.role) return this.role;
+    if (this.mode === "guru" || this.mode === "dosen" || this.mode === "lecturer") {
+      return "guru";
+    }
+    return "siswa";
+  }
+  _isGuru() {
+    return this._resolveRole() === "guru";
+  }
+  _isSiswa() {
+    return this._resolveRole() === "siswa";
   }
 
   _deteksiErrorBackend(...respon) {
@@ -2049,7 +2065,7 @@ export class QuizDashboard extends I18NMixin(DDDSuper(LitElement)) {
       queueLength = 0;
     }
 
-    const isGuru = this.mode === "guru";
+    const isGuru = this._isGuru();
     const tabs = isGuru
       ? [
           { id: "pantauan", label: "📊 Pantauan Kelas" },
@@ -2069,14 +2085,13 @@ export class QuizDashboard extends I18NMixin(DDDSuper(LitElement)) {
           { id: "forum", label: "💬 Diskusi" },
         ];
 
-    const identitas =
-      this.mode === "siswa" ? this.namaSiswa || "Siswa" : "Guru / Wali Kelas";
+    const identitas = this._isSiswa() ? this.namaSiswa || "Siswa" : "Guru / Wali Kelas";
 
     return html`
       <div class="app-container">
         <div class="navbar">
           <h1><span class="logo-badge">🎓</span> ${
-            this.mode === "siswa"
+            this._isSiswa()
               ? "Dasbor Siswa — Ruang Belajar"
               : "Dasbor Guru — Evaluasi & Pantauan Kelas"
           }</h1>
@@ -2152,7 +2167,7 @@ export class QuizDashboard extends I18NMixin(DDDSuper(LitElement)) {
       if (this._activeTab === "soal") return this._renderEditSoal();
       if (this._activeTab === "atur") return this._renderPengaturan();
       if (this._activeTab === "forum") {
-        const isGuruView = this.mode === "guru";
+        const isGuruView = this._isGuru();
         return html`
           <ruang-diskusi
             .forumApiUrl=${this.forumApiUrl || this.appsScriptUrl}

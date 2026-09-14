@@ -88,7 +88,7 @@ const SHEET_SPECS = {
   [SHEET_KEHADIRAN]: ["Timestamp", "Tanggal", "Nama", "Student ID", "NIS", "Absen", "Kelas", "Kode Materi", "Kehadiran (%)", "Status", "Kriteria"],
   [SHEET_FORUM]: ["Timestamp", "CommentID", "ParentID", "UserName", "StudentID", "Text", "Sheet", "Action", "Likes", "kdMateri", "NIS", "Absen", "Kelas"],
   [SHEET_TUGAS]: ["Timestamp", "StudentID", "Nama", "Sheet", "Title", "Content", "Link", "kdMateri", "NIS", "Absen", "Kelas"],
-  [SHEET_KUIS_SESSION]: ["Timestamp", "StudentID", "Nama", "NIS", "Absen", "Kelas", "Kode Materi", "Waktu Mulai", "Waktu Selesai", "Durasi (detik)", "Durasi Ulangan (detik)", "Sisa Waktu (detik)", "Tab Switch Count", "Status", "Catatan"],
+  [SHEET_KUIS_SESSION]: ["Timestamp", "StudentID", "Nama", "NIS", "Absen", "Kelas", "Kode Materi", "Waktu Mulai", "Waktu Selesai", "Durasi (detik)", "Durasi Ulangan (detik)", "Sisa Waktu (detik)", "Tab Switch Count", "Window Blur Count", "Session Token", "Answer Timings", "Status", "Catatan"],
   [SHEET_SETTINGS]: ["Key", "Value", "UpdatedAt"],
 };
 
@@ -933,6 +933,7 @@ function logActivity(p) {
   const studentId = _teks(p.studentId || p.student_id || "");
   if (!studentId) return { status: "error", message: "studentId wajib diisi." };
   const idLog = _teks(p.id_log || p.idLog || "");
+  const tipeAktivitas = _teks(p.type || p.tipe || p.tipe_aktivitas || "");
   let skor = _num(p.score);
   // Validasi skor untuk memastikan tetap dalam rentang 0-100 (mencegah > 100)
   if (skor < 0) skor = 0;
@@ -947,6 +948,39 @@ function logActivity(p) {
   const kdMateri = _teks(p.kdMateri || p.kodeMateri || desc.kdMateri || "");
   // Kategori default "sumatif_lm" agar skor kuis masuk ke rekap per-KD (LM) rapor.
   const kategori = _teks(p.kategori) || "sumatif_lm";
+
+  // Rute ANTI-CHEATING EVENTS: log ke db_aktivitas untuk audit
+  // Tipe: tab_switch_warning, suspicious_timing, copy_paste_attempt, fullscreen_exit, window_blur, window_focus
+  const antiCheatTypes = ["tab_switch_warning", "suspicious_timing", "copy_paste_attempt", "fullscreen_exit", "window_blur", "window_focus"];
+  if (antiCheatTypes.includes(tipeAktivitas)) {
+    _jaminSheet(SHEET_AKTIVITAS, SHEET_SPECS[SHEET_AKTIVITAS]);
+    const akt = _ss().getSheetByName(SHEET_AKTIVITAS);
+    const headerAkt = akt
+      .getRange(1, 1, 1, akt.getLastColumn())
+      .getValues()[0]
+      .map((h) => String(h).trim());
+    const idLogIdx = headerAkt.indexOf("ID Log") + 1;
+    if (idLog && idLogIdx > 0 && _kolomBerisi(akt, idLogIdx, idLog)) {
+      return { status: "ok", duplikat: true };
+    }
+    akt.appendRow([
+      Utilities.formatDate(new Date(), "GMT+7", "dd/MM/yyyy HH:mm:ss"),
+      _tglStr(new Date()),
+      _hariNama(new Date()),
+      _teks(p.nama || desc.studentName || ""),
+      tipeAktivitas,
+      JSON.stringify(desc),
+      1,
+      studentId,
+      _teks(p.nis || p.NIS || ""),
+      _teks(p.absen || ""),
+      _teks(p.kelas || ""),
+      kdMateri,
+      idLog,
+    ]);
+    SpreadsheetApp.flush();
+    return { status: "ok", tipe: tipeAktivitas };
+  }
 
   // Rute FORMATIF: progres murni ? db_aktivitas (heatmap), TIDAK ke rapor.
   if (kategori === "formatif") {
@@ -1031,6 +1065,55 @@ function getQuizLock(p) {
   return { status: "ok", locked: found, best: found ? best : null };
 }
 
+/**
+ * createSession: validasi token sesi untuk anti-multi-login.
+ * Mencegah siswa membuka kuis di banyak tab/browser bersamaan.
+ * Token disimpan di db_kuis_session dengan TTL = durasi kuis + buffer.
+ */
+function createSession(p) {
+  const studentId = _teks(p.studentId || p.student_id || "");
+  const kdMateri = _teks(p.kdMateri || p.kodeMateri || "");
+  const sessionToken = _teks(p.sessionToken || p.session_token || "");
+  const duration = _num(p.duration || p.durasiUlangan, 300);
+
+  if (!studentId || !kdMateri) {
+    return { status: "error", message: "studentId & kdMateri wajib diisi." };
+  }
+
+  const sheet = _ss().getSheetByName(SHEET_KUIS_SESSION);
+  if (sessionToken && sheet && sheet.getLastRow() >= 2) {
+    const data = sheet.getDataRange().getValues();
+    const header = data[0].map((h) => String(h).trim());
+    const idxSid = header.indexOf("Student ID");
+    const idxLM = header.indexOf("Kode Materi");
+    const idxToken = header.indexOf("Session Token");
+    const idxStatus = header.indexOf("Status");
+
+    if (idxToken >= 0) {
+      // Cek apakah token masih aktif (belum expired)
+      for (let i = 1; i < data.length; i++) {
+        const row = data[i];
+        const rowToken = _teks(row[idxToken]);
+        if (rowToken === sessionToken && _teks(row[idxSid]) === studentId && _teks(row[idxLM]) === kdMateri) {
+          // Token sudah ada — duplikat sesi (anti-multi-login)
+          return {
+            status: "ok",
+            duplicate: true,
+            message: "Sesi sudah aktif. Tidak boleh buka tab baru.",
+          };
+        }
+      }
+    }
+  }
+
+  return {
+    status: "ok",
+    duplicate: false,
+    message: "Sesi valid.",
+    expiresIn: duration + 60, // TTL = durasi kuis + 60 detik buffer
+  };
+}
+
 /** Guru membuka kunci: hapus seluruh baris db_asesmen milik siswa pada kdMateri. */
 function resetQuizLock(p) {
   const studentId = _teks(p.studentId || p.student_id || "");
@@ -1074,6 +1157,9 @@ function logQuizSession(p) {
   const durasiUlangan = _num(p.durasiUlangan || p.duration, 300);
   const sisaWaktu = _num(p.sisaWaktu || p.sisa_waktu, 0);
   const tabSwitchCount = _num(p.tabSwitchCount || p.tab_switch_count, 0);
+  const windowBlurCount = _num(p.windowBlurCount || p.window_blur_count, 0);
+  const sessionToken = _teks(p.sessionToken || p.session_token || "");
+  const answerTimings = _teks(p.answerTimings || p.answer_timings || "");
   const skor = _num(p.skor || p.score, -1);
 
   if (!studentId || !kdMateri) {
@@ -1092,10 +1178,12 @@ function logQuizSession(p) {
     catatan += "Kemungkinan: (1) Browser throttling saat buka tab lain (normal), ";
     catatan += "atau (2) Manipulasi waktu sistem. ";
     catatan += "Tab switch: " + tabSwitchCount + "x. ";
+    catatan += "Window blur: " + windowBlurCount + "x. ";
     if (skor >= 0) catatan += "Skor: " + skor + "%.";
   } else {
     catatan = "Pengerjaan normal. Durasi " + durasiPengerjaan + " detik dari " + durasiUlangan + " detik. ";
     catatan += "Tab switch: " + tabSwitchCount + "x. ";
+    catatan += "Window blur: " + windowBlurCount + "x. ";
     if (skor >= 0) catatan += "Skor: " + skor + "%.";
   }
 
@@ -1115,6 +1203,9 @@ function logQuizSession(p) {
     durasiUlangan,
     sisaWaktu,
     tabSwitchCount,
+    windowBlurCount,
+    sessionToken,
+    answerTimings,
     status,
     catatan,
   ]);
@@ -1128,6 +1219,7 @@ function logQuizSession(p) {
       kdMateri,
       status,
       sisaWaktu,
+      sessionToken,
       catatan,
     },
   };
@@ -1363,6 +1455,8 @@ function doGet(e) {
         return createJsonResponse(getQuizLock(params));
       case "resetquizlock":
         return createJsonResponse(_denganLock(() => resetQuizLock(params), "resetQuizLock"));
+      case "createsession":
+        return createJsonResponse(createSession(params));
       case "initsheets":
       case "initsheet":
       case "init":
@@ -1373,7 +1467,8 @@ function doGet(e) {
           message:
             "codev6.gs aktif (Kurikulum Merdeka). Gunakan param action: " +
             "getStudentRoster, getScores, getLeaderboard, getActivityHistory, " +
-            "register, login, verify, generateReport, initSheets.",
+            "register, login, verify, generateReport, initSheets, " +
+            "logActivity, logQuizSession, getQuizLock, resetQuizLock, createSession.",
         });
       default:
         return _err("Aksi '" + action + "' tidak dikenal di codev6.gs.");
@@ -1420,6 +1515,8 @@ function doPost(e) {
         return createJsonResponse(getQuizLock(payload));
       case "resetquizlock":
         return createJsonResponse(_denganLock(() => resetQuizLock(payload), "resetQuizLock"));
+      case "createsession":
+        return createJsonResponse(createSession(payload));
       case "register":
         return createJsonResponse(register(params));
       case "login":

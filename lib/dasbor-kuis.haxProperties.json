@@ -58,6 +58,16 @@
                 "inputMethod": "boolean"
             },
             {
+                "property": "role",
+                "title": "Role Pengguna",
+                "description": "Role eksplisit: 'guru' atau 'siswa'. Jika diisi, ini mengalah prioritas 'mode' — memungkinkan sistem otorisasi berbasis role dari backend (kolom role di sheet Users). Dikosongkan = fallback ke mode.",
+                "inputMethod": "select",
+                "options": {
+                    "guru": "Guru / Dosen / Wali Kelas",
+                    "siswa": "Siswa"
+                }
+            },
+            {
                 "property": "kelas",
                 "title": "Kelas (Filter Guru)",
                 "description": "Filter pantauan guru per kelas, misal: XI-1. Kosongkan untuk semua kelas.",

@@ -1,5 +1,6 @@
 # User Preferences
-- Primary language is Indonesian (Bahasa Indonesia) — project names, code identifiers, comments, and conversation are all in Indonesian. Confidence: 0.95
+- Primary language is Indonesian (Bahasa Indonesia), but mixes English technical terms naturally (e.g., "meningkatkan cohesion", "cohesion score") — both languages used interchangeably in conversation and code. Confidence: 0.9
+- Prefers an iterative refactoring methodology focused on increasing code cohesion: extract modules first, then deeply integrate them by replacing inline logic with module calls, and validate improvements using graphify cohesion metrics. Confidence: 0.8
 - Prefers minimal commands like "continue" — wants the assistant to autonomously keep working without asking for confirmation. Confidence: 0.85
 - Appreciates thorough, structured analysis with code references (file paths, line numbers, code blocks) and clear recommendations. Confidence: 0.8
 - Uses Indonesian-language naming for web components and methods (e.g., `dasbor-kuis`, `latihan-kuis`, `_muatStatusKuis`, `_onWaktuHabis`). Confidence: 0.9
@@ -15,3 +16,9 @@
 - Uses short, direct audit-style questions in Indonesian to verify specific code correctness (e.g. "apa sudah menjaga skor di db assesmen rentang 0-100") — expects the assistant to investigate, answer, and fix if the answer is "no". Confidence: 0.8
 - When a validation gap is found, expects the assistant to proactively fix all related code paths (not just the one asked about), across all affected files. Confidence: 0.8
 - Prefers configurable weights/parameters stored in a settings mechanism (e.g., Settings sheet) with hardcoded defaults as fallback, rather than hardcoded constants used directly in business logic. Confidence: 0.8
+- Prefers using specific skills (e.g., `/hax-design-system`, `graphify`) for specialized tasks rather than doing everything in the main conversation. Confidence: 0.75
+- Uses Python scripts (via write_file) for graph data analysis rather than doing analysis inline — creates reusable analysis scripts in `graphify-out/` directory. Confidence: 0.8
+- Prefers role-based access control (guru/siswa/admin) stored in backend (Users Sheet column) with frontend enforcing the role, rather than relying solely on URL parameters. Confidence: 0.8
+- Writes implementation plan documents to `~/.commandcode/plans/{name}.md` before coding, structured for LLM review (analysis → plan → implementation). Confidence: 0.85
+- Prefers static method calls on utility/renderer modules over instance delegation (e.g., `QuestionRenderer.renderMC()` static call vs `this._questionRenderer.renderMC()` instance). Confidence: 0.85
+- Implements anti-cheating by tracking per-question answer timing via extracted module methods (`getAnswerTime()`, `isSuspiciousTiming()`) and flagging suspiciously fast responses (below a configurable ms threshold). Confidence: 0.7
