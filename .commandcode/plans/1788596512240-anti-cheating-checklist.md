@@ -396,3 +396,39 @@ document.addEventListener('fullscreenchange', () => {
 6. **Permission rules yang ketat** pada environment ini menyulitkan proses patch. Disarankan untuk menggunakan `write` tool atau `edit` tool jika tersedia, dan menghindari multi-line bash scripts.
 
 7. **Build harus selalu dijalankan** setelah patch diterapkan di `elements/dasbor-kuis/` untuk menghasilkan `build/custom.es6.js` yang baru. Sudah terverifikasi: `npm run build` ✓
+
+## Accessibility Audit (WCAG 2.0 AA) — Status
+
+### latihan-kuis.js
+
+| Finding | WCAG | Status | Fix |
+|---------|------|--------|-----|
+| Warning icon ⚠️ tidak ada alt text | 1.1.1 | ✅ Fixed | Ditambah `aria-hidden="true"` |
+| Warning popup tidak bisa di-dismiss keyboard | 2.1.2 | ✅ Fixed | Ditambah handler `Escape` key + `autofocus` |
+| Warning popup menggunakan `role="alert"` tanpa label | 4.1.2 | ✅ Fixed | Diubah ke `role="alertdialog"` + `aria-labelledby` + `aria-describedby` |
+| False positive blur terlalu sensitif | - | ✅ Fixed | Diganti `visibilitychange` + cek `document.hidden` |
+| Timer display tidak ada `aria-live` | 4.1.2 | ✅ Fixed | Ditambah `aria-live="polite"` pada timer |
+
+### timer-kuis.js
+
+| Finding | WCAG | Status | Fix |
+|---------|------|--------|-----|
+| Timer tidak ada `role="timer"` | 4.1.2 | ✅ Fixed | Ditambah `role="timer"` pada container |
+| Timer tidak ada `aria-live` | 4.1.2 | ✅ Fixed | Ditambah `aria-live="polite"` |
+| Tombol pause/start tidak ada `aria-pressed` | 4.1.2 | ✅ Fixed | Ditambah `aria-pressed="${this._running}"` |
+| Low time warning hanya visual | 1.4.1 | ✅ Fixed | Ditambah `aria-label="Waktu hampir habis"` |
+
+### kuis-ledakan.js
+
+| Finding | WCAG | Status | Fix |
+|---------|------|--------|-----|
+| Score circle tidak ada `aria-label` | 1.1.1 | ✅ Fixed | Ditambah `aria-label="Skor: ${persentase}%"` |
+| Review summary tidak ada `role` | 1.3.1 | ✅ Fixed | Ditambah `role="region"` + `aria-label` |
+
+### Ringkasan Compliance
+
+| Component | DDD | ARIA | Keyboard | HAX Schema | Dark Mode | Overall |
+|-----------|-----|------|----------|------------|-----------|---------|
+| `latihan-kuis.js` | ✅ | ✅ | ✅ | ✅ | ✅ | **Compliant** |
+| `timer-kuis.js` | ✅ | ✅ | ✅ | ✅ | ✅ | **Compliant** |
+| `kuis-ledakan.js` | ✅ | ✅ | ✅ | ✅ | ✅ | **Compliant** |
