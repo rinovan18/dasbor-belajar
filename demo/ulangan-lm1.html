@@ -44,11 +44,11 @@
     </ol>
 
   </div>
-<!--
-  <div class="card">
+
+  <!--<div class="card">
     <h2>🔐 Login — cek Absen No 1</h2>
     <quiz-user-auth apps-script-url="https://script.google.com/macros/s/AKfycbzrdnwwjnmnVPYaNMdglqVe5gSWVQlEi46d9eCd9vjgPgGJ6jPi_X2P1OIEtpcXj0CU/exec"
-     api-timeout="30000"
+    api-timeout="30000"
 
     ></quiz-user-auth>
   </div>-->
@@ -59,23 +59,40 @@
     <p><small>Konfigurasi: <code>duration="0"</code> + <code>hide-pause-restart</code> + <code>remidi-mode</code> + <code>remidi-soal-url</code> + <code>kkm="75"</code></small></p>
 
     <latihan-kuis
-      mode="siswa"
+      apps-script-url="https://script.google.com/macros/s/AKfycbzrdnwwjnmnVPYaNMdglqVe5gSWVQlEi46d9eCd9vjgPgGJ6jPi_X2P1OIEtpcXj0CU/exec"
+      judul-materi="Materi Pembelajaran"
+      judul-kuis="Ulangan Harian Bab 1"
+      soal-file-url="./soal-LM1.json"
       kd-materi="LM1"
-      kategori="sumatif_lm"
-      judul-kuis="Uji Remidi — Latihan LM2"
-      soal-file-url="./soal-LM2.json"
-      remidi-soal-url="./soal-LM2.json"
-      remidi-mode
-      shuffle-choices
+      duration="300"
+
+      <!-- 1. Satu kali ulang (tidak bisa retake) -->
+      allow-retake="false"
+      max-retake="0"
+
+      <!-- 2. Sembunyikan jawaban -->
+      hide-confetti="true"
+      hide-answers="true"
+      hide-score="true"
+
+
+
+      <!-- 4. Ada navigasi soal -->
+      show-question-nav="true"
+      allow-backward-nav="true"
+
+      <!-- Tambahan opsional -->
+      hide-score="true"
+      practice-mode="false"
+      mode="siswa"
+      timer-autostart
       shuffle-questions
-      kkm="75"
-      student-id=""
-      allow-retake="true"
-      max-retake="4"
-      hide-pause-restart
-      tab-switch-threshold="3"
-      apps-script-url="https://script.google.com/macros/s/AKfycbzrdnwwjnmnVPYaNMdglqVe5gSWVQlEi46d9eCd9vjgPgGJ6jPi_X2P1OIEtpcXj0CU/exec">
+      shuffle-choices
+      kategori="sumatif_lm"
+    >
     </latihan-kuis>
+
+
   </div>
 
   <div class="card">

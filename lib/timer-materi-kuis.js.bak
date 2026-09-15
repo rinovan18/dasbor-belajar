@@ -81,12 +81,6 @@ export class TimerMateriKuis extends I18NMixin(DDDSuper(LitElement)) {
       if (this.autostartMateri && this._sisaMateri > 0 && !this._jalanMateri) {
         this.start("materi");
       }
-      if (this._sisaMateri <= 0 && !this._jalanMateri) {
-        this.dispatchEvent(new CustomEvent("timer-materi-expired",{bubbles:true,composed:true}));
-      }
-      if (this._sisaKuis <= 0 && !this._jalanKuis) {
-        this.dispatchEvent(new CustomEvent("timer-kuis-expired",{bubbles:true,composed:true}));
-      }
     }
   }
 

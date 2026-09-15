@@ -121,6 +121,7 @@ export class QuizDashboard extends I18NMixin(DDDSuper(LitElement)) {
       _activeTab: { state: true },
       _serverData: { state: true },
       _isFlushing: { state: true },
+      _networkStatus: { state: true },
       _loading: { state: true },
       _serverError: { state: true },
       _peringkatKelas: { state: true },
@@ -360,6 +361,8 @@ export class QuizDashboard extends I18NMixin(DDDSuper(LitElement)) {
     this.hideConfetti = false;
     this._activeTab = "pantauan";
     this._isFlushing = false;
+    this._syncRetryCount = 0;
+    this._networkStatus = globalThis.navigator?.onLine ? "online" : "offline";
     this._loading = false;
     this._serverError = "";
     this._peringkatKelas = "";
@@ -391,8 +394,8 @@ export class QuizDashboard extends I18NMixin(DDDSuper(LitElement)) {
     this._onUserLoginBound = this._onUserLogin.bind(this);
     this._onUserLogoutBound = this._onUserLogout.bind(this);
     this._onLogEventBound = this._onLogEvent.bind(this);
-    this._onOnlineBound = () => this._flushQueue();
-    this._onFocusBound = () => this._flushQueue();
+    this._boundHandleOnline = this._handleNetworkChange.bind(this, "online");
+    this._boundHandleFocus = this._flushQueue.bind(this);
   }
 
   connectedCallback() {
@@ -411,8 +414,8 @@ export class QuizDashboard extends I18NMixin(DDDSuper(LitElement)) {
     globalThis.addEventListener("quiz-user-login", this._onUserLoginBound);
     globalThis.addEventListener("quiz-user-logout", this._onUserLogoutBound);
     globalThis.addEventListener("dasbor-kuis-log", this._onLogEventBound);
-    globalThis.addEventListener("online", this._onOnlineBound);
-    globalThis.addEventListener("focus", this._onFocusBound);
+    globalThis.addEventListener("online", this._boundHandleOnline);
+    globalThis.addEventListener("focus", this._boundHandleFocus);
     this._flushQueue();
   }
 
@@ -420,9 +423,17 @@ export class QuizDashboard extends I18NMixin(DDDSuper(LitElement)) {
     globalThis.removeEventListener("quiz-user-login", this._onUserLoginBound);
     globalThis.removeEventListener("quiz-user-logout", this._onUserLogoutBound);
     globalThis.removeEventListener("dasbor-kuis-log", this._onLogEventBound);
-    globalThis.removeEventListener("online", this._onOnlineBound);
-    globalThis.removeEventListener("focus", this._onFocusBound);
+    globalThis.removeEventListener("online", this._boundHandleOnline);
+    globalThis.removeEventListener("focus", this._boundHandleFocus);
     super.disconnectedCallback();
+  }
+
+  _handleNetworkChange(status) {
+    this._networkStatus = status;
+    if (status === "online") {
+      this._syncRetryCount = 0;
+      this._flushQueue();
+    }
   }
 
   updated(changed) {
@@ -910,6 +921,13 @@ export class QuizDashboard extends I18NMixin(DDDSuper(LitElement)) {
     }
     if (queue.length === 0) return;
 
+    // Jika sudah gagal berturut-turut sebanyak 5 kali atau lebih, bekukan antrean sementara
+    // Ini penting agar tidak terus-menerus memakan kuota akses harian Google API saat server down
+    if (this._syncRetryCount >= 5) {
+      console.warn("[Dashboard] Sinkronisasi dibekukan sementara akibat 5x eror beruntun.");
+      return;
+    }
+
     // Kunci flush global: mencegah beberapa instansi <dasbor-kuis> mengirim
     // antrean yang sama secara bersamaan (satu id_log = satu request maksimal).
     this._isFlushing = true;
@@ -941,6 +959,8 @@ export class QuizDashboard extends I18NMixin(DDDSuper(LitElement)) {
           .filter((log, i) => hasil[i] && hasil[i].status === "ok")
           .map((log) => log.id_log),
       );
+      // RESET KEGAGALAN SAAT SUKSES DITERIMA
+      this._syncRetryCount = 0;
       let masukanTerbaru = [];
       try {
         masukanTerbaru = JSON.parse(
@@ -954,11 +974,24 @@ export class QuizDashboard extends I18NMixin(DDDSuper(LitElement)) {
       localStorage.setItem("a3_v5_sync_queue", JSON.stringify(sisa));
       if (sisa.length < masukanTerbaru.length) this.fetchDataKomplit();
     } catch (e) {
-      console.error("Sinkronisasi tertunda", e);
+      this._syncRetryCount++;
+      console.error("[Dashboard] Gagal terhubung ke GAS backend (Jaringan Terputus):", e);
     } finally {
       this._isFlushing = false;
       globalThis.__a3V5FlushLock = false;
       this.requestUpdate();
+
+      const remainingQueue = JSON.parse(globalThis.localStorage.getItem("a3_v5_sync_queue") || "[]");
+
+      if (remainingQueue.length > 0 && this._networkStatus === "online") {
+        const delayTime = this._syncRetryCount > 0
+          ? Math.pow(2, this._syncRetryCount) * 1000
+          : 1000;
+
+        console.log(`[Dashboard] Mencoba sinkronisasi berikutnya dalam ${delayTime / 1000} detik. (Gagal: ${this._syncRetryCount}x)`);
+
+        setTimeout(() => this._flushQueue(), delayTime);
+      }
     }
   }
 
