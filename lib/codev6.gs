@@ -951,8 +951,43 @@ function logActivity(p) {
 
   // Rute ANTI-CHEATING EVENTS: log ke db_aktivitas untuk audit
   // Tipe: tab_switch_warning, suspicious_timing, copy_paste_attempt, fullscreen_exit, window_blur, window_focus
-  const antiCheatTypes = ["tab_switch_warning", "suspicious_timing", "copy_paste_attempt", "fullscreen_exit", "window_blur", "window_focus"];
+  //        curang_tab_switch, force_choice_dialog, selesai, selesai_remidi
+  const antiCheatTypes = ["tab_switch_warning", "suspicious_timing", "copy_paste_attempt", "fullscreen_exit", "window_blur", "window_focus", "curang_tab_switch", "force_choice_dialog"];
+  // Tipe "selesai" & "selesai_remidi" → log ke db_aktivitas (audit trail), bukan db_asesmen
+  const selesaiTypes = ["selesai", "selesai_remidi"];
   if (antiCheatTypes.includes(tipeAktivitas)) {
+    _jaminSheet(SHEET_AKTIVITAS, SHEET_SPECS[SHEET_AKTIVITAS]);
+    const akt = _ss().getSheetByName(SHEET_AKTIVITAS);
+    const headerAkt = akt
+      .getRange(1, 1, 1, akt.getLastColumn())
+      .getValues()[0]
+      .map((h) => String(h).trim());
+    const idLogIdx = headerAkt.indexOf("ID Log") + 1;
+    if (idLog && idLogIdx > 0 && _kolomBerisi(akt, idLogIdx, idLog)) {
+      return { status: "ok", duplikat: true };
+    }
+    akt.appendRow([
+      Utilities.formatDate(new Date(), "GMT+7", "dd/MM/yyyy HH:mm:ss"),
+      _tglStr(new Date()),
+      _hariNama(new Date()),
+      _teks(p.nama || desc.studentName || ""),
+      tipeAktivitas,
+      JSON.stringify(desc),
+      1,
+      studentId,
+      _teks(p.nis || p.NIS || ""),
+      _teks(p.absen || ""),
+      _teks(p.kelas || ""),
+      kdMateri,
+      idLog,
+    ]);
+    SpreadsheetApp.flush();
+    return { status: "ok", tipe: tipeAktivitas };
+  }
+
+  // Rute SELESAI/SELESAI_REMIDI: log ke db_aktivitas (audit trail anti-cheat), bukan db_asesmen.
+  // Skor & flag curang disimpan di kolom Deskripsi (JSON) untuk audit guru.
+  if (selesaiTypes.includes(tipeAktivitas)) {
     _jaminSheet(SHEET_AKTIVITAS, SHEET_SPECS[SHEET_AKTIVITAS]);
     const akt = _ss().getSheetByName(SHEET_AKTIVITAS);
     const headerAkt = akt
@@ -1227,6 +1262,117 @@ function logQuizSession(p) {
 
 
 /**
+ * updateQuizSession: UPSERT sesi kuis untuk mencegah baris duplikat.
+ * Jika ada row dengan sessionToken yang sama (studentId+kdMateri+sessionToken), UPDATE kolom status/catatan/waktu_selesai.
+ * Jika belum ada, INSERT row baru.
+ * Ini adalah aksi idempotent — aman dipanggil berulang kali dengan payload yang sama.
+ */
+function updateQuizSession(p) {
+  const studentId = _teks(p.studentId || p.student_id || "");
+  const kdMateri = _teks(p.kdMateri || p.kodeMateri || "");
+  const sessionToken = _teks(p.sessionToken || p.session_token || "");
+  const idLog = _teks(p.id_log || p.idLog || "");
+
+  if (!studentId || !kdMateri) {
+    return { status: "error", message: "studentId & kdMateri wajib diisi." };
+  }
+  if (!sessionToken) {
+    return { status: "error", message: "sessionToken wajib diisi untuk upsert." };
+  }
+
+  const sheet = _jaminSheet(SHEET_KUIS_SESSION, SHEET_SPECS[SHEET_KUIS_SESSION]);
+  const header = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0]
+    .map((h) => String(h).trim());
+
+  const idxToken = header.indexOf("Session Token");
+  const idxSid = header.indexOf("StudentID");
+  const idxLM = header.indexOf("Kode Materi");
+  const idxStatus = header.indexOf("Status");
+  const idxCatatan = header.indexOf("Catatan");
+  const idxWselesai = header.indexOf("Waktu Selesai");
+  const idxWaktuMulai = header.indexOf("Waktu Mulai");
+
+  // Cari row (studentId + kdMateri + sessionToken)
+  let rowIdx = -1;
+  if (sheet.getLastRow() >= 2) {
+    const data = sheet.getDataRange().getValues();
+    if (idxToken >= 0 && idxSid >= 0 && idxLM >= 0) {
+      for (let i = 1; i < data.length; i++) {
+        if (
+          _teks(data[i][idxToken]) === sessionToken &&
+          _teks(data[i][idxSid]) === studentId &&
+          _teks(data[i][idxLM]) === kdMateri
+        ) {
+          rowIdx = i + 1; // 1-based
+          break;
+        }
+      }
+    }
+  }
+
+  // Build VALUES sesuai urutan SHEET_SPECS[SHEET_KUIS_SESSION]
+  const waktuSelesai = _teks(p.waktuSelesai || p.waktu_selesai || "");
+  const durasiPengerjaan = _num(p.durasiPengerjaan || p.durasi, 0);
+  const durasiUlangan = _num(p.durasiUlangan || p.duration, 300);
+  const sisaWaktu = _num(p.sisaWaktu || p.sisa_waktu, 0);
+  const tabSwitchCount = _num(p.tabSwitchCount || p.tab_switch_count, 0);
+  const windowBlurCount = _num(p.windowBlurCount || p.window_blur_count, 0);
+  const answerTimings = _teks(p.answerTimings || p.answer_timings || "");
+  const skor = _num(p.skor || p.score, -1);
+  const catatan = _teks(p.catatan || "");
+  let status = sisaWaktu > 60 ? "mencurigakan" : "jujur";
+
+  const rowValues = [
+    new Date().toISOString(),                                // Timestamp
+    studentId,                                               // StudentID
+    _teks(p.nama || ""),                                     // Nama
+    _teks(p.nis || ""),                                      // NIS
+    _teks(p.absen || ""),                                    // Absen
+    _teks(p.kelas || ""),                                    // Kelas
+    kdMateri,                                                // Kode Materi
+    _teks(p.waktuMulai || p.waktu_mulai || ""),              // Waktu Mulai
+    waktuSelesai,                                            // Waktu Selesai
+    durasiPengerjaan,                                        // Durasi (detik)
+    durasiUlangan,                                           // Durasi Ulangan (detik)
+    sisaWaktu,                                               // Sisa Waktu (detik)
+    tabSwitchCount,                                          // Tab Switch Count
+    windowBlurCount,                                         // Window Blur Count
+    sessionToken,                                            // Session Token
+    answerTimings,                                           // Answer Timings
+    status,                                                  // Status
+    catatan,                                                 // Catatan
+  ];
+
+  if (rowIdx > 1) {
+    // UPSERT: update kolom dinamis + catatan di row yang ada
+    if (idxStatus >= 0) sheet.getRange(rowIdx, idxStatus + 1).setValue(status);
+    if (idxCatatan >= 0) sheet.getRange(rowIdx, idxCatatan + 1).setValue(catatan);
+    if (idxWselesai >= 0 && waktuSelesai) sheet.getRange(rowIdx, idxWselesai + 1).setValue(waktuSelesai);
+    // Jika belum ada waktu mulai, isi (handle event "start")
+    if (idxWaktuMulai >= 0 && !waktuSelesai) {
+      const existing = sheet.getRange(rowIdx, idxWaktuMulai + 1).getValue();
+      if (!existing) sheet.getRange(rowIdx, idxWaktuMulai + 1).setValue(_teks(p.waktuMulai || p.waktu_mulai || ""));
+    }
+    SpreadsheetApp.flush();
+    return { status: "ok", message: "Session updated (upsert).", row: rowIdx };
+  }
+
+  // Idempotency: check ID Log before INSERT
+  if (idLog) {
+    const hdr = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0].map((h) => String(h).trim());
+    const cIdLog = hdr.indexOf("ID Log");
+    if (cIdLog >= 0 && _kolomBerisi(sheet, cIdLog + 1, idLog)) {
+      return { status: "ok", duplikat: true, message: "Session sudah terproses (id_log duplikat)." };
+    }
+  }
+  // INSERT row baru
+  sheet.appendRow(rowValues);
+  SpreadsheetApp.flush();
+  return { status: "ok", message: "Session created.", row: sheet.getLastRow() };
+}
+
+
+/**
  * generateReport V6: untuk tiap siswa, baca db_asesmen (group by Kategori),
  * hitung rapor Kurikulum Merdeka, rangkum catatan sikap & presensi, lalu
  * TULIS ULANG Akumulasi_Nilai_Rapor (sort by Nilai_Rapor desc).
@@ -1447,6 +1593,9 @@ function doGet(e) {
       case "logquissession":
       case "logquissession":
         return createJsonResponse(_denganLock(() => logQuizSession(params), "logQuizSession"));
+      case "updatequizzsession":
+        case "updateQuizSession":
+          return createJsonResponse(_denganLock(() => updateQuizSession(params), "updateQuizSession"));
       case "getbobot":
         return createJsonResponse({ status: "ok", bobot: _bacaBobot() });
       case "savebobot":
@@ -1468,7 +1617,7 @@ function doGet(e) {
             "codev6.gs aktif (Kurikulum Merdeka). Gunakan param action: " +
             "getStudentRoster, getScores, getLeaderboard, getActivityHistory, " +
             "register, login, verify, generateReport, initSheets, " +
-            "logActivity, logQuizSession, getQuizLock, resetQuizLock, createSession.",
+            "logActivity, logQuizSession, updateQuizSession, getQuizLock, resetQuizLock, createSession.",
         });
       default:
         return _err("Aksi '" + action + "' tidak dikenal di codev6.gs.");
@@ -1507,6 +1656,9 @@ function doPost(e) {
       case "logquissession":
       case "logquissession":
         return createJsonResponse(_denganLock(() => logQuizSession(payload), "logQuizSession"));
+      case "updatequizzsession":
+        case "updateQuizSession":
+          return createJsonResponse(_denganLock(() => updateQuizSession(payload), "updateQuizSession"));
       case "getbobot":
         return createJsonResponse({ status: "ok", bobot: _bacaBobot() });
       case "savebobot":

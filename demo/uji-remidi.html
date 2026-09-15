@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🧪 Uji Feature Remidi — dasbor-kuis</title>
+  <style>
+    :root { --ddd-spacing-0: 0; --ddd-spacing-2: 8px; --ddd-spacing-3: 12px; --ddd-spacing-4: 16px; --ddd-spacing-5: 24px; --ddd-spacing-6: 32px; }
+    body { margin: 0; padding: var(--ddd-spacing-5); font-family: system-ui, sans-serif; background: #f1f5f9; color: #1e293b; }
+    h1 { color: #4338ca; margin: 0 0 8px 0; }
+    .badge { display: inline-block; padding: 4px 10px; border-radius: 999px; background: #4338ca; color: white; font-size: 12px; font-weight: 700; margin-right: 6px; }
+    .badge.warn { background: #f59e0b; }
+    .badge.ok { background: #10b981; }
+    .card { background: white; border-radius: 12px; padding: var(--ddd-spacing-5); margin: var(--ddd-spacing-4) 0; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .card h2 { margin-top: 0; color: #1e293b; font-size: 18px; }
+    code { background: #e2e8f0; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+    pre { background: #1e293b; color: #e2e8f0; padding: var(--ddd-spacing-4); border-radius: 8px; overflow-x: auto; font-size: 12px; }
+    .checklist li { margin: 6px 0; }
+    .checklist input { margin-right: 6px; }
+  </style>
+</head>
+<body>
+  <h1>🧪 Uji Feature Remidi</h1>
+  <p>
+    <span class="badge">Standalone</span>
+    <span class="badge warn">Mode Latihan</span>
+    <span class="badge ok">Auto-Remidi</span>
+    Elemen <code>&lt;latihan-kuis&gt;</code> dengan konfigurasi:
+  </p>
+  <ul class="checklist">
+    <li>✅ <b>Tidak muncul popup warning</b> agresif — karena mode latihan (tanpa timer/lock)</li>
+    <li>✅ <b>Nilai tidak numpuk ke sheet</b> — pakai sessionToken untuk identifikasi attempt</li>
+    <li>✅ <b>Catatan log</b> — kolom Catatan diisi info remidi/curang/warning</li>
+  </ul>
+
+  <div class="card">
+    <h2>📋 Skenario Uji</h2>
+    <ol>
+      <li>Login siswa → mulai kuis LM2 (10 soal)</li>
+      <li>Jawab beberapa soal dengan salah → skor &lt; 75</li>
+      <li>Tombol <b>"Mulai Remidi"</b> muncul otomatis</li>
+      <li>Klik → soal remidi dimuat dari <code>remidi-soal-url</code></li>
+      <li>Selesaikan remidi → skor baru terkirim, sheet tidak numpuk</li>
+    </ol>
+
+  </div>
+
+  <!--<div class="card">
+    <h2>🔐 Login — cek Absen No 1</h2>
+    <quiz-user-auth apps-script-url="https://script.google.com/macros/s/AKfycbzrdnwwjnmnVPYaNMdglqVe5gSWVQlEi46d9eCd9vjgPgGJ6jPi_X2P1OIEtpcXj0CU/exec"></quiz-user-auth>
+  </div>-->
+
+
+  <div class="card">
+    <h2>🎯 Elemen Latihan Kuis (Mode Latihan)</h2>
+    <p><small>Konfigurasi: <code>duration="0"</code> + <code>hide-pause-restart</code> + <code>remidi-mode</code> + <code>remidi-soal-url</code> + <code>kkm="75"</code></small></p>
+
+    <latihan-kuis
+      mode="siswa"
+      kd-materi="LM2"
+      kategori="sumatif_lm"
+      judul-kuis="Uji Remidi — Latihan LM2"
+      soal-file-url="./soal-LM2.json"
+      remidi-soal-url="./soal-LM2.json"
+      remidi-mode
+      shuffle-choices
+      shuffle-questions
+      kkm="75"
+      allow-retake="true"
+      max-retake="4"
+      hide-pause-restart
+      tab-switch-threshold="3"
+      apps-script-url="https://script.google.com/macros/s/AKfycbzrdnwwjnmnVPYaNMdglqVe5gSWVQlEi46d9eCd9vjgPgGJ6jPi_X2P1OIEtpcXj0CU/exec">
+    </latihan-kuis>
+  </div>
+
+  <div class="card">
+    <h2>🔍 Cek di Spreadsheet</h2>
+    <p>Di sheet <code>[SHEET_KUIS_SESSION]</code>, cek kolom:</p>
+    <ul>
+      <li><b>Catatan</b>: <code>"selesai"</code>, <code>"selesai (remidi)"</code>, <code>"selesai (sudah-remidi)"</code></li>
+      <li><b>Session Token</b>: UUID unik per attempt</li>
+      <li><b>Percobaan Ke</b>: 1 (awal), 2 (setelah remidi)</li>
+      <li><b>Skor</b>: nilai terbaru (replace, bukan nambah)</li>
+    </ul>
+    <p>Di sheet <code>logActivity</code>, cek tipe log:</p>
+    <ul>
+      <li><b>selesai</b>: ada field <code>remidi: true/false</code> + <code>percobaanKe</code></li>
+      <li><b>curang_tab_switch</b>: muncul setelah 3x tab switch</li>
+      <li><b>force_choice_dialog</b>: log saat dialog 3x muncul</li>
+    </ul>
+  </div>
+
+  <div class="card" style="background: #fef3c7; border-left: 4px solid #f59e0b;">
+    <h2>⚠️ Catatan untuk Backend (codev6.gs)</h2>
+    <p>Frontend mengirim kolom baru di <code>logQuizSession</code>:</p>
+    <ul>
+      <li><code>catatan</code> — string info (selesai/curang/remidi/dll)</li>
+      <li><code>sessionToken</code> — UUID identifikasi attempt</li>
+      <li><code>percobaanKe</code> — attempt number (1, 2, 3, ...)</li>
+      <li><code>id_log</code> — UUID untuk idempotensi</li>
+    </ul>
+    <p>Backend perlu:</p>
+    <ol>
+      <li>Tambah kolom <b>Catatan</b> di sheet (sudah ada di schema)</li>
+      <li>Tambah action <code>updateQuizSession</code> yang UPDATE row by sessionToken (bukan insert)</li>
+      <li>Update schema sheet untuk support semua kolom baru</li>
+    </ol>
+  </div>
+
+  <script type="module" src="../lib/latihan-kuis.js"></script>
+  <script type="module" src="../lib/quiz-user-auth.js"></script>
+</body>
+</html>

@@ -258,4 +258,256 @@ describe("LatihanKuis test", () => {
       expect(ulangBtn).to.exist;
     });
   });
+
+  describe("anti-cheat + remidi", () => {
+    beforeEach(() => {
+      element.appsScriptUrl = "";
+      element.studentId = "u1";
+      element.kdMateri = "bab1";
+      element._sendLogDirect = () => {}; // hindari network di test
+    });
+
+    describe("_effectiveRemidiMode", () => {
+      it("true ketika remidiMode attribute di-set (manual)", async () => {
+        element.remidiMode = true;
+        element.remidiSoalUrl = "";
+        element._bestSkor = null;
+        expect(element._effectiveRemidiMode).to.equal(true);
+      });
+
+      it("auto-true ketika remidiSoalUrl ada + _bestSkor < kkm + belum remidi", async () => {
+        element.remidiMode = false;
+        element.remidiSoalUrl = "./remidi.json";
+        element.kkm = 75;
+        element._bestSkor = 60;
+        element.sudahRemidi = false;
+        expect(element._effectiveRemidiMode).to.equal(true);
+      });
+
+      it("false ketika skor >= kkm (tidak perlu remidi)", async () => {
+        element.remidiMode = false;
+        element.remidiSoalUrl = "./remidi.json";
+        element.kkm = 75;
+        element._bestSkor = 80;
+        element.sudahRemidi = false;
+        expect(element._effectiveRemidiMode).to.equal(false);
+      });
+
+      it("false ketika sudah remidi (hanya boleh sekali)", async () => {
+        element.remidiMode = false;
+        element.remidiSoalUrl = "./remidi.json";
+        element.kkm = 75;
+        element._bestSkor = 60;
+        element.sudahRemidi = true;
+        expect(element._effectiveRemidiMode).to.equal(false);
+      });
+
+      it("false ketika tidak ada remidiSoalUrl dan tidak manual", async () => {
+        element.remidiMode = false;
+        element.remidiSoalUrl = "";
+        element.kkm = 75;
+        element._bestSkor = 60;
+        element.sudahRemidi = false;
+        expect(element._effectiveRemidiMode).to.equal(false);
+      });
+    });
+
+    describe("_cekThresholdCurang", () => {
+      it("log curang_tab_switch sekali saat count >= threshold", async () => {
+        element.tabSwitchThreshold = 3;
+        let logCount = 0;
+        element._logActivity = (tipe, payload) => {
+          if (tipe === "curang_tab_switch") logCount++;
+        };
+        element._tabSwitchCount = 3;
+        element._curangLogged = false;
+        element._cekThresholdCurang();
+        expect(logCount).to.equal(1);
+        expect(element._curangLogged).to.equal(true);
+      });
+
+      it("tidak log lagi jika sudah pernah logged (_curangLogged=true)", async () => {
+        element.tabSwitchThreshold = 3;
+        let logCount = 0;
+        element._logActivity = (tipe) => {
+          if (tipe === "curang_tab_switch") logCount++;
+        };
+        element._tabSwitchCount = 5;
+        element._curangLogged = true;
+        element._cekThresholdCurang();
+        expect(logCount).to.equal(0);
+      });
+
+      it("tidak log saat count < threshold", async () => {
+        element.tabSwitchThreshold = 3;
+        let logCount = 0;
+        element._logActivity = (tipe) => {
+          if (tipe === "curang_tab_switch") logCount++;
+        };
+        element._tabSwitchCount = 2;
+        element._curangLogged = false;
+        element._cekThresholdCurang();
+        expect(logCount).to.equal(0);
+        expect(element._curangLogged).to.equal(false);
+      });
+    });
+
+    describe("dedup _onKuisLog (sessionToken)", () => {
+      it("dispatch 2x event serupa (same sessionToken) => hanya sekali _logSelesaiKuis", async () => {
+        element._sessionToken = "tok-1";
+        element._sessionLogged = "";
+        let selesaiCount = 0;
+        element._logSelesaiKuis = () => { selesaiCount++; };
+        element._kirimLogSession = () => {};
+
+        const event = { detail: { payload: { score: 80, sessionToken: "tok-1" } } };
+        element._onKuisLog(event);
+        element._onKuisLog(event);
+
+        await element.updateComplete;
+        expect(selesaiCount).to.equal(1);
+        expect(element._sessionLogged).to.equal("tok-1");
+        expect(element._skor).to.equal(80);
+      });
+
+      it("dispatch 2x dengan sessionToken beda => _logSelesaiKuis dipanggil 2x", async () => {
+        element._sessionToken = "tok-A";
+        element._sessionLogged = "";
+        let selesaiCount = 0;
+        element._logSelesaiKuis = () => { selesaiCount++; };
+        element._kirimLogSession = () => {};
+
+        element._onKuisLog({ detail: { payload: { score: 80, sessionToken: "tok-A" } } });
+        element._onKuisLog({ detail: { payload: { score: 90, sessionToken: "tok-B" } } });
+        await element.updateComplete;
+        expect(selesaiCount).to.equal(2);
+      });
+    });
+
+    describe("dialog 3x (_warningCount, _forceChoiceDialog)", () => {
+      it("_lanjutkanKuis reset _warningCount ke 0 + _forceChoiceDialog false", async () => {
+        element._warningCount = 5;
+        element._forceChoiceDialog = true;
+        element._lanjutkanKuis();
+        expect(element._warningCount).to.equal(0);
+        expect(element._forceChoiceDialog).to.equal(false);
+      });
+
+      it("_kumpulkanSekarang set _forceChoiceDialog false tanpa throw bila tidak ada kuis child", async () => {
+        element._forceChoiceDialog = true;
+        element._kumpulkanSekarang();
+        expect(element._forceChoiceDialog).to.equal(false);
+      });
+
+      it("_onVisibilityChange hidden trigger dialog saat _warningCount >= 3", async () => {
+        element._mulai = true;
+        element._selesai = false;
+        element._warningCount = 2;
+        element._forceChoiceDialog = false;
+        element._logActivity = () => {};
+        // simulasikan visibilityState hidden
+        Object.defineProperty(document, "visibilityState", {
+          configurable: true, get: () => "hidden",
+        });
+        element._onVisibilityChange();
+        expect(element._warningCount).to.equal(3);
+        expect(element._forceChoiceDialog).to.equal(true);
+        Object.defineProperty(document, "visibilityState", {
+          configurable: true, get: () => "visible",
+        });
+      });
+
+      it("_laporKeGuru reset counter + log 'lapor_ke_guru' ke sheet", async () => {
+        element._forceChoiceDialog = true;
+        element._warningCount = 5;
+        let loggedTipe = "";
+        element._logActivity = (tipe) => { loggedTipe = tipe; };
+        element._laporKeGuru();
+        expect(element._forceChoiceDialog).to.equal(false);
+        expect(element._warningCount).to.equal(0);
+        expect(loggedTipe).to.equal("lapor_ke_guru");
+      });
+    });
+
+    describe("reset anti-cheat di _mulaiLatihan", () => {
+      it("_warningCount & _forceChoiceDialog dan _curangLogged di-reset ke 0/false", async () => {
+        element._warningCount = 5;
+        element._forceChoiceDialog = true;
+        element._curangLogged = true;
+        element._sessionLogged = "old";
+        element._sessionToken = "old-tok";
+        // _mulaiLatihan butuh appsScriptUrl? cek early guards
+        element._muatStatusKuis = () => Promise.resolve();
+        element._mulaiLatihan();
+        await element.updateComplete;
+        expect(element._warningCount).to.equal(0);
+        expect(element._forceChoiceDialog).to.equal(false);
+        expect(element._curangLogged).to.equal(false);
+        expect(element._sessionToken).to.not.equal("old-tok");
+      });
+    });
+  });
+
+  describe("hardening: id_log & key cleanup", () => {
+    const _origFetch = window.fetch;
+    const setFetch = (fn) =>
+      Object.defineProperty(window, "fetch", { value: fn, configurable: true, writable: true });
+    afterEach(() => setFetch(_origFetch));
+
+    it("_sendLogDirect reuses id_log from payload instead of generating new", async () => {
+      element.appsScriptUrl = "https://example.com/x";
+      element.studentId = "u1";
+      element.kdMateri = "bab1";
+      let capturedUrl = "";
+      setFetch(async (url) => {
+        capturedUrl = url;
+        return { ok: true, json: async () => ({ status: "ok" }) };
+      });
+      await element._sendLogDirect("selesai", { id_log: "PREDEFINED-LOG-ID", score: 80 });
+      expect(capturedUrl).to.contain("id_log=PREDEFINED-LOG-ID");
+    });
+
+    it("_onKuisLog propagates id_log from event to _sendLogDirect", async () => {
+      element.appsScriptUrl = "https://example.com/x";
+      element.studentId = "u1";
+      element.kdMateri = "bab1";
+      element._sessionLogged = "";
+      let capturedUrl = "";
+      setFetch(async (url) => {
+        capturedUrl = url;
+        return { ok: true, json: async () => ({ status: "ok" }) };
+      });
+      element._logSelesaiKuis = () => {};
+      element._kirimLogSession = () => {};
+      element._onKuisLog({ detail: { id_log: "EVENT-LOG-123", tipe: "quiz", payload: { score: 80, sessionToken: "tok-x" } } });
+      await new Promise((r) => setTimeout(r, 50));
+      expect(capturedUrl).to.contain("id_log=EVENT-LOG-123");
+    });
+
+    it("_onKuisLog clears kuis-ledakan attempt & session keys on completion", async () => {
+      element.appsScriptUrl = "https://example.com/x";
+      element.studentId = "u1";
+      element.kdMateri = "bab1";
+      element._sessionLogged = "";
+      localStorage.setItem("kuis-ledakan:attempt:u1:bab1", JSON.stringify({ start: Date.now() }));
+      localStorage.setItem("kuis-ledakan:session:u1:bab1", JSON.stringify({ token: "tok" }));
+      element._logSelesaiKuis = () => {};
+      element._kirimLogSession = () => {};
+      element._onKuisLog({ detail: { payload: { score: 80, sessionToken: "tok-x" } } });
+      await element.updateComplete;
+      expect(localStorage.getItem("kuis-ledakan:attempt:u1:bab1")).to.be.null;
+      expect(localStorage.getItem("kuis-ledakan:session:u1:bab1")).to.be.null;
+    });
+
+    it("_onAuthLogout clears kuis-ledakan attempt & session keys", () => {
+      element.studentId = "u1";
+      element.kdMateri = "bab1";
+      localStorage.setItem("kuis-ledakan:attempt:u1:bab1", JSON.stringify({ start: Date.now() }));
+      localStorage.setItem("kuis-ledakan:session:u1:bab1", JSON.stringify({ token: "tok" }));
+      element._onAuthLogout();
+      expect(localStorage.getItem("kuis-ledakan:attempt:u1:bab1")).to.be.null;
+      expect(localStorage.getItem("kuis-ledakan:session:u1:bab1")).to.be.null;
+      expect(element.studentId).to.equal("");
+    });
+  });
 });

@@ -115,6 +115,9 @@ export class QuizDashboard extends I18NMixin(DDDSuper(LitElement)) {
         reflect: true,
       },
       soalFileUrl: { type: String, attribute: "soal-file-url", reflect: true },
+      remidiMode: { type: Boolean, attribute: "remidi-mode", reflect: true },
+      remidiSoalUrl: { type: String, attribute: "remidi-soal-url", reflect: true },
+      kkm: { type: Number, attribute: "kkm", reflect: true },
       _activeTab: { state: true },
       _serverData: { state: true },
       _isFlushing: { state: true },
@@ -211,6 +214,25 @@ export class QuizDashboard extends I18NMixin(DDDSuper(LitElement)) {
             description: "URL file JSON soal (array). Jika diisi, soal dimuat dari file per kdMateri/LM — seperti latihan-kuis soal-file-url. Kosongkan untuk pakai questions inline atau Bank Soal sheet.",
             inputMethod: "haxupload",
             required: false,
+          },
+          {
+            property: "remidiMode",
+            title: "Aktifkan Mode Remidi",
+            inputMethod: "boolean",
+            description: "Jika aktif, siswa dengan nilai < KKM bisa mengerjakan remidi.",
+          },
+          {
+            property: "remidiSoalUrl",
+            title: "URL Soal Remidi (JSON)",
+            inputMethod: "haxupload",
+            description: "File .json soal remidi; digunakan jika siswa tidak mencapai KKM.",
+          },
+          {
+            property: "kkm",
+            title: "KKM (Kriteria Ketuntasan Minimal)",
+            inputMethod: "number",
+            description: "Nilai minimum untuk lulus. Default 75. Jika nilai < KKM, siswa harus remidi.",
+            default: 75,
           },
           {
             property: "tema",
@@ -329,6 +351,9 @@ export class QuizDashboard extends I18NMixin(DDDSuper(LitElement)) {
     this.judulKuis = "Evaluasi Kuis Interaktif";
     this.questions = [];
     this.soalFileUrl = "";
+    this.remidiMode = false;
+    this.remidiSoalUrl = "";
+    this.kkm = 75;
     this.shuffleChoices = false;
     this.hideAnswers = false;
     this.hideScore = false;
@@ -559,6 +584,12 @@ export class QuizDashboard extends I18NMixin(DDDSuper(LitElement)) {
 
   _onUserLogout() {
     this._serverData = { roster: [], leaderboard: [], siswa: null, history: [] };
+    this.studentId = "";
+    this.namaSiswa = "";
+    this.nis = "";
+    this.absen = "";
+    this.kelas = "";
+    try { localStorage.clear(); } catch (_) {}
     this.requestUpdate();
   }
 
@@ -2238,7 +2269,7 @@ export class QuizDashboard extends I18NMixin(DDDSuper(LitElement)) {
         .studentAbsen=${this.absen}
         .studentKelas=${this.kelas}
         .judul=${this.judulKuis}
-        .questions=${this.questions}
+        .questions=${this.questions && this.questions.length > 0 ? this.questions : undefined}
         .shuffleChoices=${this.shuffleChoices}
         .hideAnswers=${this.hideAnswers}
         .hideScore=${this.hideScore}
@@ -2268,9 +2299,12 @@ export class QuizDashboard extends I18NMixin(DDDSuper(LitElement)) {
             .studentNis=${this.nis}
             .studentAbsen=${this.absen}
             .studentKelas=${this.kelas}
-            .questions=${this.questions}
+            .questions=${this.questions && this.questions.length > 0 ? this.questions : undefined}
             .judulKuis=${this.judulKuis}
             .mode=${this.mode}
+            .remidiMode=${this.remidiMode}
+            .remidiSoalUrl=${this.remidiSoalUrl}
+            .kkm=${this.kkm}
             kategori="sumatif_lm"
           ></latihan-kuis>
         </div>

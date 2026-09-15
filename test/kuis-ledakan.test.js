@@ -246,4 +246,47 @@ describe("KuisLedakan test", () => {
     expect(timer).to.not.be.null;
     expect(timer.getAttribute("duration")).to.equal("60");
   });
+
+  describe("anti-cheat: periodic auto-save", () => {
+    afterEach(() => {
+      if (element._autoSaveInterval) {
+        clearInterval(element._autoSaveInterval);
+        element._autoSaveInterval = null;
+      }
+      try { localStorage.removeItem(element._attemptKey()); } catch (_) {}
+    });
+
+    it("_startQuiz sets _autoSaveInterval", async () => {
+      element.lockAfterComplete = true;
+      element.studentId = "STD-1";
+      element.kdMateri = "Pertemuan 1";
+      element._startQuiz();
+      expect(element._autoSaveInterval).to.not.be.null;
+      // setInterval returns number in browser, Timeout object in Node
+      expect(element._autoSaveInterval).to.be.ok;
+    });
+
+    it("_selesaiKuis clears _autoSaveInterval", async () => {
+      element.lockAfterComplete = true;
+      element.studentId = "STD-1";
+      element.kdMateri = "Pertemuan 1";
+      element.questions = [{ q: "Test?", a: "1", b: "2", k: "a" }];
+      element._startQuiz();
+      expect(element._autoSaveInterval).to.not.be.null;
+      element._pilihJawaban(0, "a");
+      element._selesaiKuis();
+      expect(element._autoSaveInterval).to.be.null;
+    });
+
+    it("_bukaKunci clears _autoSaveInterval", async () => {
+      element.lockAfterComplete = true;
+      element.studentId = "STD-1";
+      element.kdMateri = "Pertemuan 1";
+      element._startQuiz();
+      expect(element._autoSaveInterval).to.not.be.null;
+      element.appsScriptUrl = "https://example.com/exec";
+      await element._bukaKunci();
+      expect(element._autoSaveInterval).to.be.null;
+    });
+  });
 });
