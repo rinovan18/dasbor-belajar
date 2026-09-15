@@ -499,6 +499,57 @@ describe("LatihanKuis test", () => {
       expect(localStorage.getItem("kuis-ledakan:session:u1:bab1")).to.be.null;
     });
 
+    it("_onKuisLog selesai log includes security context fields", async () => {
+      element.appsScriptUrl = "https://example.com/x";
+      element.studentId = "u1";
+      element.kdMateri = "bab1";
+      element._warningCount = 3;
+      element._forceChoiceDialog = true;
+      element._curangLogged = true;
+      element.tabSwitchThreshold = 3;
+      element._sessionLogged = "";
+      let capturedPayload = null;
+      element._logActivity = (tipe, payload) => {
+        if (tipe === "selesai") capturedPayload = payload;
+      };
+      element._kirimLogSession = () => {};
+      element._logSelesaiKuis = () => {};
+      element._onKuisLog({ detail: { payload: { score: 75, sessionToken: "tok-sec" } } });
+      await element.updateComplete;
+      expect(capturedPayload).to.not.equal(null);
+      expect(capturedPayload.warningCount).to.equal(3);
+      expect(capturedPayload.forceChoiceDialogTriggered).to.equal(true);
+      expect(capturedPayload.curangTabSwitchTriggered).to.equal(true);
+      expect(capturedPayload.tabSwitchThreshold).to.equal(3);
+    });
+
+    it("_kirimLogSession includes security context fields", async () => {
+      element.appsScriptUrl = "https://example.com/x";
+      element.studentId = "u1";
+      element.kdMateri = "bab1";
+      element._warningCount = 2;
+      element._forceChoiceDialog = false;
+      element._curangLogged = false;
+      element.tabSwitchThreshold = 3;
+      element._waktuMulai = Date.now();
+      let capturedParams = null;
+      const origFetch = window.fetch;
+      window.fetch = async (url) => {
+        const qs = new URL(url.toString()).searchParams;
+        capturedParams = {};
+        for (const [k, v] of qs.entries()) capturedParams[k] = v;
+        return { ok: true, json: async () => ({ status: "ok" }) };
+      };
+      element._kirimLogSession("selesai");
+      await new Promise((r) => setTimeout(r, 100));
+      window.fetch = origFetch;
+      expect(capturedParams).to.not.equal(null);
+      expect(capturedParams.warningCount).to.equal("2");
+      expect(capturedParams.forceChoiceDialogTriggered).to.equal("false");
+      expect(capturedParams.curangTabSwitchTriggered).to.equal("false");
+      expect(capturedParams.tabSwitchThreshold).to.equal("3");
+    });
+
     it("_onAuthLogout clears kuis-ledakan attempt & session keys", () => {
       element.studentId = "u1";
       element.kdMateri = "bab1";
