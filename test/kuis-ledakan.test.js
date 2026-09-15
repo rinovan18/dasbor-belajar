@@ -247,6 +247,61 @@ describe("KuisLedakan test", () => {
     expect(timer.getAttribute("duration")).to.equal("60");
   });
 
+  it("mencegah re-submit: _submitShortAnswer hanya hitung sekali", async () => {
+    element.questions = [{ type: "shortAnswer", question: "Ibu kota?", acceptedAnswers: ["jakarta"] }];
+    element._startQuiz();
+    expect(element._screen).to.equal("question");
+    // Jawaban pertama (benar)
+    element._shortAnswerText = "jakarta";
+    element._submitShortAnswer();
+    expect(element._score).to.equal(1);
+    // Coba submit lagi dengan jawaban sama
+    element._shortAnswerText = "jakarta";
+    element._submitShortAnswer();
+    // Score TIDAK boleh naik
+    expect(element._score).to.equal(1);
+  });
+
+  it("mencegah re-submit: _submitPGK hanya hitung sekali", async () => {
+    element.questions = [
+      {
+        type: "pgk",
+        question: "Pernyataan?",
+        statements: [{ text: "A", answer: true }, { text: "B", answer: false }],
+      },
+    ];
+    element._startQuiz();
+    element._matchAnswers = { 0: true, 1: false };
+    element._submitPGK();
+    expect(element._score).to.equal(2);
+    // Coba submit lagi
+    element._matchAnswers = { 0: true, 1: false };
+    element._submitPGK();
+    // Score TIDAK boleh naik
+    expect(element._score).to.equal(2);
+  });
+
+  it("mencegah re-submit: _submitMatching hanya hitung sekali", async () => {
+    element.questions = [
+      {
+        type: "matching",
+        question: "Pasangkan",
+        leftItems: ["Kucing", "Anjing"],
+        rightItems: ["Mengeong", "Menggonggong"],
+        correctPairs: { 0: 0, 1: 1 },
+      },
+    ];
+    element._startQuiz();
+    element._matchAnswers = { 0: 0, 1: 1 };
+    element._submitMatching();
+    expect(element._score).to.equal(2);
+    // Coba submit lagi
+    element._matchAnswers = { 0: 0, 1: 1 };
+    element._submitMatching();
+    // Score TIDAK boleh naik
+    expect(element._score).to.equal(2);
+  });
+
   describe("anti-cheat: periodic auto-save", () => {
     afterEach(() => {
       if (element._autoSaveInterval) {
