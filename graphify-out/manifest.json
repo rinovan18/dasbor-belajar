@@ -5,9 +5,9 @@
     "semantic_hash": "67475d8d92bf29bd13fd1f8d001a2161"
   },
   "dasbor-kuis.js": {
-    "mtime": 1789442496.0262027,
-    "ast_hash": "901f941e417fe9c5337b3a4798922e92",
-    "semantic_hash": "901f941e417fe9c5337b3a4798922e92"
+    "mtime": 1789489784.6602073,
+    "ast_hash": "2207b16cb4b166e7d509a9d9b4554199",
+    "semantic_hash": "2207b16cb4b166e7d509a9d9b4554199"
   },
   "demo/soal-contoh.json": {
     "mtime": 1787724068.575191,
@@ -40,14 +40,14 @@
     "semantic_hash": "66ed1e5966df8ac072a740fd78e18ff9"
   },
   "lib/kuis-ledakan.js": {
-    "mtime": 1789459966.766574,
-    "ast_hash": "1ecef29d1c86810120436c48b9ccbc74",
-    "semantic_hash": "1ecef29d1c86810120436c48b9ccbc74"
+    "mtime": 1789489784.667559,
+    "ast_hash": "a0eb1ee0766c8936a585b7230d934617",
+    "semantic_hash": "a0eb1ee0766c8936a585b7230d934617"
   },
   "lib/latihan-kuis.js": {
-    "mtime": 1789447480.0164108,
-    "ast_hash": "64e99d2a0de0e5272b2b6602039e473c",
-    "semantic_hash": "64e99d2a0de0e5272b2b6602039e473c"
+    "mtime": 1789491467.898252,
+    "ast_hash": "ed1b43b3325c2466ea8a28b680b1c20d",
+    "semantic_hash": "ed1b43b3325c2466ea8a28b680b1c20d"
   },
   "lib/quiz-user-auth.js": {
     "mtime": 1789457061.7433128,
@@ -65,14 +65,14 @@
     "semantic_hash": "f4d22789e50b9d12e7552a255802ddbe"
   },
   "lib/timer-kuis.js": {
-    "mtime": 1789435972.2242382,
-    "ast_hash": "54c952b39870e5591e5d46e444a34c82",
-    "semantic_hash": "54c952b39870e5591e5d46e444a34c82"
+    "mtime": 1789489784.6733472,
+    "ast_hash": "be9668f75a9b2c669e963dbbd4cd4b14",
+    "semantic_hash": "be9668f75a9b2c669e963dbbd4cd4b14"
   },
   "lib/timer-materi-kuis.js": {
-    "mtime": 1789265706.578357,
-    "ast_hash": "35c3a8ec5b683ba8bac97e940ecf0ded",
-    "semantic_hash": "35c3a8ec5b683ba8bac97e940ecf0ded"
+    "mtime": 1789489784.6746862,
+    "ast_hash": "c0910df88897ee1b20ce640652fe5836",
+    "semantic_hash": "c0910df88897ee1b20ce640652fe5836"
   },
   "locales/dasbor-kuis.ar.haxProperties.json": {
     "mtime": 1786472588.355858,
@@ -185,19 +185,19 @@
     "semantic_hash": "609a8c8729c255bdb6b751c3677ca42e"
   },
   "test/latihan-kuis.test.js": {
-    "mtime": 1789447973.9063556,
-    "ast_hash": "197a9015e76800d78a349cd1cfea3ed3",
-    "semantic_hash": "197a9015e76800d78a349cd1cfea3ed3"
+    "mtime": 1789491507.6238394,
+    "ast_hash": "646a79da61edd1611d4494938a49b78d",
+    "semantic_hash": "646a79da61edd1611d4494938a49b78d"
   },
   "test/timer-kuis.test.js": {
-    "mtime": 1787036162.2982087,
-    "ast_hash": "ecabc17034e99c60eab8524b739d597d",
-    "semantic_hash": "ecabc17034e99c60eab8524b739d597d"
+    "mtime": 1789465746.728168,
+    "ast_hash": "7c58406b70e4118cb1fd7b813f5728f7",
+    "semantic_hash": "7c58406b70e4118cb1fd7b813f5728f7"
   },
   "test/timer-materi-kuis.test.js": {
-    "mtime": 1787036173.3826263,
-    "ast_hash": "33eb16bae19f08863c713f447527c005",
-    "semantic_hash": "33eb16bae19f08863c713f447527c005"
+    "mtime": 1789465751.8297856,
+    "ast_hash": "e90d0af758a7ca2a51904dad14b384df",
+    "semantic_hash": "e90d0af758a7ca2a51904dad14b384df"
   },
   "web-dev-server.config.mjs": {
     "mtime": 1786472588.5528557,
@@ -230,9 +230,9 @@
     "semantic_hash": "2cfe9ff0a1af31273f5a395acbad5a01"
   },
   "lib/question-renderer.js": {
-    "mtime": 1789454692.1268678,
-    "ast_hash": "337aecd01500a8a3cd6adef32f446701",
-    "semantic_hash": "337aecd01500a8a3cd6adef32f446701"
+    "mtime": 1789489784.671561,
+    "ast_hash": "2e170fc291d52e4f2b365ab12c099c8d",
+    "semantic_hash": "2e170fc291d52e4f2b365ab12c099c8d"
   },
   "lib/quiz-engine.js": {
     "mtime": 1789339131.6806767,
@@ -312,12 +312,12 @@
   ".github/workflows/main.yml": {
     "mtime": 1786472587.8934636,
     "ast_hash": "3f8cd84746a43726433f4e257357d7ba",
-    "semantic_hash": "3f8cd84746a43726433f4e257357d7ba"
+    "semantic_hash": ""
   },
   ".travis.yml": {
     "mtime": 1786472587.9104612,
     "ast_hash": "8924ef59a0ea958b51a5572e4145db14",
-    "semantic_hash": "8924ef59a0ea958b51a5572e4145db14"
+    "semantic_hash": ""
   },
   "AGENTS.md": {
     "mtime": 1789046404.9859746,
@@ -327,7 +327,7 @@
   "DATA-CONTOH.md": {
     "mtime": 1786472587.9134655,
     "ast_hash": "067a7698024f0152fc3689f1c60e334f",
-    "semantic_hash": "067a7698024f0152fc3689f1c60e334f"
+    "semantic_hash": ""
   },
   "PANDUAN-KUIS-LEDAPAN.md": {
     "mtime": 1787525717.9331121,
@@ -347,7 +347,7 @@
   "README.md": {
     "mtime": 1786472587.9194639,
     "ast_hash": "1b36616874ac5513d8cdf144e9886f00",
-    "semantic_hash": "1b36616874ac5513d8cdf144e9886f00"
+    "semantic_hash": ""
   },
   "REKOMENDASI-DASBOR-KUIS.md": {
     "mtime": 1787724107.2448719,
@@ -377,7 +377,7 @@
   "demo/index.html": {
     "mtime": 1789450124.6340046,
     "ast_hash": "9f25d3843009e788312132e40befd13b",
-    "semantic_hash": "9f25d3843009e788312132e40befd13b"
+    "semantic_hash": ""
   },
   "demo/kegiatan-september-2026.html": {
     "mtime": 1789450124.6330187,
@@ -387,7 +387,7 @@
   "demo/kirim-tugas.html": {
     "mtime": 1789450124.6340046,
     "ast_hash": "9507bf8bed9d504a0b5bc115609951d5",
-    "semantic_hash": "9507bf8bed9d504a0b5bc115609951d5"
+    "semantic_hash": ""
   },
   "demo/kuis-timer-demo.html": {
     "mtime": 1787743788.757307,
@@ -417,17 +417,17 @@
   "demo/quiz-user-auth.html": {
     "mtime": 1789450124.627999,
     "ast_hash": "9b97fee3aa3468ac551741e5de940302",
-    "semantic_hash": "9b97fee3aa3468ac551741e5de940302"
+    "semantic_hash": ""
   },
   "demo/ruang-diskusi.html": {
     "mtime": 1789450124.6330187,
     "ast_hash": "384daf9bdc38a99683fd198ea46ce8a2",
-    "semantic_hash": "384daf9bdc38a99683fd198ea46ce8a2"
+    "semantic_hash": ""
   },
   "demo/soal-akm-lengkap.html": {
     "mtime": 1789450124.6330187,
     "ast_hash": "79868bc98c2fab498f06b05dcf2eb755",
-    "semantic_hash": "79868bc98c2fab498f06b05dcf2eb755"
+    "semantic_hash": ""
   },
   "demo/tema-ceria.html": {
     "mtime": 1789450124.627999,
@@ -462,7 +462,7 @@
   "demo/tutorial-hax.html": {
     "mtime": 1786472599.43619,
     "ast_hash": "9ad65970e1f78a3a3d5f49082a1b381d",
-    "semantic_hash": "9ad65970e1f78a3a3d5f49082a1b381d"
+    "semantic_hash": ""
   },
   "docs/BANKSOAL-PER-SEL.md": {
     "mtime": 1789294340.3409252,
@@ -472,11 +472,21 @@
   "index.html": {
     "mtime": 1789450124.626998,
     "ast_hash": "aabf7f56ca7b3ea8396da303e530f5a8",
-    "semantic_hash": "aabf7f56ca7b3ea8396da303e530f5a8"
+    "semantic_hash": ""
   },
   "promptlengkap-dasbor-kuis.txt": {
     "mtime": 1786472588.521857,
     "ast_hash": "0f97fa3ae8bb5cdf70265fc75cacdcef",
-    "semantic_hash": "0f97fa3ae8bb5cdf70265fc75cacdcef"
+    "semantic_hash": ""
+  },
+  "lib/timer-kuis.haxProperties.json": {
+    "mtime": 1789465401.6296227,
+    "ast_hash": "b3cd980d3d3a00c17a83db8797aca84e",
+    "semantic_hash": "b3cd980d3d3a00c17a83db8797aca84e"
+  },
+  "lib/timer-materi-kuis.haxProperties.json": {
+    "mtime": 1789465402.7049272,
+    "ast_hash": "451664c869651fa3617a53c6f36e3728",
+    "semantic_hash": "451664c869651fa3617a53c6f36e3728"
   }
 }
