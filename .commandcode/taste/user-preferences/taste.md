@@ -1,7 +1,7 @@
 # User Preferences
 - Primary language is Indonesian (Bahasa Indonesia), but mixes English technical terms naturally (e.g., "meningkatkan cohesion", "cohesion score") — both languages used interchangeably in conversation and code. Confidence: 0.9
 - Prefers an iterative refactoring methodology focused on increasing code cohesion: extract modules first, then deeply integrate them by replacing inline logic with module calls, and validate improvements using graphify cohesion metrics. Confidence: 0.8
-- Prefers minimal commands like "continue" — wants the assistant to autonomously keep working without asking for confirmation. Confidence: 0.85
+- Prefers minimal commands like "continue" — wants the assistant to autonomously keep working without asking for confirmation. Confidence: 0.855
 - Appreciates thorough, structured analysis with code references (file paths, line numbers, code blocks) and clear recommendations. Confidence: 0.8
 - Uses Indonesian-language naming for web components and methods (e.g., `dasbor-kuis`, `latihan-kuis`, `_muatStatusKuis`, `_onWaktuHabis`). Confidence: 0.9
 - Web components follow kebab-case for element names and mixed camelCase/pascalCase for internal methods (prefixed with `_` for private). Confidence: 0.85

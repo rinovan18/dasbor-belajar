@@ -302,6 +302,151 @@ describe("KuisLedakan test", () => {
     expect(element._score).to.equal(2);
   });
 
+  describe("keyboard navigation", () => {
+    const dispatchKeyEvent = (key) => {
+      const event = new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true });
+      document.dispatchEvent(event);
+    };
+
+    it("ArrowRight navigates to next question after answering", async () => {
+      element.questions = [
+        { q: "Soal 1?", a: "1", b: "2", k: "a" },
+        { q: "Soal 2?", a: "3", b: "4", k: "b" },
+      ];
+      element._startQuiz();
+      expect(element._currentIdx).to.equal(0);
+      // Answer first question
+      element._pilihJawaban(0, "a");
+      dispatchKeyEvent("ArrowRight");
+      expect(element._currentIdx).to.equal(1);
+    });
+
+    it("ArrowLeft navigates to previous question", async () => {
+      element.allowBackwardNav = true;
+      element.questions = [
+        { q: "Soal 1?", a: "1", b: "2", k: "a" },
+        { q: "Soal 2?", a: "3", b: "4", k: "b" },
+      ];
+      element._startQuiz();
+      // Answer first question and move to second
+      element._pilihJawaban(0, "a");
+      element._goToNextQuestion();
+      expect(element._currentIdx).to.equal(1);
+      dispatchKeyEvent("ArrowLeft");
+      expect(element._currentIdx).to.equal(0);
+    });
+
+    it("number key jumps to question", async () => {
+      element.questions = [
+        { q: "Soal 1?", a: "1", b: "2", k: "a" },
+        { q: "Soal 2?", a: "3", b: "4", k: "b" },
+        { q: "Soal 3?", a: "5", b: "6", k: "a" },
+      ];
+      element._startQuiz();
+      expect(element._currentIdx).to.equal(0);
+      dispatchKeyEvent("3");
+      expect(element._currentIdx).to.equal(2);
+    });
+  });
+
+  describe("navigation answer preservation (audit fix)", () => {
+    it("_goToQuestion preserves _answered for previously answered question", async () => {
+      element.practiceMode = true;
+      element.allowBackwardNav = true;
+      element.questions = [
+        { q: "Q1?", a: "A", b: "B", k: "a" },
+        { q: "Q2?", a: "C", b: "D", k: "b" },
+      ];
+      element._startQuiz();
+      element._pilihJawaban(0, "a");
+      expect(element._answered).to.equal(true);
+      expect(element._currentIdx).to.equal(0);
+      // move to Q2 fresh
+      element._goToQuestion(1);
+      expect(element._currentIdx).to.equal(1);
+      expect(element._answered).to.equal(false);
+      expect(element._selected).to.equal(-1);
+      // back to Q1 preserves
+      element._goToQuestion(0);
+      expect(element._currentIdx).to.equal(0);
+      expect(element._answered).to.equal(true);
+      expect(element._selected).to.equal(0);
+    });
+
+    it("_goToQuestion clears stale _selected for fresh question", async () => {
+      element.practiceMode = true;
+      element.questions = [
+        { q: "Q1?", a: "A", b: "B", k: "a" },
+        { q: "Q2?", a: "C", b: "D", k: "b" },
+      ];
+      element._startQuiz();
+      element._pilihJawaban(1, "b");
+      expect(element._selected).to.equal(1);
+      element._goToQuestion(1);
+      expect(element._selected).to.equal(-1);
+      expect(element._answered).to.equal(false);
+    });
+
+    it("_goToNextQuestion restores answer for previously answered next question", async () => {
+      element.practiceMode = true;
+      element.questions = [
+        { q: "Q1?", a: "A", b: "B", k: "a" },
+        { q: "Q2?", a: "C", b: "D", k: "b" },
+        { q: "Q3?", a: "E", b: "F", k: "a" },
+      ];
+      element._startQuiz();
+      element._pilihJawaban(0, "a");
+      element._goToNextQuestion();
+      element._pilihJawaban(1, "b");
+      expect(element._currentIdx).to.equal(1);
+      element._goToQuestion(0);
+      expect(element._currentIdx).to.equal(0);
+      element._goToNextQuestion();
+      expect(element._currentIdx).to.equal(1);
+      expect(element._answered).to.equal(true);
+      expect(element._selected).to.equal(1);
+    });
+
+    it("_autoAdvance restores next question answer (stub timer)", async () => {
+      element.practiceMode = false;
+      element.questionDelay = 10;
+      element.questions = [
+        { q: "Q1?", a: "A", b: "B", k: "a" },
+        { q: "Q2?", a: "C", b: "D", k: "b" },
+      ];
+      element._startQuiz();
+      // pre-answer Q2
+      element._userAnswers.set(1, { selected: 1, isCorrect: true, points: 1 });
+      element._answeredSet.add(1);
+      element._pilihJawaban(0, "a");
+      // wait for autoAdvance
+      await new Promise(function(r) { setTimeout(r, 30); });
+      expect(element._currentIdx).to.equal(1);
+      expect(element._answered).to.equal(true);
+      expect(element._selected).to.equal(1);
+      if (element._advanceTimer) { clearTimeout(element._advanceTimer); element._advanceTimer = null; }
+    });
+
+    it("practice mode round-trip shows disabled styling via _answered", async () => {
+      element.practiceMode = true;
+      element.allowBackwardNav = true;
+      element.questions = [
+        { q: "Q1?", a: "A", b: "B", k: "a" },
+        { q: "Q2?", a: "C", b: "D", k: "b" },
+      ];
+      element._startQuiz();
+      element._pilihJawaban(0, "a");
+      element._goToQuestion(1);
+      element._goToQuestion(0);
+      expect(element._answered).to.equal(true);
+      expect(element._userAnswers.has(0)).to.equal(true);
+      // _pilihJawaban guard should block re-answer
+      const beforeScore = element._score;
+      element._pilihJawaban(1, "b");
+      expect(element._score).to.equal(beforeScore);
+    });
+  });
+
   describe("anti-cheat: periodic auto-save", () => {
     afterEach(() => {
       if (element._autoSaveInterval) {
