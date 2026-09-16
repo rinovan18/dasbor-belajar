@@ -53,6 +53,52 @@ describe("KuisLedakan test", () => {
     expect(logged.payload.score).to.equal(100);
   });
 
+  it("dispatches timer_mulai on start (sumatif, lockAfterComplete)", async () => {
+    let loggedEvents = [];
+    element.addEventListener("dasbor-kuis-log", (e) => loggedEvents.push(e.detail));
+    element.studentId = "STD-1";
+    element.kdMateri = "Pertemuan 1";
+    element.kategori = "sumatif_lm";
+    element.lockAfterComplete = true;
+    element.questions = [{ q: "Test?", a: "1", b: "2", c: "3", k: "a" }];
+    element._startQuiz();
+    await element.updateComplete;
+    const startEvt = loggedEvents.find((e) => e.tipe === "timer_mulai");
+    expect(startEvt).to.not.be.undefined;
+    expect(startEvt.payload.kategori).to.equal("sumatif_lm");
+    expect(startEvt.payload.kdMateri).to.equal("Pertemuan 1");
+  });
+
+  it("does NOT dispatch timer_mulai when formatif", async () => {
+    let loggedEvents = [];
+    element.addEventListener("dasbor-kuis-log", (e) => loggedEvents.push(e.detail));
+    element.studentId = "STD-1";
+    element.kdMateri = "Pertemuan 1";
+    element.kategori = "formatif";
+    element.lockAfterComplete = true;
+    element.questions = [{ q: "Test?", a: "1", b: "2", c: "3", k: "a" }];
+    element._startQuiz();
+    await element.updateComplete;
+    const startEvt = loggedEvents.find((e) => e.tipe === "timer_mulai");
+    expect(startEvt).to.be.undefined;
+  });
+
+  it("does NOT dispatch timer_mulai on resume (hasResumed)", async () => {
+    let loggedEvents = [];
+    element.addEventListener("dasbor-kuis-log", (e) => loggedEvents.push(e.detail));
+    element.studentId = "STD-1";
+    element.kdMateri = "Pertemuan 1";
+    element.kategori = "sumatif_lm";
+    element.lockAfterComplete = true;
+    element.questions = [{ q: "Test?", a: "1", b: "2", c: "3", k: "a" }];
+    // Simulate resume: _shuffledQuestions already set before start
+    element._shuffledQuestions = [{ q: "Test?", a: "1", b: "2", c: "3", k: "a", _originalIndex: 0 }];
+    element._startQuiz();
+    await element.updateComplete;
+    const startEvt = loggedEvents.find((e) => e.tipe === "timer_mulai");
+    expect(startEvt).to.be.undefined;
+  });
+
   it("forwards kdMateri & kategori in dasbor-kuis-log payload", async () => {
     let logged = null;
     element.addEventListener("dasbor-kuis-log", (e) => (logged = e.detail));
@@ -300,6 +346,49 @@ describe("KuisLedakan test", () => {
     element._submitMatching();
     // Score TIDAK boleh naik
     expect(element._score).to.equal(2);
+  });
+
+  describe("editable mode", () => {
+    it("allows re-submit on MC single and recomputes score", async () => {
+      element.editable = true;
+      element.questions = [
+        { q: "1+1?", a: "2", b: "3", c: "4", k: "a" },
+      ];
+      element._startQuiz();
+      element._pilihJawaban(0, "a");
+      expect(element._score).to.equal(1);
+      expect(element._userAnswers.get(0).isCorrect).to.equal(true);
+      // Re-submit with wrong answer
+      element._pilihJawaban(2, "c");
+      expect(element._score).to.equal(0);
+      expect(element._userAnswers.get(0).isCorrect).to.equal(false);
+    });
+
+    it("allows re-submit on short answer and recomputes score", async () => {
+      element.editable = true;
+      element.questions = [{ type: "shortAnswer", question: "Ibu kota?", acceptedAnswers: ["jakarta"] }];
+      element._startQuiz();
+      element._shortAnswerText = "jakarta";
+      element._submitShortAnswer();
+      expect(element._score).to.equal(1);
+      // Re-submit with wrong answer
+      element._shortAnswerText = "bandung";
+      element._submitShortAnswer();
+      expect(element._score).to.equal(0);
+      expect(element._userAnswers.get(0).text).to.equal("bandung");
+    });
+
+    it("blocks re-submit when editable is false", async () => {
+      element.editable = false;
+      element.questions = [
+        { q: "1+1?", a: "2", b: "3", c: "4", k: "a" },
+      ];
+      element._startQuiz();
+      element._pilihJawaban(0, "a");
+      expect(element._score).to.equal(1);
+      element._pilihJawaban(2, "c");
+      expect(element._score).to.equal(1); // no change
+    });
   });
 
   describe("keyboard navigation", () => {

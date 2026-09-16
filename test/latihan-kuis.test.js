@@ -161,6 +161,9 @@ describe("LatihanKuis test", () => {
 
   describe("max-retake (batas ulangan)", () => {
     const keyFor = (s, k) => `latihan_kuis_attempt_${s}_${k}`;
+    const _origFetch = window.fetch;
+    const setFetch = (fn) =>
+      Object.defineProperty(window, "fetch", { value: fn, configurable: true, writable: true });
     beforeEach(() => {
       element.appsScriptUrl = "https://example.com/x";
       element.studentId = "u1";
@@ -168,9 +171,13 @@ describe("LatihanKuis test", () => {
       element.allowRetake = true;
       element.maxRetake = 1;
       element._attemptKe = 0;
+      // Hindari fetch nyata dari _muatStatusKuis/_sendLogDirect (async continuations
+      // dari klik Mulai bisa leak ke test berikutnya & menyambar setFetch milik test lain).
+      setFetch(async () => ({ ok: true, json: async () => ({ status: "ok" }) }));
       try { localStorage.removeItem(keyFor("u1", "bab1")); } catch (_) {}
     });
     afterEach(() => {
+      setFetch(_origFetch);
       try { localStorage.removeItem(keyFor("u1", "bab1")); } catch (_) {}
     });
 
@@ -446,6 +453,30 @@ describe("LatihanKuis test", () => {
         expect(element._sessionToken).to.not.equal("old-tok");
       });
     });
+
+    describe("start → db_aktivitas (timer_mulai)", () => {
+      it("fires timer_mulai with kategori & percobaanKe when NOT latihanOnlyMode", async () => {
+        element.lockAfterComplete = true; // _latihanOnlyMode = false (duration=300)
+        element._attemptKe = 2;
+        element.kategori = "sumatif_lm";
+        element._muatStatusKuis = () => Promise.resolve();
+        let capturedTipe = null;
+        let capturedPayload = null;
+        element._logActivity = (tipe, payload) => {
+          if (tipe === "timer_mulai") {
+            capturedTipe = tipe;
+            capturedPayload = payload;
+          }
+        };
+        element._mulaiLatihan();
+        await element.updateComplete;
+        expect(capturedTipe).to.equal("timer_mulai");
+        expect(capturedPayload).to.not.be.null;
+        expect(capturedPayload.kategori).to.equal("sumatif_lm");
+        expect(capturedPayload.percobaanKe).to.equal(3); // attemptKe (2) + 1
+        expect(capturedPayload.kdMateri).to.equal(element.kdMateri);
+      });
+    });
   });
 
   describe("hardening: id_log & key cleanup", () => {
@@ -472,16 +503,16 @@ describe("LatihanKuis test", () => {
       element.studentId = "u1";
       element.kdMateri = "bab1";
       element._sessionLogged = "";
-      let capturedUrl = "";
+      let captured = [];
       setFetch(async (url) => {
-        capturedUrl = url;
+        captured.push(url);
         return { ok: true, json: async () => ({ status: "ok" }) };
       });
       element._logSelesaiKuis = () => {};
       element._kirimLogSession = () => {};
       element._onKuisLog({ detail: { id_log: "EVENT-LOG-123", tipe: "quiz", payload: { score: 80, sessionToken: "tok-x" } } });
       await new Promise((r) => setTimeout(r, 50));
-      expect(capturedUrl).to.contain("id_log=EVENT-LOG-123");
+      expect(captured.some((u) => u.includes("id_log=EVENT-LOG-123"))).to.equal(true);
     });
 
     it("_onKuisLog clears kuis-ledakan attempt & session keys on completion", async () => {
@@ -559,6 +590,58 @@ describe("LatihanKuis test", () => {
       expect(localStorage.getItem("kuis-ledakan:attempt:u1:bab1")).to.be.null;
       expect(localStorage.getItem("kuis-ledakan:session:u1:bab1")).to.be.null;
       expect(element.studentId).to.equal("");
+    });
+  });
+
+  describe("ulanganMode preset wiring", () => {
+    const getKuis = () => element.shadowRoot.querySelector("kuis-ledakan");
+
+    it("ulangan-mode enables editable + practice + hide + shuffle preset on kuis-ledakan", async () => {
+      element.ulanganMode = true;
+      element.studentId = "u1";
+      element.kdMateri = "bab1";
+      element._mulai = true;
+      await element.updateComplete;
+      const kk = getKuis();
+      expect(kk).to.not.be.null;
+      expect(kk.editable).to.equal(true);
+      expect(kk.practiceMode).to.equal(true);
+      expect(kk.lockAfterComplete).to.equal(true);
+      expect(kk.hideConfetti).to.equal(true);
+      expect(kk.hideAnswers).to.equal(true);
+      expect(kk.hideScore).to.equal(true);
+      expect(kk.shuffleQuestions).to.equal(true);
+      expect(kk.shuffleChoices).to.equal(true);
+      expect(kk.hidePauseRestart).to.equal(true);
+    });
+
+    it("explicit false props tetap memakai preset (preset adalah pilihan penulis)", async () => {
+      element.ulanganMode = true;
+      element.hideScore = false;
+      element.shuffleQuestions = false;
+      element.studentId = "u1";
+      element.kdMateri = "bab1";
+      element._mulai = true;
+      await element.updateComplete;
+      const kk = getKuis();
+      expect(kk).to.not.be.null;
+      // Preset hard-set saat ulangan-mode aktif
+      expect(kk.hideScore).to.equal(true);
+      expect(kk.shuffleQuestions).to.equal(true);
+      expect(kk.editable).to.equal(true);
+      expect(kk.hideAnswers).to.equal(true);
+    });
+
+    it("ulangan-mode tetap default off (tanpa preset)", async () => {
+      element.studentId = "u1";
+      element.kdMateri = "bab1";
+      element._mulai = true;
+      await element.updateComplete;
+      const kk = getKuis();
+      expect(kk).to.not.be.null;
+      expect(kk.editable).to.equal(false);
+      expect(kk.practiceMode).to.equal(false);
+      expect(kk.lockAfterComplete).to.equal(false); // allowRetake default true
     });
   });
 });

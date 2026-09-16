@@ -40,19 +40,19 @@
     "semantic_hash": "66ed1e5966df8ac072a740fd78e18ff9"
   },
   "lib/kuis-ledakan.js": {
-    "mtime": 1789489784.667559,
-    "ast_hash": "a0eb1ee0766c8936a585b7230d934617",
-    "semantic_hash": "a0eb1ee0766c8936a585b7230d934617"
+    "mtime": 1789565850.7397404,
+    "ast_hash": "d9377d7a7e477be727eab037ee000755",
+    "semantic_hash": "d9377d7a7e477be727eab037ee000755"
   },
   "lib/latihan-kuis.js": {
-    "mtime": 1789491467.898252,
-    "ast_hash": "ed1b43b3325c2466ea8a28b680b1c20d",
-    "semantic_hash": "ed1b43b3325c2466ea8a28b680b1c20d"
+    "mtime": 1789565602.736822,
+    "ast_hash": "dad63dacfb3c6c3e545ee2506e731363",
+    "semantic_hash": "dad63dacfb3c6c3e545ee2506e731363"
   },
   "lib/quiz-user-auth.js": {
-    "mtime": 1789457061.7433128,
-    "ast_hash": "e7c5b58672ce6dcf77ab8a7aafa3b2f6",
-    "semantic_hash": "e7c5b58672ce6dcf77ab8a7aafa3b2f6"
+    "mtime": 1789497962.2935557,
+    "ast_hash": "eca62692976ab5d95da1ddef4ca97248",
+    "semantic_hash": "eca62692976ab5d95da1ddef4ca97248"
   },
   "lib/ruang-diskusi.js": {
     "mtime": 1788410154.6504107,
@@ -180,14 +180,14 @@
     "semantic_hash": "02a484a4a51253017e428988c280d652"
   },
   "test/kuis-ledakan.test.js": {
-    "mtime": 1789459987.2803257,
-    "ast_hash": "609a8c8729c255bdb6b751c3677ca42e",
-    "semantic_hash": "609a8c8729c255bdb6b751c3677ca42e"
+    "mtime": 1789565477.768435,
+    "ast_hash": "fb0fbc05c055e6775006048685cbf699",
+    "semantic_hash": "fb0fbc05c055e6775006048685cbf699"
   },
   "test/latihan-kuis.test.js": {
-    "mtime": 1789491507.6238394,
-    "ast_hash": "646a79da61edd1611d4494938a49b78d",
-    "semantic_hash": "646a79da61edd1611d4494938a49b78d"
+    "mtime": 1789565612.3723166,
+    "ast_hash": "8d41cbfecdf11c8e37faf8020b2a568a",
+    "semantic_hash": "8d41cbfecdf11c8e37faf8020b2a568a"
   },
   "test/timer-kuis.test.js": {
     "mtime": 1789465746.728168,
@@ -230,9 +230,9 @@
     "semantic_hash": "2cfe9ff0a1af31273f5a395acbad5a01"
   },
   "lib/question-renderer.js": {
-    "mtime": 1789489784.671561,
-    "ast_hash": "2e170fc291d52e4f2b365ab12c099c8d",
-    "semantic_hash": "2e170fc291d52e4f2b365ab12c099c8d"
+    "mtime": 1789565205.6138358,
+    "ast_hash": "da8275387a35691ca93550d847cf80e9",
+    "semantic_hash": "da8275387a35691ca93550d847cf80e9"
   },
   "lib/quiz-engine.js": {
     "mtime": 1789339131.6806767,
@@ -257,227 +257,227 @@
   ".commandcode/import-report.md": {
     "mtime": 1789046504.9620261,
     "ast_hash": "6013e135534438e6ac3d724cf741378c",
-    "semantic_hash": ""
+    "semantic_hash": "6013e135534438e6ac3d724cf741378c"
   },
   ".commandcode/plans/1787990743000-fix-theme-config-site-json.md": {
     "mtime": 1787991691.096728,
     "ast_hash": "095b426cd155948379184ce906f09076",
-    "semantic_hash": ""
+    "semantic_hash": "095b426cd155948379184ce906f09076"
   },
   ".commandcode/plans/1788424688625-fix-duplicate-nis-quiz-nav.md": {
     "mtime": 1788575559.2887847,
     "ast_hash": "0fb0ece26549fdb072647005ed33a9a9",
-    "semantic_hash": ""
+    "semantic_hash": "0fb0ece26549fdb072647005ed33a9a9"
   },
   ".commandcode/plans/1788432353484-nis-lock-quiz-nav-tutorial.md": {
     "mtime": 1788473310.605819,
     "ast_hash": "ee58bfcf0fdbcd1b434d7431aee2a871",
-    "semantic_hash": ""
+    "semantic_hash": "ee58bfcf0fdbcd1b434d7431aee2a871"
   },
   ".commandcode/plans/1788596512240-anti-cheating-checklist.md": {
     "mtime": 1789380147.8091261,
     "ast_hash": "32bbcca4fc165b3cf8a9ed7b77425cea",
-    "semantic_hash": ""
+    "semantic_hash": "32bbcca4fc165b3cf8a9ed7b77425cea"
   },
   ".commandcode/plans/1788624688625-fix-nis-validation-format-codev6.md": {
     "mtime": 1788736350.8497775,
     "ast_hash": "aa85efb26df88d55c9ac79459d643477",
-    "semantic_hash": ""
+    "semantic_hash": "aa85efb26df88d55c9ac79459d643477"
   },
   ".commandcode/plans/1788852835427-source-fix-plan.md": {
     "mtime": 1789023895.9032755,
     "ast_hash": "c714ce0ca72cef176ce48ee23e6e1a54",
-    "semantic_hash": ""
+    "semantic_hash": "c714ce0ca72cef176ce48ee23e6e1a54"
   },
   ".commandcode/plans/1788931168148-timer-fix-plan.md": {
     "mtime": 1788939810.045498,
     "ast_hash": "370835a1b42bb4edd596a8bf32e9a771",
-    "semantic_hash": ""
+    "semantic_hash": "370835a1b42bb4edd596a8bf32e9a771"
   },
   ".commandcode/plans/IMPLEMENTATION_SUMMARY.md": {
     "mtime": 1788945144.1218178,
     "ast_hash": "f70a535b6710f67f698aa00e3014461c",
-    "semantic_hash": ""
+    "semantic_hash": "f70a535b6710f67f698aa00e3014461c"
   },
   ".commandcode/taste/taste.md": {
     "mtime": 1789443221.606254,
     "ast_hash": "4f6a9c8b50e0814e341fa23659129c52",
-    "semantic_hash": ""
+    "semantic_hash": "4f6a9c8b50e0814e341fa23659129c52"
   },
   ".commandcode/taste/user-preferences/taste.md": {
     "mtime": 1789458391.5342586,
     "ast_hash": "e0a0d97c655db8c862e1a65c0ea14f95",
-    "semantic_hash": ""
+    "semantic_hash": "e0a0d97c655db8c862e1a65c0ea14f95"
   },
   ".github/workflows/main.yml": {
     "mtime": 1786472587.8934636,
     "ast_hash": "3f8cd84746a43726433f4e257357d7ba",
-    "semantic_hash": ""
+    "semantic_hash": "3f8cd84746a43726433f4e257357d7ba"
   },
   ".travis.yml": {
     "mtime": 1786472587.9104612,
     "ast_hash": "8924ef59a0ea958b51a5572e4145db14",
-    "semantic_hash": ""
+    "semantic_hash": "8924ef59a0ea958b51a5572e4145db14"
   },
   "AGENTS.md": {
     "mtime": 1789046404.9859746,
     "ast_hash": "caff6d5d29afcff8e158a7623daf0162",
-    "semantic_hash": ""
+    "semantic_hash": "caff6d5d29afcff8e158a7623daf0162"
   },
   "DATA-CONTOH.md": {
     "mtime": 1786472587.9134655,
     "ast_hash": "067a7698024f0152fc3689f1c60e334f",
-    "semantic_hash": ""
+    "semantic_hash": "067a7698024f0152fc3689f1c60e334f"
   },
   "PANDUAN-KUIS-LEDAPAN.md": {
     "mtime": 1787525717.9331121,
     "ast_hash": "bbb1f1957c6ae71c60886474f30abc9a",
-    "semantic_hash": ""
+    "semantic_hash": "bbb1f1957c6ae71c60886474f30abc9a"
   },
   "PANDUAN-LATIHAN-KUIS.md": {
     "mtime": 1787747809.2445638,
     "ast_hash": "645f2d3d843ac8c8758180e8b3a9a8a9",
-    "semantic_hash": ""
+    "semantic_hash": "645f2d3d843ac8c8758180e8b3a9a8a9"
   },
   "PATCH-2026-09-05-finish-button-unanswered.md": {
     "mtime": 1788597420.4287379,
     "ast_hash": "443b75158c6c00a5190ff5b0e98bace8",
-    "semantic_hash": ""
+    "semantic_hash": "443b75158c6c00a5190ff5b0e98bace8"
   },
   "README.md": {
     "mtime": 1786472587.9194639,
     "ast_hash": "1b36616874ac5513d8cdf144e9886f00",
-    "semantic_hash": ""
+    "semantic_hash": "1b36616874ac5513d8cdf144e9886f00"
   },
   "REKOMENDASI-DASBOR-KUIS.md": {
     "mtime": 1787724107.2448719,
     "ast_hash": "d305adecdde302569bc3e891818f9a95",
-    "semantic_hash": ""
+    "semantic_hash": "d305adecdde302569bc3e891818f9a95"
   },
   "demo/contoh-api-langsung.html": {
     "mtime": 1789267281.712987,
     "ast_hash": "43851d0cb86b10beee39b91ebe7bfe18",
-    "semantic_hash": ""
+    "semantic_hash": "43851d0cb86b10beee39b91ebe7bfe18"
   },
   "demo/contoh-perubahan.html": {
-    "mtime": 1789450124.627999,
-    "ast_hash": "2fee559291e81faf92a7c60bd2bfd572",
-    "semantic_hash": ""
+    "mtime": 1789549443.9966636,
+    "ast_hash": "197e208df9cd266c34e8f6560e11ec62",
+    "semantic_hash": "197e208df9cd266c34e8f6560e11ec62"
   },
   "demo/hasil-cek-perubahan.html": {
     "mtime": 1786472599.4127486,
     "ast_hash": "e3247704bb3e3fa49932c6714dc5c174",
-    "semantic_hash": ""
+    "semantic_hash": "e3247704bb3e3fa49932c6714dc5c174"
   },
   "demo/haxcms-page.html": {
-    "mtime": 1789450124.632009,
-    "ast_hash": "6f849cd5b6aeefd71c9d3c5d08bfec75",
-    "semantic_hash": ""
+    "mtime": 1789549443.9966636,
+    "ast_hash": "e95c358aaa4153ddfbe315e059e54f5e",
+    "semantic_hash": "e95c358aaa4153ddfbe315e059e54f5e"
   },
   "demo/index.html": {
-    "mtime": 1789450124.6340046,
-    "ast_hash": "9f25d3843009e788312132e40befd13b",
-    "semantic_hash": ""
+    "mtime": 1789549443.9966636,
+    "ast_hash": "9597e450cf58ad5d56645a388b6ecc54",
+    "semantic_hash": "9597e450cf58ad5d56645a388b6ecc54"
   },
   "demo/kegiatan-september-2026.html": {
-    "mtime": 1789450124.6330187,
-    "ast_hash": "4d1d7e552de70dee168a91871ec8eb52",
-    "semantic_hash": ""
+    "mtime": 1789549443.9966636,
+    "ast_hash": "696ef1b400de0e1ec43dcae9f99165b0",
+    "semantic_hash": "696ef1b400de0e1ec43dcae9f99165b0"
   },
   "demo/kirim-tugas.html": {
-    "mtime": 1789450124.6340046,
-    "ast_hash": "9507bf8bed9d504a0b5bc115609951d5",
-    "semantic_hash": ""
+    "mtime": 1789549443.9966636,
+    "ast_hash": "4d8efada527dd385f1ba9170a30afa4d",
+    "semantic_hash": "4d8efada527dd385f1ba9170a30afa4d"
   },
   "demo/kuis-timer-demo.html": {
     "mtime": 1787743788.757307,
     "ast_hash": "1bc56b3a9e173faa24470c21cc1d3480",
-    "semantic_hash": ""
+    "semantic_hash": "1bc56b3a9e173faa24470c21cc1d3480"
   },
   "demo/landing.html": {
     "mtime": 1789460439.4653003,
     "ast_hash": "a68bd7c7a0c6c025fe7ae8bd89f3b57b",
-    "semantic_hash": ""
+    "semantic_hash": "a68bd7c7a0c6c025fe7ae8bd89f3b57b"
   },
   "demo/latihan-kuis.html": {
     "mtime": 1788598225.9159663,
     "ast_hash": "8388fa13a5f73fda2f336cf26d65fc74",
-    "semantic_hash": ""
+    "semantic_hash": "8388fa13a5f73fda2f336cf26d65fc74"
   },
   "demo/lm1-terintegrasi.html": {
-    "mtime": 1789450124.632009,
-    "ast_hash": "43da0fd559e095bdde25c8db0f5b2fce",
-    "semantic_hash": ""
+    "mtime": 1789549443.9966636,
+    "ast_hash": "dfdc0b8948c03fe6c2a420c29fc85690",
+    "semantic_hash": "dfdc0b8948c03fe6c2a420c29fc85690"
   },
   "demo/login.html": {
-    "mtime": 1789450124.626998,
-    "ast_hash": "6dc15f78f6572b9b6db5c60dfa19f33d",
-    "semantic_hash": ""
+    "mtime": 1789549443.9966636,
+    "ast_hash": "ff83c35d5b38abc46005f57023c7c5ac",
+    "semantic_hash": "ff83c35d5b38abc46005f57023c7c5ac"
   },
   "demo/quiz-user-auth.html": {
-    "mtime": 1789450124.627999,
-    "ast_hash": "9b97fee3aa3468ac551741e5de940302",
-    "semantic_hash": ""
+    "mtime": 1789549443.9966636,
+    "ast_hash": "aa167e05a55a40cec5988302e901bcb6",
+    "semantic_hash": "aa167e05a55a40cec5988302e901bcb6"
   },
   "demo/ruang-diskusi.html": {
-    "mtime": 1789450124.6330187,
-    "ast_hash": "384daf9bdc38a99683fd198ea46ce8a2",
-    "semantic_hash": ""
+    "mtime": 1789549443.9966636,
+    "ast_hash": "9066f4f213dbf97a44414bf50a1285d2",
+    "semantic_hash": "9066f4f213dbf97a44414bf50a1285d2"
   },
   "demo/soal-akm-lengkap.html": {
-    "mtime": 1789450124.6330187,
-    "ast_hash": "79868bc98c2fab498f06b05dcf2eb755",
-    "semantic_hash": ""
+    "mtime": 1789549443.9966636,
+    "ast_hash": "e9219c636c3e32e6e9f1d49f7594cc6f",
+    "semantic_hash": "e9219c636c3e32e6e9f1d49f7594cc6f"
   },
   "demo/tema-ceria.html": {
-    "mtime": 1789450124.627999,
-    "ast_hash": "56b50b9166a50bc1eea5b968bc4e91a5",
-    "semantic_hash": ""
+    "mtime": 1789549443.9886518,
+    "ast_hash": "f39b2ec6ecc6d0fa1c4d57dbeabfcf43",
+    "semantic_hash": "f39b2ec6ecc6d0fa1c4d57dbeabfcf43"
   },
   "demo/timer.html": {
     "mtime": 1787035968.6515253,
     "ast_hash": "b13c5d2f85994c8086eeb4b8036ad94b",
-    "semantic_hash": ""
+    "semantic_hash": "b13c5d2f85994c8086eeb4b8036ad94b"
   },
   "demo/tutor-akm-sheet.html": {
     "mtime": 1789267281.8088386,
     "ast_hash": "c3a011708430704aa46bfe7c6010ecfe",
-    "semantic_hash": ""
+    "semantic_hash": "c3a011708430704aa46bfe7c6010ecfe"
   },
   "demo/tutor-akumulasi-nilai-rapor.html": {
     "mtime": 1786472599.4312122,
     "ast_hash": "75a1febb3880cf12acb81ac613b3b4ed",
-    "semantic_hash": ""
+    "semantic_hash": "75a1febb3880cf12acb81ac613b3b4ed"
   },
   "demo/tutor-merdeka-v6.html": {
     "mtime": 1787512714.9360886,
     "ast_hash": "e435ad9f8d2652c7dc699dcf2e9f9fbf",
-    "semantic_hash": ""
+    "semantic_hash": "e435ad9f8d2652c7dc699dcf2e9f9fbf"
   },
   "demo/tutor-rangkuman.html": {
     "mtime": 1786472599.43419,
     "ast_hash": "e169f34bfddc21f9ffccf9cf74f246b8",
-    "semantic_hash": ""
+    "semantic_hash": "e169f34bfddc21f9ffccf9cf74f246b8"
   },
   "demo/tutorial-hax.html": {
     "mtime": 1786472599.43619,
     "ast_hash": "9ad65970e1f78a3a3d5f49082a1b381d",
-    "semantic_hash": ""
+    "semantic_hash": "9ad65970e1f78a3a3d5f49082a1b381d"
   },
   "docs/BANKSOAL-PER-SEL.md": {
     "mtime": 1789294340.3409252,
     "ast_hash": "54e86dcdf61f6721af11eff302cc4841",
-    "semantic_hash": ""
+    "semantic_hash": "54e86dcdf61f6721af11eff302cc4841"
   },
   "index.html": {
-    "mtime": 1789450124.626998,
-    "ast_hash": "aabf7f56ca7b3ea8396da303e530f5a8",
-    "semantic_hash": ""
+    "mtime": 1789549443.9886518,
+    "ast_hash": "66c099ff72aebd9931a6dd1eec7ed4b5",
+    "semantic_hash": "66c099ff72aebd9931a6dd1eec7ed4b5"
   },
   "promptlengkap-dasbor-kuis.txt": {
     "mtime": 1786472588.521857,
     "ast_hash": "0f97fa3ae8bb5cdf70265fc75cacdcef",
-    "semantic_hash": ""
+    "semantic_hash": "0f97fa3ae8bb5cdf70265fc75cacdcef"
   },
   "lib/timer-kuis.haxProperties.json": {
     "mtime": 1789465401.6296227,
@@ -488,5 +488,25 @@
     "mtime": 1789465402.7049272,
     "ast_hash": "451664c869651fa3617a53c6f36e3728",
     "semantic_hash": "451664c869651fa3617a53c6f36e3728"
+  },
+  "demo/landing1.html": {
+    "mtime": 1789452651.7271237,
+    "ast_hash": "eb6f0cf44ef34f67340cc560d5bdb168",
+    "semantic_hash": "eb6f0cf44ef34f67340cc560d5bdb168"
+  },
+  "demo/lm1-remidi.html": {
+    "mtime": 1789549443.9886518,
+    "ast_hash": "93f7d840ab7d253b7f4ac4dd87fed996",
+    "semantic_hash": "93f7d840ab7d253b7f4ac4dd87fed996"
+  },
+  "demo/uji-remidi.html": {
+    "mtime": 1789562673.6214852,
+    "ast_hash": "9a43fb561751f00820948453fbc421a3",
+    "semantic_hash": "9a43fb561751f00820948453fbc421a3"
+  },
+  "demo/ulangan-lm1.html": {
+    "mtime": 1789571808.994603,
+    "ast_hash": "b56de388e5d5c7e4bf8917ce93c7317f",
+    "semantic_hash": "b56de388e5d5c7e4bf8917ce93c7317f"
   }
 }

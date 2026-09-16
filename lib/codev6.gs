@@ -955,6 +955,39 @@ function logActivity(p) {
   const antiCheatTypes = ["tab_switch_warning", "suspicious_timing", "copy_paste_attempt", "fullscreen_exit", "window_blur", "window_focus", "curang_tab_switch", "force_choice_dialog"];
   // Tipe "selesai" & "selesai_remidi" → log ke db_aktivitas (audit trail), bukan db_asesmen
   const selesaiTypes = ["selesai", "selesai_remidi"];
+  // Tipe MULAI kuis → log ke db_aktivitas (audit trail + heatmap), JANGAN ke db_asesmen.
+  // Dulu timer_mulai jatuh ke rute sumatif → menulis baris skor=0 di db_asesmen yang
+  // mengunci siswa (getQuizLock) sebelum ia selesai & memblokir retake saat remidi gagal.
+  const startTypes = ["timer_mulai", "kuis_mulai", "mulai", "mulai_kuis"];
+  if (startTypes.includes(tipeAktivitas)) {
+    _jaminSheet(SHEET_AKTIVITAS, SHEET_SPECS[SHEET_AKTIVITAS]);
+    const akt = _ss().getSheetByName(SHEET_AKTIVITAS);
+    const headerAkt = akt
+      .getRange(1, 1, 1, akt.getLastColumn())
+      .getValues()[0]
+      .map((h) => String(h).trim());
+    const idLogIdx = headerAkt.indexOf("ID Log") + 1;
+    if (idLog && idLogIdx > 0 && _kolomBerisi(akt, idLogIdx, idLog)) {
+      return { status: "ok", duplikat: true };
+    }
+    akt.appendRow([
+      Utilities.formatDate(new Date(), "GMT+7", "dd/MM/yyyy HH:mm:ss"),
+      _tglStr(new Date()),
+      _hariNama(new Date()),
+      _teks(p.nama || desc.studentName || ""),
+      tipeAktivitas,
+      JSON.stringify(desc),
+      1,
+      studentId,
+      _teks(p.nis || p.NIS || ""),
+      _teks(p.absen || ""),
+      _teks(p.kelas || ""),
+      kdMateri,
+      idLog,
+    ]);
+    SpreadsheetApp.flush();
+    return { status: "ok", tipe: tipeAktivitas };
+  }
   if (antiCheatTypes.includes(tipeAktivitas)) {
     _jaminSheet(SHEET_AKTIVITAS, SHEET_SPECS[SHEET_AKTIVITAS]);
     const akt = _ss().getSheetByName(SHEET_AKTIVITAS);
@@ -998,6 +1031,18 @@ function logActivity(p) {
     if (idLog && idLogIdx > 0 && _kolomBerisi(akt, idLogIdx, idLog)) {
       return { status: "ok", duplikat: true };
     }
+    // Agregasi "numpuk" dari server: hitung baris start (kuis mulai) milik siswa+kdMateri
+    // ini → audit jujur yang tidak bergantung localStorage (bisa diakali siswa). Flag
+    // curang/remidi dari payload diformat jadi catatan ringkas untuk guru.
+    const jumlahMulai = _hitungAktivitas(akt, headerAkt, studentId, kdMateri, startTypes);
+    desc = Object.assign({}, desc, {
+      jumlahMulaiServer: jumlahMulai,
+      catatanAudit: [
+        "mulaiServer:" + jumlahMulai,
+        "curang:" + (desc.curang ? "ya" : "tidak"),
+        "remidi:" + (desc.remidi ? "ya" : "tidak"),
+      ].join(", "),
+    });
     akt.appendRow([
       Utilities.formatDate(new Date(), "GMT+7", "dd/MM/yyyy HH:mm:ss"),
       _tglStr(new Date()),
@@ -1077,6 +1122,23 @@ function logActivity(p) {
   return { status: "ok" };
 }
 
+/** Hitung berapa baris tipe tertentu (mis. start kuis) milik siswa+kdMateri di sheet aktivitas. */
+function _hitungAktivitas(sheet, header, studentId, kdMateri, tipeSet) {
+  if (!sheet || sheet.getLastRow() < 2) return 0;
+  const idxSid = header.indexOf("Student ID") + 1;
+  const idxLM = header.indexOf("Kode Materi") + 1;
+  const idxTipe = header.indexOf("Tipe Aktivitas") + 1;
+  if (!idxTipe) return 0;
+  const data = sheet.getRange(2, 1, sheet.getLastRow() - 1, sheet.getLastColumn()).getValues();
+  let hitungan = 0;
+  data.forEach((r) => {
+    if (studentId && _teks(r[idxSid - 1]) !== studentId) return;
+    if (kdMateri && _teks(r[idxLM - 1]) !== _teks(kdMateri)) return;
+    if (tipeSet.includes(_teks(r[idxTipe - 1]))) hitungan += 1;
+  });
+  return hitungan;
+}
+
 /** Cek apakah siswa sudah mengunci kuis tertentu (berdasar db_asesmen). */
 function getQuizLock(p) {
   const studentId = _teks(p.studentId || p.student_id || "");
@@ -1092,9 +1154,13 @@ function getQuizLock(p) {
   let found = false;
   asm.rows.forEach((r) => {
     if (_teks(r[idxSid]) === studentId && _teks(r[idxLM]) === kdMateri) {
-      found = true;
       const v = Math.max(_num(r[idxTulis]), _num(r[idxPerf]));
-      if (v > best) best = v;
+      // Kunci HANYA oleh baris skor sungguhan (>0). Baris skor=0 (bekas event mulai /
+      // sampah) tidak boleh men-generate kunci → mencegah retake terblokir tanpa alasan.
+      if (v > 0) {
+        found = true;
+        if (v > best) best = v;
+      }
     }
   });
   return { status: "ok", locked: found, best: found ? best : null };
